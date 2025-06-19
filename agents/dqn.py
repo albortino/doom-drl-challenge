@@ -7,7 +7,7 @@ from gym import Env
 import random
 from typing import Dict
 from collections import OrderedDict
-from agents.utils import MultiHeadAttention, ResidualBlock, process_observation
+from agents.utils import MultiHeadAttention, ResidualBlock, Downsample, process_observation, OwnModule
 from agents.my_modules import *
 
 
@@ -76,9 +76,9 @@ def update_ema(ema_model, model, decay: float = 0.995):
 
     for name, param in model_params.items():
         ema_params[name].mul_(decay).add_(param.data, alpha=1 - decay)
+        
 
-
-class EfficientDQN(nn.Module):
+class EfficientDQN(OwnModule):
     """
     Efficient DQN with multi-buffer visual processing and attention mechanisms
     
@@ -86,7 +86,7 @@ class EfficientDQN(nn.Module):
     TODO
     """
     
-    def __init__(self, input_channels_dict: Dict[str, int], action_space: int, feature_dim_cnns: int = 64, hidden_dim_heads: int = 512, phi: nn.Module = nn.ReLU(), r: int = 4):
+    def __init__(self, input_channels_dict: Dict[str, int], action_space: int, feature_dim_cnns: int = 64, hidden_dim_heads: int = 512, phi: nn.Module = nn.ELU(), r: int = 4):
     
         super().__init__()
         
@@ -98,6 +98,7 @@ class EfficientDQN(nn.Module):
         # Feature dimension after encoding
         self.feature_dim_cnns = feature_dim_cnns
         
+        self.input_channels_dict = input_channels_dict
         self.num_buffers = len(input_channels_dict)
         
         # Separate encoders for each buffer type
@@ -132,11 +133,12 @@ class EfficientDQN(nn.Module):
         params_automap_encoder = sum(p.numel() for p in self.automap_encoder.parameters() if p.requires_grad)
         params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
-    
+
+        self.init_weights(debug=True)
         
         print(f"Initialized model with {params_screen_encoder + params_depth_encoder + params_labels_encoder + params_automap_encoder + params_advantage_head + params_value_head} parameters!")
         
-    def _build_encoder(self, input_channels: int) -> nn.Module:
+    def _build_encoder_old(self, input_channels: int) -> nn.Module:
         """Build CNN encoder for visual input"""
         
         first_channel_out = 16 if input_channels == 3 else 4
@@ -166,6 +168,47 @@ class EfficientDQN(nn.Module):
             nn.Linear(first_channel_out*4//self.r, self.feature_dim_cnns),
             self.phi
         )
+    
+    
+    def _build_encoder(self, input_channels: int) -> nn.Module:
+        """Build CNN encoder with residual blocks for visual input"""
+        
+        first_channel_out = 16 if input_channels == 3 else 4
+        
+        return nn.Sequential(
+            # Initial convolution - reduce spatial dimensions significantly
+            nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
+            self.phi,  # Output [N, C=16/4, WH=32]
+            
+            # First residual stage
+            ResidualBlock(space=2, dim=first_channel_out, act_fn=type(self.phi), depth=1),
+            Downsample(space=2, dim=first_channel_out, downsample=2),  # [N, C, 16]
+            
+            # Second residual stage - double channels
+            nn.Conv2d(first_channel_out, first_channel_out * 2, 1, bias=False),  # Channel expansion
+            ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=type(self.phi), depth=1),
+            Downsample(space=2, dim=first_channel_out * 2, downsample=2),  # [N, 2C, 8]
+            
+            # Third residual stage - double channels again
+            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 1, bias=False),  # Channel expansion
+            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=2),
+            
+            # Channel reduction with residual connection
+            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=1),
+            
+            # Final spatial reduction and channel adjustment
+            nn.Conv2d(first_channel_out * 4, first_channel_out * 4//self.r, 3, stride=2, padding=1),
+            self.phi,
+            
+            # Global average pooling -> one pixel per channel
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            
+            # Output projection
+            nn.Linear(first_channel_out*4//self.r, self.feature_dim_cnns),
+            self.phi
+        )
+    
     
     def forward(self, observations: dict[str, torch.Tensor]) -> torch.Tensor:
         """

@@ -7,9 +7,121 @@ from collections import OrderedDict
 import math
 import random
 
+from datetime import datetime
 
 from doom_arena.render import render_episode
 from IPython.display import HTML
+import os
+
+
+class OwnModule(nn.Module):
+    def __init__(self):
+        super().__init__()
+        
+    def forward(self):
+        raise NotImplementedError
+        
+    def set_arg(self, arg, value):
+        """ Sets the <arg> to a certain <value>, e.g. self.phi = OtherActivationFunction
+
+        Args:
+            arg (_type_): _description_
+            value (_type_): _description_
+
+        Raises:
+            AttributeError: _description_
+        """
+        if hasattr(self, arg):
+            setattr(self, arg, value)
+            self.__build_model()
+        else:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{arg}'")
+        
+    def init_weights(self, debug: bool=False):  
+        """ Initialize weights for Linear features. Kaiming He for (Leaky-)Relu otherwise Xavier. """
+        for module in self.model:
+            if isinstance(module, (nn.Linear, nn.Conv2d)):
+                
+                if isinstance(self.phi, (nn.ReLU, nn.ELU)):
+                    nn.init.kaiming_uniform_(module.weight, nonlinearity="relu")
+                    print("Weights initialized with Kaiming He") if debug else None
+                    
+                elif isinstance(self.phi, nn.LeakyReLU):
+                    nn.init.kaiming_uniform_(module.weight, nonlinearity="leaky_relu")
+                    print("Weights initialized with Kaiming He") if debug else None
+                    
+                else:
+                    nn.init.xavier_uniform_(module.weight) 
+                    print("Weights initialized with Glorot") if debug else None
+                    
+                if module.bias is not None:
+                    nn.init.zeros_(module.bias)
+                                  
+    @torch.no_grad()
+    def get_device(self) -> str:
+        """ Returns the current device of the model. """
+        return next(self.model.parameters()).device
+
+    def save_model(self, path: str = ""):
+        """ Saves the model's state dict at the provided path in a subfolder based on the date. Name: "model.pt"
+
+        Args:
+            path (str, optional): Path where the model should be stored. Defaults to "".
+        """
+        
+        try:
+            dir_path = os.path.dirname(os.path.realpath(__file__)) if path == "" else path     
+            os.makedirs(dir_path, exist_ok=True)
+            
+            file_path = os.path.join(dir_path, "model.pt")
+            
+            checkpoint = dict(
+                architecture= dict(
+                    input_channels_dict=self.input_channels_dict,
+                    action_space=self.action_space,
+                    feature_dim_cnns = self.feature_dim_cnns,
+                    hidden_dim_heads = self.hidden_dim_heads,
+                    phi = self.phi,
+                    r = self.r
+                ),
+                state_dict=self.model.state_dict()
+            )
+            
+            torch.save(checkpoint, file_path)
+            
+            print(f"Successfully stored the model: {file_path}")
+        
+        except Exception as e:
+            print(f"Failed to store the model: {e}")
+    
+    @classmethod  
+    def load_model(cls, path: str = ""):
+        """ Loads an instance of this model class from the provided path. 
+
+        Args:
+            path (str, optional): Path to the state dicht. Defaults to "".
+
+        Returns:
+            PM_Model: An instance of the model class.
+        """
+        try:
+            checkpoint = torch.load(path, weights_only=False)
+                        
+            arch_params = checkpoint.get("architecture")
+            state_dict = checkpoint.get("state_dict")
+
+            if arch_params is None or state_dict is None:
+                print(f"Failed to load model: Checkpoint file {path} is missing 'architecture' or 'state_dict'.")
+                return None
+
+            loaded_model = cls(**arch_params)
+            loaded_model.model.load_state_dict(state_dict)
+            
+            return loaded_model
+        
+        except Exception as e:
+            print(f"Failed to load the model: {e}")
+
 
 
 class Downsample(nn.Module):
@@ -183,69 +295,37 @@ def soft_update_target_network(local_model: nn.Module, target_model: nn.Module, 
     target_model.load_state_dict(target_state_dict)
     
     
-    
-def replay_episode(env, model, device, extra_state_dims, dtype):
+def replay_episode(env, model, device, extra_state_dims, dtype, store: bool = False):
     # ----------------------------------------------------------------
     # Hint for replay visualisation:
     # ----------------------------------------------------------------
     env.enable_replay()
-    # ... run an evaluation episode ..
-    
+
     # Tracking reward components
     eval_reward = 0.0
-    play_episode_metrics = {
-        'frags': 0, 'hits': 0, 'damage_taken': 0, 
-        'movement': 0, 'ammo_efficiency': 0, 'survival': 0
-    }
-    
+
     # Reset environment
     eval_obs = env.reset()[0]
     eval_done = False
     model.eval().cpu()
 
-    # # Run episode
-    # while not done:
-    #     act = epsilon_greedy(env, model, obs, epsilon=0.0, device=device, dtype=DTYPE)
-    #     next_obs, r, done, info = env.step(act)
-
-    #     # Accumulate reward (adapt keys depending on env)
-    #     if isinstance(info, dict):  # single env
-    #         for k in reward_components:
-    #             reward_components[k] += info.get(k, 0.0)
-    #     elif isinstance(info, list):  # vectorized env
-    #         for k in reward_components:
-    #             reward_components[k] += info[0].get(k, 0.0)
-
-    #     ep_return += r[0]
-    #     obs = next_obs[0]
-
     while not eval_done:
-        eval_act = epsilon_greedy_multi_buffer(env, model, eval_obs.cpu(), 0.05, device, extra_state_dims, dtype)
+        eval_act = epsilon_greedy_multi_buffer(env, model, eval_obs.cpu(), 0.05, "cpu", extra_state_dims, dtype)
         eval_obs, reward_components, eval_done, _ = env.step(eval_act)
         eval_obs = eval_obs[0]
-        
-        total_reward = sum(reward_components)
-        eval_reward += total_reward
-        
-        if len(reward_components) >= 6:
-            play_episode_metrics['frags'] += reward_components[0]
-            play_episode_metrics['hits'] += reward_components[1]
-            play_episode_metrics['damage_taken'] += reward_components[2]
-            play_episode_metrics['movement'] += reward_components[3]
-            play_episode_metrics['ammo_efficiency'] += reward_components[4]
-            play_episode_metrics['survival'] += reward_components[5]
-
+        eval_reward += sum(reward_components)
 
     print(f"Final evaluation - Total reward: {eval_reward:.1f}")
-    print(f"Metrics: {play_episode_metrics}")
 
     # Finalize episode
     env.disable_replay()
 
     replays = env.get_player_replays()
-    HTML(render_episode(replays, subsample=5).to_html5_video())
     
+    if store:
+        path = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        render_episode(replays, subsample=5, replay_path=path)
+    else:
+        HTML(render_episode(replays, subsample=5).to_html5_video())
     
     model.to(device)
-    #
-    # Feel free to adapt or write your own GIF/MP4 export.
