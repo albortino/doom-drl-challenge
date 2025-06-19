@@ -6,6 +6,7 @@ from torch.distributions import Categorical
 from einops import rearrange
 
 
+
 class PPOActorCritic(nn.Module):
     def __init__(self, input_dim: int, action_space: int):
         super().__init__()
