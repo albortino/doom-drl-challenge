@@ -132,7 +132,6 @@ class EfficientDQN(OwnModule):
             nn.Linear(self.hidden_dim_heads // 4, 32), # one value prediction
             self.phi,
             nn.Linear(32, 1) # one value prediction
-            
         )
         
         self.advantage_head = nn.Sequential(

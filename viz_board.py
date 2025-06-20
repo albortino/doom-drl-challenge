@@ -12,7 +12,7 @@ from flask import send_from_directory
 
 # --- CONFIGURATION ---
 # The root folder where all your training runs are stored.
-RUNS_BASE_FOLDER = '/Users/matsschneider/Documents/Studium/JKU/Deep Reinforcement Learning/365.277 UE DRL/Final/jku.wad/runs'
+RUNS_BASE_FOLDER = '/runs'
 # How often the app should refresh, in milliseconds.
 REFRESH_INTERVAL_MS = 60000  # 60 seconds
 
@@ -41,7 +41,7 @@ def parse_log_file(log_file_path):
 
     # Regex to capture the key information from each episode log entry
     episode_pattern = re.compile(
-        r"Episode: (\d+).*?Steps done: (\d+).*?currently (\d+).*?Rewards:\s*Reward: \[(.*?)\].*?Avg Reward: \[(.*?)\].*?Loss: ([\d\.]+).*?ε: ([\d\.]+).*?LR: ([\d\.e\-]+).*?Metrics - \[(.*?)\]",
+        r"Episode: (\d+).*?Steps done: (\d+).*?currently (\d+).*?Rewards:*?\s*Reward: \[(.*?)\].*?Avg Reward: ([\d\.]+).*?Loss: ([\d\.]+).*?ε: ([\d\.]+).*?LR: ([\d\.e\-]+).*?Metrics - \[(.*?)\]",
         re.DOTALL
     )
 
@@ -54,17 +54,16 @@ def parse_log_file(log_file_path):
             episode_data = {
                 'Episode': int(match.group(1)),
                 'Steps Done': int(match.group(2)),
+                'Rollout Buffer': int(match.group(3)),
+                'Average Reward (All Players)': float(match.group(5)),
                 'Loss': float(match.group(6)),
                 'Epsilon': float(match.group(7)),
                 'Learning Rate': float(match.group(8)),
-                'Rollout Buffer': int(match.group(3))
             }
             
             # Parse reward lists
-            rewards = [float(r.strip()) for r in match.group(4).split('.') if r.strip()]
-            avg_rewards = [float(r.strip()) for r in match.group(5).split('.') if r.strip()]
-            
-            episode_data['Average Reward (All Players)'] = sum(avg_rewards) / len(avg_rewards) if avg_rewards else 0
+            reward_str = match.group(4)
+            rewards = [float(r) for r in re.findall(r'[\d\.]+', reward_str)]
             for i, r in enumerate(rewards):
                 episode_data[f'Player {i+1} Reward'] = r
             
@@ -100,6 +99,7 @@ app = dash.Dash(__name__, title="DRL Training Dashboard")
 # The folder for the currently displayed run. This is a global variable
 # that will be updated periodically by our update callback.
 CURRENT_RUN_FOLDER = find_latest_run_folder(RUNS_BASE_FOLDER)
+print(CURRENT_RUN_FOLDER)
 
 # --- APP LAYOUT ---
 app.layout = html.Div(style={'fontFamily': 'Arial, sans-serif', 'backgroundColor': '#f4f4f4', 'padding': '20px'}, children=[
@@ -189,9 +189,7 @@ def update_dashboard(n):
     avg_reward = f"Avg. Reward: {latest_data.get('Average Reward (All Players)', 0):.2f}"
     rollout_buffer = f"Rollout Buffer: {latest_data.get('Rollout Buffer', 0):,}" # From log, this seems to be the same as steps done
     
-    latest_info_children = [
-        html.Div(html.H4(val, style={'textAlign': 'center'})) for val in [steps_done, avg_reward, rollout_buffer]
-    ]
+    latest_info_children = [html.Div(html.H4(val, style={'textAlign': 'center'})) for val in [steps_done, avg_reward, rollout_buffer]]
 
     # Video Player
     video_player = html.Video(
@@ -255,4 +253,4 @@ if __name__ == '__main__':
     # Run the Dash app
     # debug=True allows for hot-reloading when you save the script,
     # but it's recommended to turn it off for a stable deployment.
-    app.run_server(debug=True)
+    app.run(debug=True)
