@@ -13,115 +13,14 @@ from doom_arena.render import render_episode
 from IPython.display import HTML
 import os
 
-
-class OwnModule(nn.Module):
-    def __init__(self):
+class Parallel(nn.Module):
+    def __init__(self, *modules: dict[str, torch.nn.Module]):
         super().__init__()
-        
-    def forward(self):
-        raise NotImplementedError
-        
-    def set_arg(self, arg, value):
-        """ Sets the <arg> to a certain <value>, e.g. self.phi = OtherActivationFunction
+        self.modules = modules
 
-        Args:
-            arg (_type_): _description_
-            value (_type_): _description_
-
-        Raises:
-            AttributeError: _description_
-        """
-        if hasattr(self, arg):
-            setattr(self, arg, value)
-            self.__build_model()
-        else:
-            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{arg}'")
-        
-    def init_weights(self, debug: bool=False):  
-        """ Initialize weights for Linear features. Kaiming He for (Leaky-)Relu otherwise Xavier. """
-        for module in self.model:
-            if isinstance(module, (nn.Linear, nn.Conv2d)):
-                
-                if isinstance(self.phi, (nn.ReLU, nn.ELU)):
-                    nn.init.kaiming_uniform_(module.weight, nonlinearity="relu")
-                    print("Weights initialized with Kaiming He") if debug else None
-                    
-                elif isinstance(self.phi, nn.LeakyReLU):
-                    nn.init.kaiming_uniform_(module.weight, nonlinearity="leaky_relu")
-                    print("Weights initialized with Kaiming He") if debug else None
-                    
-                else:
-                    nn.init.xavier_uniform_(module.weight) 
-                    print("Weights initialized with Glorot") if debug else None
-                    
-                if module.bias is not None:
-                    nn.init.zeros_(module.bias)
-                                  
-    @torch.no_grad()
-    def get_device(self) -> str:
-        """ Returns the current device of the model. """
-        return next(self.model.parameters()).device
-
-    def save_model(self, path: str = ""):
-        """ Saves the model's state dict at the provided path in a subfolder based on the date. Name: "model.pt"
-
-        Args:
-            path (str, optional): Path where the model should be stored. Defaults to "".
-        """
-        
-        try:
-            dir_path = os.path.dirname(os.path.realpath(__file__)) if path == "" else path     
-            os.makedirs(dir_path, exist_ok=True)
-            
-            file_path = os.path.join(dir_path, "model.pt")
-            
-            checkpoint = dict(
-                architecture= dict(
-                    input_channels_dict=self.input_channels_dict,
-                    action_space=self.action_space,
-                    feature_dim_cnns = self.feature_dim_cnns,
-                    hidden_dim_heads = self.hidden_dim_heads,
-                    phi = self.phi,
-                    r = self.r
-                ),
-                state_dict=self.model.state_dict()
-            )
-            
-            torch.save(checkpoint, file_path)
-            
-            print(f"Successfully stored the model: {file_path}")
-        
-        except Exception as e:
-            print(f"Failed to store the model: {e}")
+    def forward(self, inputs: dict[str, torch.Tensor]):
+        return [module(inputs[name]) for name, module in self.modules.items()]
     
-    @classmethod  
-    def load_model(cls, path: str = ""):
-        """ Loads an instance of this model class from the provided path. 
-
-        Args:
-            path (str, optional): Path to the state dicht. Defaults to "".
-
-        Returns:
-            PM_Model: An instance of the model class.
-        """
-        try:
-            checkpoint = torch.load(path, weights_only=False)
-                        
-            arch_params = checkpoint.get("architecture")
-            state_dict = checkpoint.get("state_dict")
-
-            if arch_params is None or state_dict is None:
-                print(f"Failed to load model: Checkpoint file {path} is missing 'architecture' or 'state_dict'.")
-                return None
-
-            loaded_model = cls(**arch_params)
-            loaded_model.model.load_state_dict(state_dict)
-            
-            return loaded_model
-        
-        except Exception as e:
-            print(f"Failed to load the model: {e}")
-
 
 
 class Downsample(nn.Module):
