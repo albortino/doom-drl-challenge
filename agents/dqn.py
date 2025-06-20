@@ -68,20 +68,8 @@ class EfficientDQN(OwnModule):
         self.num_buffers = len(input_channels_dict)
         
         # Separate encoders for each buffer type
-        self.screen_encoder = self._build_encoder(input_channels_dict.get("screen", 3))
-        self.depth_encoder = self._build_encoder(input_channels_dict.get("depth", 1))
-        self.labels_encoder = self._build_encoder(input_channels_dict.get("labels", 1))
-        self.automap_encoder = self._build_encoder(input_channels_dict.get("automap", 3))
-        
-        encoder_dict = {
-            "screen": self.screen_encoder,
-            "depth": self.depth_encoder,
-            "labels": self.labels_encoder,
-            "automap": self.automap_encoder
-        }
-        
+        encoder_dict = {key: self._build_encoder(dims) for key, dims in input_channels_dict.items()}
         self.encoder = Parallel(encoder_dict)
-        
         
         self.head_first = nn.Sequential(
             nn.Linear(self.feature_dim_cnns * self.num_buffers, self.hidden_dim_heads),
@@ -92,8 +80,8 @@ class EfficientDQN(OwnModule):
         # Dueling network heads
         self.value_head = nn.Sequential(
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            self.phi,
             nn.Dropout(0.2),
+            self.phi,
             nn.Linear(self.hidden_dim_heads // 4, 32), # one value prediction
             self.phi,
             nn.Linear(32, 1) # one value prediction
@@ -108,7 +96,6 @@ class EfficientDQN(OwnModule):
             self.phi,
             nn.Linear(action_space * self.num_buffers, action_space) # one prediction per action
         )
-        
         
         params_encoder = sum(p.numel() for p in self.encoder.parameters() if p.requires_grad)
         params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)

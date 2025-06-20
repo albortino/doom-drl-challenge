@@ -1,0 +1,262 @@
+LOGGER INITIALIZED AT 20250620-154029
+15:40:30 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+15:40:46 | Episode: 0 | Training for 50 epochs
+15:40:52 | Episode: 0 | Updating target network...
+15:40:52 | Episode: 0 | Rewards:
+	Reward: [-840.   17.   15. -842.] | Avg Reward: [-412.] | Loss: 1.0196 | ε: 0.987 | LR: 4.97e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:41:27 | Episode: 0 | Running quick evaluation...
+15:41:57 | Episode: 1 | Steps done: 1500 | Gathering rollout (currently 1500)
+15:42:12 | Episode: 1 | Training for 50 epochs
+15:42:15 | Episode: 1 | Updating target network...
+15:42:15 | Episode: 1 | Rewards:
+	Reward: [-829. -844.   17.   15.] | Avg Reward: [-412. -410.] | Loss: 1.1043 | ε: 0.974 | LR: 4.88e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:42:15 | Episode: 1 | Running quick evaluation...
+15:42:44 | Episode: 2 | Steps done: 3000 | Gathering rollout (currently 3000)
+15:43:00 | Episode: 2 | Training for 50 epochs
+15:43:03 | Episode: 2 | Updating target network...
+15:43:03 | Episode: 2 | Rewards:
+	Reward: [-829.   17. -832.   13.] | Avg Reward: [-412. -410. -408.] | Loss: 0.9417 | ε: 0.962 | LR: 4.73e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:43:03 | Episode: 2 | Running quick evaluation...
+15:43:32 | Episode: 3 | Steps done: 4500 | Gathering rollout (currently 4500)
+15:43:48 | Episode: 3 | Training for 50 epochs
+15:43:51 | Episode: 3 | Updating target network...
+15:43:51 | Episode: 3 | Rewards:
+	Reward: [-849.   18.   48. -840.] | Avg Reward: [-412. -410. -408. -405.] | Loss: 1.0638 | ε: 0.949 | LR: 4.52e-05
+	Metrics - ['frags: 0', 'hits: 7', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:43:51 | Episode: 3 | Running quick evaluation...
+15:44:20 | Episode: 4 | Steps done: 6000 | Gathering rollout (currently 6000)
+15:44:36 | Episode: 4 | Training for 50 epochs
+15:44:39 | Episode: 4 | Updating target network...
+15:44:39 | Episode: 4 | Rewards:
+	Reward: [-842. -842.   14.   18.] | Avg Reward: [-412. -410. -408. -405. -413.] | Loss: 0.9830 | ε: 0.937 | LR: 4.27e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:44:39 | Episode: 4 | Running quick evaluation...
+15:45:08 | Episode: 5 | Steps done: 7500 | Gathering rollout (currently 7500)
+15:45:24 | Episode: 5 | Training for 50 epochs
+15:45:27 | Episode: 5 | Updating target network...
+15:45:27 | Episode: 5 | Rewards:
+	Reward: [-832.   15.   18. -798.] | Avg Reward: [-412. -410. -408. -405. -413. -399.] | Loss: 0.9015 | ε: 0.924 | LR: 3.97e-05
+	Metrics - ['frags: 0', 'hits: 15', 'damage_taken: -3', 'movement: 5', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:45:27 | Episode: 5 | Running quick evaluation...
+15:45:56 | Episode: 6 | Steps done: 9000 | Gathering rollout (currently 9000)
+15:46:12 | Episode: 6 | Training for 50 epochs
+15:46:15 | Episode: 6 | Updating target network...
+15:46:15 | Episode: 6 | Rewards:
+	Reward: [-807. -834.   13.   13.] | Avg Reward: [-412. -410. -408. -405. -413. -399. -404.] | Loss: 1.0889 | ε: 0.912 | LR: 3.63e-05
+	Metrics - ['frags: 0', 'hits: 10', 'damage_taken: -2', 'movement: 5', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:46:15 | Episode: 6 | Running quick evaluation...
+15:46:43 | Episode: 7 | Steps done: 10500 | Gathering rollout (currently 10500)
+15:47:00 | Episode: 7 | Training for 50 epochs
+15:47:02 | Episode: 7 | Updating target network...
+15:47:02 | Episode: 7 | Rewards:
+	Reward: [-829. -844.   15.   26.] | Avg Reward: [-412. -410. -408. -405. -413. -399. -404. -408.] | Loss: 1.3047 | ε: 0.901 | LR: 3.27e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:47:02 | Episode: 7 | Running quick evaluation...
+15:47:31 | Episode: 8 | Steps done: 12000 | Gathering rollout (currently 12000)
+15:47:48 | Episode: 8 | Training for 50 epochs
+15:47:50 | Episode: 8 | Updating target network...
+15:47:50 | Episode: 8 | Rewards:
+	Reward: [-763.   13.   12. -850.] | Avg Reward: [-412. -410. -408. -405. -413. -399. -404. -408. -397.] | Loss: 1.0933 | ε: 0.889 | LR: 2.89e-05
+	Metrics - ['frags: 0', 'hits: 17', 'damage_taken: -3', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:47:50 | Episode: 8 | Running quick evaluation...
+15:48:19 | Episode: 9 | Steps done: 13500 | Gathering rollout (currently 13500)
+15:48:36 | Episode: 9 | Training for 50 epochs
+15:48:39 | Episode: 9 | Updating target network...
+15:48:39 | Episode: 9 | Rewards:
+	Reward: [-829. -842.   11.   27.] | Avg Reward: [-412. -410. -408. -405. -413. -399. -404. -408. -397. -408.] | Loss: 1.0745 | ε: 0.877 | LR: 2.50e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:48:39 | Episode: 9 | Running quick evaluation...
+15:49:07 | Episode: 10 | Steps done: 15000 | Gathering rollout (currently 15000)
+15:49:24 | Episode: 10 | Training for 50 epochs
+15:49:27 | Episode: 10 | Updating target network...
+15:49:27 | Episode: 10 | Rewards:
+	Reward: [-843. -847.   17.   38.] | Avg Reward: [-410. -408. -405. -413. -399. -404. -408. -397. -408. -409.] | Loss: 1.2603 | ε: 0.866 | LR: 2.11e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:50:03 | Episode: 10 | Running quick evaluation...
+15:50:31 | Episode: 11 | Steps done: 16500 | Gathering rollout (currently 16500)
+15:50:49 | Episode: 11 | Training for 50 epochs
+15:50:52 | Episode: 11 | Updating target network...
+15:50:52 | Episode: 11 | Rewards:
+	Reward: [-840. -810.    8.   17.] | Avg Reward: [-408. -405. -413. -399. -404. -408. -397. -408. -409. -406.] | Loss: 1.3928 | ε: 0.855 | LR: 1.73e-05
+	Metrics - ['frags: 0', 'hits: 7', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:50:52 | Episode: 11 | Running quick evaluation...
+15:51:20 | Episode: 12 | Steps done: 18000 | Gathering rollout (currently 18000)
+15:51:38 | Episode: 12 | Training for 50 epochs
+15:51:40 | Episode: 12 | Updating target network...
+15:51:40 | Episode: 12 | Rewards:
+	Reward: [-839.   11. -778.   17.] | Avg Reward: [-405. -413. -399. -404. -408. -397. -408. -409. -406. -397.] | Loss: 1.2630 | ε: 0.844 | LR: 1.37e-05
+	Metrics - ['frags: 0', 'hits: 17', 'damage_taken: -3', 'movement: 5', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:51:40 | Episode: 12 | Running quick evaluation...
+15:52:10 | Episode: 13 | Steps done: 19500 | Gathering rollout (currently 19500)
+15:52:27 | Episode: 13 | Training for 50 epochs
+15:52:30 | Episode: 13 | Updating target network...
+15:52:30 | Episode: 13 | Rewards:
+	Reward: [-807. -831.   13.   11.] | Avg Reward: [-413. -399. -404. -408. -397. -408. -409. -406. -397. -404.] | Loss: 1.0531 | ε: 0.833 | LR: 1.03e-05
+	Metrics - ['frags: 0', 'hits: 10', 'damage_taken: -2', 'movement: 5', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:52:30 | Episode: 13 | Running quick evaluation...
+15:52:59 | Episode: 14 | Steps done: 21000 | Gathering rollout (currently 20000)
+15:53:16 | Episode: 14 | Training for 50 epochs
+15:53:19 | Episode: 14 | Updating target network...
+15:53:19 | Episode: 14 | Rewards:
+	Reward: [-819. -815.    9.   17.] | Avg Reward: [-399. -404. -408. -397. -408. -409. -406. -397. -404. -402.] | Loss: 1.0544 | ε: 0.822 | LR: 7.32e-06
+	Metrics - ['frags: 0', 'hits: 12', 'damage_taken: -2', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:53:19 | Episode: 14 | Running quick evaluation...
+15:53:48 | Episode: 15 | Steps done: 22500 | Gathering rollout (currently 20000)
+15:54:05 | Episode: 15 | Training for 50 epochs
+15:54:08 | Episode: 15 | Updating target network...
+15:54:08 | Episode: 15 | Rewards:
+	Reward: [-840.   12.   18. -832.] | Avg Reward: [-404. -408. -397. -408. -409. -406. -397. -404. -402. -411.] | Loss: 0.9147 | ε: 0.811 | LR: 4.77e-06
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:54:08 | Episode: 15 | Running quick evaluation...
+15:54:37 | Episode: 16 | Steps done: 24000 | Gathering rollout (currently 20000)
+15:54:54 | Episode: 16 | Training for 50 epochs
+15:54:57 | Episode: 16 | Updating target network...
+15:54:57 | Episode: 16 | Rewards:
+	Reward: [-841.   15.   17. -843.] | Avg Reward: [-408. -397. -408. -409. -406. -397. -404. -402. -411. -413.] | Loss: 1.1065 | ε: 0.801 | LR: 2.72e-06
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:54:57 | Episode: 16 | Running quick evaluation...
+15:55:25 | Episode: 17 | Steps done: 25500 | Gathering rollout (currently 20000)
+15:55:43 | Episode: 17 | Training for 50 epochs
+15:55:46 | Episode: 17 | Updating target network...
+15:55:46 | Episode: 17 | Rewards:
+	Reward: [-840.   28. -843.   11.] | Avg Reward: [-397. -408. -409. -406. -397. -404. -402. -411. -413. -411.] | Loss: 1.1234 | ε: 0.790 | LR: 1.22e-06
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:55:46 | Episode: 17 | Running quick evaluation...
+15:56:14 | Episode: 18 | Steps done: 27000 | Gathering rollout (currently 20000)
+15:56:32 | Episode: 18 | Training for 50 epochs
+15:56:35 | Episode: 18 | Updating target network...
+15:56:35 | Episode: 18 | Rewards:
+	Reward: [-841. -844.   17.   25.] | Avg Reward: [-408. -409. -406. -397. -404. -402. -411. -413. -411. -411.] | Loss: 0.9993 | ε: 0.780 | LR: 3.08e-07
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:56:35 | Episode: 18 | Running quick evaluation...
+15:57:03 | Episode: 19 | Steps done: 28500 | Gathering rollout (currently 20000)
+15:57:21 | Episode: 19 | Training for 50 epochs
+15:57:24 | Episode: 19 | Updating target network...
+15:57:24 | Episode: 19 | Rewards:
+	Reward: [-840.   14. -743. -857.] | Avg Reward: [-409. -406. -397. -404. -402. -411. -413. -411. -411. -607.] | Loss: 1.3885 | ε: 0.770 | LR: 5.00e-05
+	Metrics - ['frags: 25', 'hits: 0', 'damage_taken: 0', 'movement: 6', 'ammo_efficiency: 0', 'survival: -639', 'health_pickup: 1']
+15:57:24 | Episode: 19 | Running quick evaluation...
+15:57:52 | Episode: 20 | Steps done: 30000 | Gathering rollout (currently 20000)
+15:58:09 | Episode: 20 | Training for 50 epochs
+15:58:12 | Episode: 20 | Updating target network...
+15:58:12 | Episode: 20 | Rewards:
+	Reward: [-829.   14.   16. -845.] | Avg Reward: [-406. -397. -404. -402. -411. -413. -411. -411. -607. -411.] | Loss: 1.2105 | ε: 0.760 | LR: 4.97e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+15:58:48 | Episode: 20 | Running quick evaluation...
+15:59:17 | Episode: 21 | Steps done: 31500 | Gathering rollout (currently 20000)
+15:59:35 | Episode: 21 | Training for 50 epochs
+15:59:38 | Episode: 21 | Updating target network...
+15:59:38 | Episode: 21 | Rewards:
+	Reward: [-840.    6.   17. -800.] | Avg Reward: [-397. -404. -402. -411. -413. -411. -411. -607. -411. -404.] | Loss: 1.4056 | ε: 0.750 | LR: 4.88e-05
+	Metrics - ['frags: 0', 'hits: 10', 'damage_taken: -2', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+15:59:38 | Episode: 21 | Running quick evaluation...
+16:00:06 | Episode: 22 | Steps done: 33000 | Gathering rollout (currently 20000)
+16:00:25 | Episode: 22 | Training for 50 epochs
+16:00:28 | Episode: 22 | Updating target network...
+16:00:28 | Episode: 22 | Rewards:
+	Reward: [-786.   14. -853.   17.] | Avg Reward: [-404. -402. -411. -413. -411. -411. -607. -411. -404. -402.] | Loss: 1.2175 | ε: 0.740 | LR: 4.73e-05
+	Metrics - ['frags: 0', 'hits: 12', 'damage_taken: -2', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+16:00:28 | Episode: 22 | Running quick evaluation...
+16:00:57 | Episode: 23 | Steps done: 34500 | Gathering rollout (currently 20000)
+16:01:15 | Episode: 23 | Training for 50 epochs
+16:01:18 | Episode: 23 | Updating target network...
+16:01:18 | Episode: 23 | Rewards:
+	Reward: [-840. -742. -861.   17.] | Avg Reward: [-402. -411. -413. -411. -411. -607. -411. -404. -402. -607.] | Loss: 1.4082 | ε: 0.730 | LR: 4.52e-05
+	Metrics - ['frags: 25', 'hits: 0', 'damage_taken: 0', 'movement: 6', 'ammo_efficiency: 0', 'survival: -639', 'health_pickup: 1']
+16:01:18 | Episode: 23 | Running quick evaluation...
+16:01:47 | Episode: 24 | Steps done: 36000 | Gathering rollout (currently 20000)
+16:02:05 | Episode: 24 | Training for 50 epochs
+16:02:08 | Episode: 24 | Updating target network...
+16:02:08 | Episode: 24 | Rewards:
+	Reward: [-829.   14.   15. -843.] | Avg Reward: [-411. -413. -411. -411. -607. -411. -404. -402. -607. -411.] | Loss: 0.9978 | ε: 0.721 | LR: 4.27e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:02:08 | Episode: 24 | Running quick evaluation...
+16:02:36 | Episode: 25 | Steps done: 37500 | Gathering rollout (currently 20000)
+16:02:55 | Episode: 25 | Training for 50 epochs
+16:02:58 | Episode: 25 | Updating target network...
+16:02:58 | Episode: 25 | Rewards:
+	Reward: [-819.   11. -842.   14.] | Avg Reward: [-413. -411. -411. -607. -411. -404. -402. -607. -411. -409.] | Loss: 0.8778 | ε: 0.712 | LR: 3.97e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:02:58 | Episode: 25 | Running quick evaluation...
+16:03:27 | Episode: 26 | Steps done: 39000 | Gathering rollout (currently 20000)
+16:03:45 | Episode: 26 | Training for 50 epochs
+16:03:48 | Episode: 26 | Updating target network...
+16:03:48 | Episode: 26 | Rewards:
+	Reward: [-840.   16. -871. -811.] | Avg Reward: [-411. -411. -607. -411. -404. -402. -607. -411. -409. -626.] | Loss: 0.8303 | ε: 0.702 | LR: 3.63e-05
+	Metrics - ['frags: 0', 'hits: 7', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -639', 'health_pickup: 1']
+16:03:48 | Episode: 26 | Running quick evaluation...
+16:04:17 | Episode: 27 | Steps done: 40500 | Gathering rollout (currently 20000)
+16:04:36 | Episode: 27 | Training for 50 epochs
+16:04:39 | Episode: 27 | Updating target network...
+16:04:39 | Episode: 27 | Rewards:
+	Reward: [-752. -847. -878.   17.] | Avg Reward: [-411. -607. -411. -404. -402. -607. -411. -409. -626. -615.] | Loss: 1.6952 | ε: 0.693 | LR: 3.27e-05
+	Metrics - ['frags: 0', 'hits: 20', 'damage_taken: -4', 'movement: 4', 'ammo_efficiency: 2', 'survival: -639', 'health_pickup: 1']
+16:04:39 | Episode: 27 | Running quick evaluation...
+16:05:07 | Episode: 28 | Steps done: 42000 | Gathering rollout (currently 20000)
+16:05:26 | Episode: 28 | Training for 50 epochs
+16:05:29 | Episode: 28 | Updating target network...
+16:05:29 | Episode: 28 | Rewards:
+	Reward: [-840.   38.   10. -842.] | Avg Reward: [-607. -411. -404. -402. -607. -411. -409. -626. -615. -409.] | Loss: 1.2327 | ε: 0.684 | LR: 2.89e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:05:29 | Episode: 28 | Running quick evaluation...
+16:05:58 | Episode: 29 | Steps done: 43500 | Gathering rollout (currently 20000)
+16:06:16 | Episode: 29 | Training for 50 epochs
+16:06:19 | Episode: 29 | Updating target network...
+16:06:19 | Episode: 29 | Rewards:
+	Reward: [-818.   24. -842.   11.] | Avg Reward: [-411. -404. -402. -607. -411. -409. -626. -615. -409. -406.] | Loss: 1.2429 | ε: 0.675 | LR: 2.50e-05
+	Metrics - ['frags: 0', 'hits: 7', 'damage_taken: -1', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:06:19 | Episode: 29 | Running quick evaluation...
+16:06:48 | Episode: 30 | Steps done: 45000 | Gathering rollout (currently 20000)
+16:07:07 | Episode: 30 | Training for 50 epochs
+16:07:10 | Episode: 30 | Updating target network...
+16:07:10 | Episode: 30 | Rewards:
+	Reward: [-841.   15. -831.   13.] | Avg Reward: [-404. -402. -607. -411. -409. -626. -615. -409. -406. -411.] | Loss: 1.5029 | ε: 0.667 | LR: 2.11e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:07:46 | Episode: 30 | Running quick evaluation...
+16:08:14 | Episode: 31 | Steps done: 46500 | Gathering rollout (currently 20000)
+16:08:33 | Episode: 31 | Training for 50 epochs
+16:08:36 | Episode: 31 | Updating target network...
+16:08:36 | Episode: 31 | Rewards:
+	Reward: [-840. -799. -847.   51.] | Avg Reward: [-402. -607. -411. -409. -626. -615. -409. -406. -411. -609.] | Loss: 1.2592 | ε: 0.658 | LR: 1.73e-05
+	Metrics - ['frags: 0', 'hits: 27', 'damage_taken: -5', 'movement: 4', 'ammo_efficiency: 3', 'survival: -639', 'health_pickup: 1']
+16:08:36 | Episode: 31 | Running quick evaluation...
+16:09:06 | Episode: 32 | Steps done: 48000 | Gathering rollout (currently 20000)
+16:09:24 | Episode: 32 | Training for 50 epochs
+16:09:27 | Episode: 32 | Updating target network...
+16:09:27 | Episode: 32 | Rewards:
+	Reward: [-824.    9. -843.   38.] | Avg Reward: [-607. -411. -409. -626. -615. -409. -406. -411. -609. -405.] | Loss: 0.8534 | ε: 0.649 | LR: 1.37e-05
+	Metrics - ['frags: 0', 'hits: 10', 'damage_taken: -2', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+16:09:27 | Episode: 32 | Running quick evaluation...
+16:09:56 | Episode: 33 | Steps done: 49500 | Gathering rollout (currently 20000)
+16:10:16 | Episode: 33 | Training for 50 epochs
+16:10:19 | Episode: 33 | Updating target network...
+16:10:19 | Episode: 33 | Rewards:
+	Reward: [-844.   14. -843.   17.] | Avg Reward: [-411. -409. -626. -615. -409. -406. -411. -609. -405. -414.] | Loss: 1.3895 | ε: 0.641 | LR: 1.03e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:10:19 | Episode: 33 | Running quick evaluation...
+16:10:47 | Episode: 34 | Steps done: 51000 | Gathering rollout (currently 20000)
+16:11:06 | Episode: 34 | Training for 50 epochs
+16:11:09 | Episode: 34 | Updating target network...
+16:11:09 | Episode: 34 | Rewards:
+	Reward: [-840.   14. -842.   17.] | Avg Reward: [-409. -626. -615. -409. -406. -411. -609. -405. -414. -413.] | Loss: 1.1442 | ε: 0.633 | LR: 7.32e-06
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 5', 'ammo_efficiency: 0', 'survival: -419', 'health_pickup: 1']
+16:11:09 | Episode: 34 | Running quick evaluation...
+16:11:38 | Episode: 35 | Steps done: 52500 | Gathering rollout (currently 20000)
+16:11:57 | Episode: 35 | Training for 50 epochs
+16:12:00 | Episode: 35 | Updating target network...
+16:12:00 | Episode: 35 | Rewards:
+	Reward: [-840.   14. -743. -857.] | Avg Reward: [-626. -615. -409. -406. -411. -609. -405. -414. -413. -607.] | Loss: 1.1431 | ε: 0.624 | LR: 4.77e-06
+	Metrics - ['frags: 25', 'hits: 0', 'damage_taken: 0', 'movement: 6', 'ammo_efficiency: 0', 'survival: -639', 'health_pickup: 1']
+16:12:00 | Episode: 35 | Running quick evaluation...
+16:12:29 | Episode: 36 | Steps done: 54000 | Gathering rollout (currently 20000)
+16:12:48 | Episode: 36 | Training for 50 epochs
+16:12:51 | Episode: 36 | Updating target network...
+16:12:51 | Episode: 36 | Rewards:
+	Reward: [-796.    9. -844.   15.] | Avg Reward: [-615. -409. -406. -411. -609. -405. -414. -413. -607. -404.] | Loss: 1.0968 | ε: 0.616 | LR: 2.72e-06
+	Metrics - ['frags: 0', 'hits: 10', 'damage_taken: -2', 'movement: 4', 'ammo_efficiency: 1', 'survival: -419', 'health_pickup: 1']
+16:12:51 | Episode: 36 | Running quick evaluation...
+16:13:20 | Episode: 37 | Steps done: 55500 | Gathering rollout (currently 20000)
+16:23:45 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)

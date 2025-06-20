@@ -89,10 +89,10 @@ class Parallel(nn.Module):
         if not isinstance(modules, dict):
             raise ValueError("Modules are not dicts!")
         
-        self.modules = modules
+        self.model = nn.ModuleDict(modules) # Otherwise modeules are not registered correctly
 
     def forward(self, inputs: dict[str, torch.Tensor]):
-        return [module(inputs[name]) for name, module in self.modules.items()]
+        return [module(inputs[name]) for name, module in self.model.items()]
     
 
 
@@ -230,7 +230,7 @@ def epsilon_greedy_multi_buffer(env, model: nn.Module, obs: torch.Tensor, epsilo
         return env.action_space.sample() # Single value or tuple
 
     elif num_players == 1:
-        obs = obs[0]
+        #obs = obs[0]
         
         model.eval()
         with torch.no_grad():
@@ -313,11 +313,10 @@ def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", 
     # Random Player
     player_idx = np.random.randint(0, len(replays))
     player_name = list(replays.keys())[player_idx]
-
     one_player_replay = {player_name: replays.get(player_name)}
 
     if store:
-        path = os.path.join(path, f"{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_{eval_reward:.0f}.mp4")
+        path = os.path.join(path, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{eval_reward:.0f}.mp4")
         render_episode(one_player_replay, subsample=5, replay_path=path)
     else:
         HTML(render_episode(one_player_replay, subsample=5).to_html5_video())
@@ -328,35 +327,44 @@ def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", 
 
 def plot_images(obs: torch.Tensor, state_dims: dict):
     
+    num_plots = len(state_dims)
+    
     obs_processed = process_observation(obs, state_dims, device="cpu", permute=True)
     
-    plt.subplot(141)
-    plt.imshow(obs_processed.get("screen"))
-    plt.axis("off")
-    plt.title("Screen")
+    last_plot = 1
+    
+    if state_dims.get("screen") is not None:
+        plt.subplot(100 + 10*num_plots + last_plot)
+        plt.imshow(obs_processed.get("screen"))
+        plt.axis("off")
+        plt.title("Screen")
+        last_plot += 1
 
     # Labels 
-    plt.subplot(142)
-    plt.imshow(obs_processed.get("labels"), vmin=0, vmax=1)
-    plt.axis("off")
-    plt.title("Labels")
-    
-    # Get unique values and their counts
-    # unique, counts = torch.unique(obs_processed["labels"], return_counts=True)
-    # table_data = list(zip(unique.tolist(), counts.tolist()))
+    if state_dims.get("labels") is not None:
+        plt.subplot(100 + 10*num_plots + last_plot)
+        plt.imshow(obs_processed.get("labels"), vmin=0, vmax=1)
+        plt.axis("off")
+        plt.title("Labels")
+        last_plot += 1
     
     # Depth
-    plt.subplot(143)
-    plt.imshow(obs_processed.get("depth"))
-    plt.axis("off")
-    plt.title("Depth")
+    if state_dims.get("depth") is not None:
+        plt.subplot(100 + 10*num_plots + last_plot)
+        plt.imshow(obs_processed.get("depth"))
+        plt.axis("off")
+        plt.title("Depth")
+        last_plot += 1
+
 
 
     # Automap
-    plt.subplot(144)
-    plt.imshow(obs_processed.get("automap"))
-    plt.axis("off")
-    plt.title("Automap")
+    if state_dims.get("automap") is not None:
+        plt.subplot(100 + 10*num_plots + last_plot)
+        plt.imshow(obs_processed.get("automap"))
+        plt.axis("off")
+        plt.title("Automap")
+        
 
     
     plt.tight_layout()
@@ -389,12 +397,18 @@ def get_avg_reward(reward_history: dict, episodes: int = 1, player_idx: int=-1, 
         np.ndarray: Average rewards as an array
     """
     df_rwds = pd.DataFrame.from_dict(reward_history)
-
-    if player_idx == -1: # all players
-        avg_reward = df_rwds.mean(axis=1)
-    else:
-        avg_reward = df_rwds.iloc[:, player_idx]
+    
+    if player_idx == -1:
+        df_rwds = df_rwds.mean(axis=1) # Mean over columns
         
-    return np.round(avg_reward[-episodes:].to_numpy(), round)
+    else:
+        df_rwds = df_rwds.iloc[:, player_idx]
+        
+    if episodes > 1:
+        df_rwds = df_rwds[-episodes:].mean(axis=0) # Mean over columns
+    else:
+        df_rwds = df_rwds.iloc[episodes]
+        
+    return np.round(df_rwds, round)
         
     

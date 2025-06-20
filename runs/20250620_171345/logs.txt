@@ -1,0 +1,3 @@
+LOGGER INITIALIZED AT 20250620-171345
+17:13:46 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+17:13:58 | Episode: 0 | Training for 50 epochs
