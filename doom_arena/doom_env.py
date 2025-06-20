@@ -180,9 +180,7 @@ class PlayerEnv(Env):
         if self.discrete7:
             num_configured_buttons = len(self._buttons)
             processed_action = [0] * num_configured_buttons
-            if (
-                action > 0
-            ):  # action is 1-indexed from Discrete(num_buttons+1) space; 0 is no-op.
+            if (action > 0):  # action is 1-indexed from Discrete(num_buttons+1) space; 0 is no-op.
                 # Valid button actions are 1 to num_configured_buttons.
                 button_index = action - 1
                 if (
@@ -383,6 +381,7 @@ class VizdoomMPEnv(Env):
         hud: Sequence[str] = "full",
         screen_format: Union[int, Sequence[int]] = 0,
         seed: Sequence[int] = 1337,
+        ticrate: int = 35
     ):
         if config_path == "doom_arena/scenarios/jku.cfg":
             assert doom_map in ["TRNM", "TRNMBIG", "ROOM"]
@@ -414,20 +413,18 @@ class VizdoomMPEnv(Env):
                 extra_state = [extra_state] * num_players
 
         # other configs
-        if not isinstance(n_stack_frames, Sequence):
+        if not isinstance(n_stack_frames, (Sequence, list, np.ndarray)):
             n_stack_frames = [n_stack_frames] * num_players
-        if not isinstance(crosshair, Sequence):
+        if not isinstance(crosshair, (Sequence, list, np.ndarray)):
             crosshair = [crosshair] * num_players
-        if not isinstance(hud, Sequence) or not isinstance(hud, list):
+        if not isinstance(hud, (Sequence, list, np.ndarray)):
             hud = [hud] * num_players
-        if not isinstance(screen_format, Sequence):
+        if not isinstance(screen_format, (Sequence, list, np.ndarray)):
             screen_format = [screen_format] * num_players
-            
-        # Added sequence of seeds
-        if not isinstance(seed, Sequence):
+        if not isinstance(seed, (Sequence, list, np.ndarray)):
             seed = [seed] * num_players
         
-        print(f"Instance of HUD: {type(hud)}-{hud}, SEED: {type(seed)}-{seed}")
+        print("Environment Seed:", seed)
         
         # select empty port for multiplayer
         self.port = pick_unused_port()
@@ -445,7 +442,7 @@ class VizdoomMPEnv(Env):
             cfg.player_mode = vzd.Mode.PLAYER
             cfg.screen_resolution = vzd.ScreenResolution.RES_256X192
             cfg.screen_format = vzd.ScreenFormat(screen_format[i])
-            cfg.ticrate = 35
+            cfg.ticrate = ticrate
             cfg.crosshair = crosshair[i]
             cfg.respawns = True
             cfg.hud = hud[i]
@@ -468,7 +465,9 @@ class VizdoomMPEnv(Env):
             else:
                 cfg.join_cfg = self.join_cfg
                 cfg.name = f"P{i}"
-                cfg.num_bots = num_bots
+                #cfg.num_bots = num_bots
+                # Clients should not manage bots; host handles bot setup.
+                cfg.num_bots = 0
 
             self.players_cfg.append(cfg)
 

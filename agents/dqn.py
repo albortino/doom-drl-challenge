@@ -2,48 +2,95 @@
 
 import torch
 import torch.nn as nn
-from einops import rearrange
-from gym import Env
 from collections import OrderedDict
 import os
 import random
 from typing import Dict
-from agents.utils import ResidualBlock, Downsample, Parallel, process_observation
-from agents.my_modules import *
+from agents.modules import ResidualBlock, Downsample, Parallel, OwnModule
 
-@torch.no_grad
-def epsilon_greedy(
-    env: Env,
-    model: nn.Module,
-    obs: torch.Tensor,
-    epsilon: float,
-    device: torch.device,
-    dtype: torch.dtype,
-    state_dims: dict,
-):
-    if random.random() < epsilon:
-        return env.action_space.sample()
-    else:
-        #obs = obs.to(device, dtype=dtype).unsqueeze(0)
-        processed_obs = process_observation(obs, state_dims, device, dtype)
-        for key in processed_obs:
-                processed_obs[key] = processed_obs[key].unsqueeze(0)
+@torch.no_grad()
+def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype = torch.float32, permute: bool = False) -> Dict[str, torch.Tensor]:
+    """Process multi-buffer observation from environment, for training and for plotting. Returns a dictionary with the state as key and data as value. """
+    
+    if isinstance(obs, torch.Tensor) and obs.size()[1] > 1:
         
-        return model(processed_obs).argmax().item()
+        state_dim_idx = obs.ndim - 1 if permute else obs.ndim - 3 # if permute last channel, regular case: channel 0 if 3 dimensions, otherwise channel 1 as 0 is batches.
+        
+        # Put state channel at the end for plotting (color detection)
+        if permute and obs.ndim == 3:
+            obs = obs.permute(1,2,0)
+            
+        elif permute and obs.ndim == 4:
+            obs = obs.permute(0,2,3,1)
+        
+        obs = obs.to(device, dtype=dtype)
+        obs_states = obs.split(list(state_dims.values()), dim=state_dim_idx)
+        obs_processed = dict(zip(state_dims.keys(), obs_states))
+        return obs_processed
+        
+    else:
+        # Single observation case
+        return {'screen': obs.to(device, dtype=dtype)}
 
 
 @torch.no_grad()
-def update_ema(ema_model, model, decay: float = 0.995):
-    """Exponential moving average model updates."""
-    ema_params = OrderedDict(ema_model.named_parameters())
-    if hasattr(model, "module"):
-        model_params = OrderedDict(model.module.named_parameters())
-    else:
-        model_params = OrderedDict(model.named_parameters())
+def epsilon_greedy(env, model: nn.Module, obs: torch.Tensor, epsilon: float, device: str, state_dims: dict, dtype = torch.float32):
+    """Epsilon-greedy action selection for multi-buffer observations"""
 
-    for name, param in model_params.items():
-        ema_params[name].mul_(decay).add_(param.data, alpha=1 - decay)
-        
+    num_players = env.num_players
+    
+    if random.random() < epsilon:
+        return env.action_space.sample() # Single value or tuple
+
+    # elif num_players == 1:
+    #     model.eval()
+    #     with torch.no_grad():
+    #         obs_batch = torch.stack(obs)
+    #         processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
+    #         # Add batch dimension
+    #         for key in processed_obs:
+    #             processed_obs[key] = processed_obs[key].unsqueeze(0)
+    #         q_values = model(processed_obs)
+    #         return q_values.argmax().item()
+    
+    model.eval()
+    obs_batch = torch.stack(obs)
+    processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
+    q_values = model(processed_obs)
+    
+    if num_players == 1:
+        return q_values.argmax().item()
+    else:
+        return q_values.argmax(dim=1).tolist() # return list of actions
+
+def hard_update_target_network(target_net, main_net):
+    """Hard update of target network"""
+    target_net.load_state_dict(main_net.state_dict())
+    
+    
+    # Update Target network
+def soft_update_target_network(local_model: nn.Module, target_model: nn.Module, tau: float):
+    """Soft update model parameters.
+    θ_target = τ*θ_local + (1 - τ)*θ_target
+    Params
+    ======
+        local_model (PyTorch model): weights will be copied from
+        target_model (PyTorch model): weights will be copied to
+        tau (float): interpolation parameter
+    """
+    # TODO: Update target network
+    
+    # Store current state dicts
+    local_state_dict = local_model.state_dict()
+    target_state_dict = target_model.state_dict()
+    
+    # Iterate over the modules and soft update the target state dict with parameter tau
+    for module in local_state_dict.keys():
+        target_state_dict[module] = local_state_dict[module] * tau + target_state_dict[module] * (1 - tau)
+    
+    # Load the soft updated values
+    target_model.load_state_dict(target_state_dict)
+    
 
 class EfficientDQN(OwnModule):
     """
@@ -103,38 +150,6 @@ class EfficientDQN(OwnModule):
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
         
         print(f"Initialized model with {params_encoder + params_head_first + params_advantage_head + params_value_head} parameters!")
-        
-    def _build_encoder_old(self, input_channels: int) -> nn.Module:
-        """Build CNN encoder for visual input"""
-        
-        first_channel_out = 16 if input_channels == 3 else 4
-        
-        return nn.Sequential(
-            # Initial convolution
-            nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            #nn.BatchNorm2d(32),
-            self.phi, # Output [N, C=16/4, WH=32]
-            
-            nn.Conv2d(first_channel_out, first_channel_out * 2, 4, stride=2, padding=1), # [N, C, 16]
-            self.phi,
-            
-            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 2, stride=2, padding=0), # [N, C, 8]
-            self.phi,
-
-            DepthwiseConvBlock(first_channel_out * 4, phi=self.phi, kernel_size=2), # returns c
-            PointwiseConvBlock(first_channel_out * 4, out_channels=first_channel_out * 4//self.r, phi=self.phi), # returns c//r
-            
-            SqueezeExcitationBlock(first_channel_out*4//self.r, init_weights=False),
-            
-            # Global average pooling -> one pixel per channel
-            nn.AdaptiveAvgPool2d(1),
-            nn.Flatten(),
-            
-            # Output projection
-            nn.Linear(first_channel_out*4//self.r, self.feature_dim_cnns),
-            self.phi
-        )
-
     
     def _build_encoder(self, input_channels: int) -> nn.Module:
         """Build CNN encoder with residual blocks for visual input"""
@@ -147,20 +162,20 @@ class EfficientDQN(OwnModule):
             self.phi,  # Output [N, C=16/4, WH=32]
             
             # First residual stage
-            ResidualBlock(space=2, dim=first_channel_out, act_fn=type(self.phi), depth=1),
+            ResidualBlock(space=2, dim=first_channel_out, act_fn=self.phi, depth=1),
             Downsample(space=2, dim=first_channel_out, downsample=2),  # [N, C, 16]
             
             # Second residual stage - double channels
             nn.Conv2d(first_channel_out, first_channel_out * 2, 1, bias=False),
-            ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=type(self.phi), depth=1),
+            ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=self.phi, depth=1),
             Downsample(space=2, dim=first_channel_out * 2, downsample=2),  # [N, 2C, 8]
             
             # Third residual stage - double channels again, with kernel
             nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 3, bias=False),
-            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=2), # [N, 4C, 6]
+            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=self.phi, depth=2), # [N, 4C, 6]
             
             # Channel reduction with residual connection
-            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=1),
+            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=self.phi, depth=1),
             
             # Final spatial reduction and channel adjustment
             nn.Conv2d(first_channel_out * 4, first_channel_out * 2, 3, stride=3, padding=1), # [N, C, 2]
@@ -182,18 +197,12 @@ class EfficientDQN(OwnModule):
         
         Args:
             observations: Tensor for "screen", "depth", "labels", "automap"
-        """
-        features = []
-                
+        """                
         # Encode each visual buffer
         features = self.encoder(observations)
         
-        # Stack features for attention
-        if len(features) > 1:
-            fused_features = torch.cat(features, dim=1)  # (batch, feature_dim * num_buffers)
-        
-        else:
-            fused_features = features[0]
+        #if len(features) > 1:
+        fused_features = torch.cat(features, dim=1)  # (batch, feature_dim * num_buffers)
         
         head_logits = self.head_first(fused_features)
         
@@ -237,8 +246,6 @@ class EfficientDQN(OwnModule):
         except Exception as e:
             print(f"Failed to store the model: {e}")
         
-        except Exception as e:
-            print(f"Failed to store the model: {e}")
     
     @classmethod  
     def load_model(cls, path: str = ""):
