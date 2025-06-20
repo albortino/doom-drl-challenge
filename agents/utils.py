@@ -10,6 +10,18 @@ import pandas as pd
 import contextlib
 from agents.dqn import epsilon_greedy
 
+def get_buttons(env) -> dict:
+    """ Returns a dictionary with the button key and description """
+    buttons = dict()
+
+    for player_env in env.envs:
+        for idx, button in enumerate(player_env.game.get_available_buttons()):
+            button_name = str(button).split(".")[1].split(":")[0].replace("_", " ")
+            button_val = idx + 1
+            
+            buttons[button_val] = button_name.title()
+            
+    return buttons
     
 def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", store: bool = False):
     # ----------------------------------------------------------------

@@ -5,6 +5,7 @@ from datetime import datetime
 import numpy as np
 from typing import Dict, Tuple
 from doom_arena.reward import VizDoomReward
+from collections import defaultdict
 
 class YourReward(VizDoomReward):
     def __init__(self, num_players: int):
@@ -20,7 +21,7 @@ class YourReward(VizDoomReward):
         * +100 for frags (kills)
         * +10 for hits
         * -2 for damage taken
-        * +2 for movement (exploration)
+        * +3 for movement (exploration)
         * +1 for ammo efficiency, +2 if ammo pickup
         * +0.05 survival bonus per step, -20 if dead
         * +2 if health pickup
@@ -48,8 +49,8 @@ class YourReward(VizDoomReward):
 
         # Combat reward from hits
         rwd_frag = 100.0 * (game_var["FRAGCOUNT"] - game_var_old["FRAGCOUNT"])
-        rwd_hit = 10.0 * (game_var["HITCOUNT"] - game_var_old["HITCOUNT"])
-        rwd_hit_taken = -2 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
+        rwd_hit = 15.0 * (game_var["HITCOUNT"] - game_var_old["HITCOUNT"])
+        rwd_hit_taken = -1 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
         
         # Movement reward
         pos_x = game_var.get("POSITION_X", 0)
@@ -58,7 +59,7 @@ class YourReward(VizDoomReward):
         pos_y_old = game_var_old.get("POSITION_Y", 0)
                 
         movement_dist = np.sqrt((pos_x - pos_x_old)**2 + (pos_y - pos_y_old)**2) # Euclidean distance
-        rwd_movement = 2 * min((movement_dist if movement_dist else -5e-2) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
+        rwd_movement = 3 * min((movement_dist if movement_dist else -5e-1) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
         
         # Ammo efficiency
         ammo_used = game_var_old.get("SELECTED_WEAPON_AMMO", 0) - game_var.get("SELECTED_WEAPON_AMMO", 0)
@@ -66,7 +67,7 @@ class YourReward(VizDoomReward):
         
         if ammo_used > 0: # Shots fired
             accuracy = hits_made / ammo_used
-            rwd_ammo_efficiency = 1.0 * accuracy
+            rwd_ammo_efficiency = 10.0 * accuracy
             
         elif ammo_used < 0: # Picked up ammunition
             rwd_ammo_efficiency = 2.0
@@ -75,13 +76,29 @@ class YourReward(VizDoomReward):
             rwd_ammo_efficiency = 0.0
             
         # Survival bonus
-        rwd_survival = 3e-2 if game_var["HEALTH"] > 0 else 0 #-20 # Moving AND surviving improves score slightly
+        rwd_survival = 1e-1 if game_var["HEALTH"] > 0 else -5.0 #-20 # Moving AND surviving improves score slightly
         
         # Bonus point if a reward is picked up
-        rwd_health_pickup = +2.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
+        rwd_health_pickup = +3.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
         
         return rwd_frag, rwd_hit, rwd_hit_taken, rwd_movement, rwd_ammo_efficiency, rwd_survival, rwd_health_pickup
     
+class ActionCounter:
+    """ Class to count the occurrences of each action. """
+    def __init__(self):
+        self.counts = defaultdict(int)
+
+    def add(self, action: int):
+        """ Increments the count for a given action. """
+        self.counts[action] += 1
+
+    def get_counts(self) -> Dict[int, int]:
+        """ Returns the current action counts. """
+        return dict(self.counts) # Return a regular dict
+
+    def reset(self):
+        """ Resets all action counts. """
+        self.counts.clear()
 
 class LossLogger():
     """ Class to log the losses during training or evaluation. """

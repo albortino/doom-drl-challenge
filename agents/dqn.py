@@ -7,6 +7,9 @@ import os
 import random
 from typing import Dict
 from agents.modules import ResidualBlock, Downsample, Parallel, OwnModule
+from agents.helpers import ActionCounter
+from agents.utils import get_buttons
+import numpy as np
 
 @torch.no_grad()
 def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype = torch.float32, permute: bool = False) -> Dict[str, torch.Tensor]:
@@ -34,14 +37,36 @@ def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype 
 
 
 @torch.no_grad()
-def epsilon_greedy(env, model: nn.Module, obs: torch.Tensor, epsilon: float, device: str, state_dims: dict, dtype = torch.float32):
+def epsilon_greedy(env, model: nn.Module, obs: torch.Tensor, epsilon: float, device: str, state_dims: dict, dtype = torch.float32, action_counter: ActionCounter = None, debug: bool = False):
     """Epsilon-greedy action selection for multi-buffer observations"""
 
+    possible_actions = get_buttons(env).keys()
     num_players = env.num_players
     
     if random.random() < epsilon:
-        return env.action_space.sample() # Single value or tuple
+       
+        action_weights = {
+            'Move Forward': 0.2,
+            'Attack': 0.2,
+            'Move Left': 0.1,
+            'Move Right': 0.1,
+            'Turn Left': 0.1,
+            'Turn Right': 0.1,
+            'Jump': 0.15}
 
+        # Calculate the probability of each action
+        action_weight_vals = np.array(list(action_weights.values()))
+        action_proba = action_weight_vals / action_weight_vals.sum()
+
+        # The action values (1-7)
+        action_vals = np.array(list(action_weights.keys()))
+        
+        # One different action per player
+        chosen_actions = [np.random.choice(action_vals, p=action_proba).item() for player in range(num_players)]
+
+        print("WITHIN EPSILON:", chosen_actions) if debug else None
+        
+    else:
     # elif num_players == 1:
     #     model.eval()
     #     with torch.no_grad():
@@ -53,15 +78,27 @@ def epsilon_greedy(env, model: nn.Module, obs: torch.Tensor, epsilon: float, dev
     #         q_values = model(processed_obs)
     #         return q_values.argmax().item()
     
-    model.eval()
-    obs_batch = torch.stack(obs)
-    processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
-    q_values = model(processed_obs)
-    
-    if num_players == 1:
-        return q_values.argmax().item()
-    else:
-        return q_values.argmax(dim=1).tolist() # return list of actions
+        model.eval()
+        obs_batch = torch.stack(obs)
+        processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
+        q_values = model(processed_obs)
+        
+        if num_players == 1:
+            chosen_actions = q_values.argmax().item()
+            print("DEBUG EPSILON NUM PLAYERS=1:", chosen_actions, q_values)  if debug else None
+        else:
+            chosen_actions = q_values.argmax(dim=1).tolist() # list of actions
+            print("DEBUG EPSILON NUM PLAYERS>1:", chosen_actions, q_values)  if debug else None
+
+
+    if action_counter:
+        if isinstance(chosen_actions, list):
+            for action in chosen_actions:
+                action_counter.add(action)
+        else: # single action
+            action_counter.add(chosen_actions)
+
+    return chosen_actions
 
 def hard_update_target_network(target_net, main_net):
     """Hard update of target network"""
