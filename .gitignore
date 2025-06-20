@@ -2,6 +2,7 @@ __pycache__
 _vizdoom
 .vscode
 _vizdoom.ini
+*.mp4
 
 # Python virtual environments
 .venv/
