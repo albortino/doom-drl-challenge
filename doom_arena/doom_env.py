@@ -382,7 +382,7 @@ class VizdoomMPEnv(Env):
         crosshair: Sequence[bool] = True,
         hud: Sequence[str] = "full",
         screen_format: Union[int, Sequence[int]] = 0,
-        seed: int = 1337,
+        seed: Sequence[int] = 1337,
     ):
         if config_path == "doom_arena/scenarios/jku.cfg":
             assert doom_map in ["TRNM", "TRNMBIG", "ROOM"]
@@ -418,10 +418,17 @@ class VizdoomMPEnv(Env):
             n_stack_frames = [n_stack_frames] * num_players
         if not isinstance(crosshair, Sequence):
             crosshair = [crosshair] * num_players
-        if not isinstance(hud, Sequence):
+        if not isinstance(hud, Sequence) or not isinstance(hud, list):
             hud = [hud] * num_players
         if not isinstance(screen_format, Sequence):
             screen_format = [screen_format] * num_players
+            
+        # Added sequence of seeds
+        if not isinstance(seed, Sequence):
+            seed = [seed] * num_players
+        
+        print(f"Instance of HUD: {type(hud)}-{hud}, SEED: {type(seed)}-{seed}")
+        
         # select empty port for multiplayer
         self.port = pick_unused_port()
         # host cfg
@@ -461,11 +468,13 @@ class VizdoomMPEnv(Env):
             else:
                 cfg.join_cfg = self.join_cfg
                 cfg.name = f"P{i}"
+                cfg.num_bots = num_bots
+
             self.players_cfg.append(cfg)
 
         self.envs = []
         for i, cfg in enumerate(self.players_cfg):
-            e = PlayerEnv(cfg, discrete7=discrete7, seed=seed)
+            e = PlayerEnv(cfg, discrete7=discrete7, seed=seed[i])
             self.envs.append(e)
 
         if len(self.envs) == 1:
@@ -478,6 +487,7 @@ class VizdoomMPEnv(Env):
 
         if reward_fn is None:
             reward_fn = VizDoomReward(num_players)
+            
         self.reward_fn = reward_fn
 
     def step(self, actions):

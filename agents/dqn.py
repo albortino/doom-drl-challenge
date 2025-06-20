@@ -53,7 +53,7 @@ class EfficientDQN(OwnModule):
     TODO
     """
     
-    def __init__(self, input_channels_dict: Dict[str, int], action_space: int, feature_dim_cnns: int = 64, hidden_dim_heads: int = 512, phi: nn.Module = nn.ELU()):
+    def __init__(self, input_channels_dict: Dict[str, int], action_space: int, feature_dim_cnns: int = 128, hidden_dim_heads: int = 1024, phi: nn.Module = nn.ELU()):
     
         super().__init__()
         
@@ -73,32 +73,49 @@ class EfficientDQN(OwnModule):
         self.labels_encoder = self._build_encoder(input_channels_dict.get("labels", 1))
         self.automap_encoder = self._build_encoder(input_channels_dict.get("automap", 3))
         
-        self.encoder = Parallel(self.screen_encoder, self.depth_encoder, self.labels_encoder, self.automap_encoder)
+        encoder_dict = {
+            "screen": self.screen_encoder,
+            "depth": self.depth_encoder,
+            "labels": self.labels_encoder,
+            "automap": self.automap_encoder
+        }
         
-        # Dueling network heads
-        self.value_head = nn.Sequential(
+        self.encoder = Parallel(encoder_dict)
+        
+        
+        self.head_first = nn.Sequential(
             nn.Linear(self.feature_dim_cnns * self.num_buffers, self.hidden_dim_heads),
             self.phi,
             nn.Dropout(0.3),
+        )
+        
+        # Dueling network heads
+        self.value_head = nn.Sequential(
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
             self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, 1) # one value prediction
+            nn.Dropout(0.2),
+            nn.Linear(self.hidden_dim_heads // 4, 32), # one value prediction
+            self.phi,
+            nn.Linear(32, 1) # one value prediction
+            
         )
         
         self.advantage_head = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns* self.num_buffers, self.hidden_dim_heads),
-            self.phi,
-            nn.Dropout(0.3),
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
+            nn.Dropout(0.2),
             self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, action_space) # one prediction per action
+            nn.Linear(self.hidden_dim_heads // 4, action_space * self.num_buffers),
+            self.phi,
+            nn.Linear(action_space * self.num_buffers, action_space) # one prediction per action
         )
         
+        
         params_encoder = sum(p.numel() for p in self.encoder.parameters() if p.requires_grad)
+        params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)
         params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
         
-        print(f"Initialized model with {params_encoder + params_advantage_head + params_value_head} parameters!")
+        print(f"Initialized model with {params_encoder + params_head_first + params_advantage_head + params_value_head} parameters!")
         
     def _build_encoder_old(self, input_channels: int) -> nn.Module:
         """Build CNN encoder for visual input"""
@@ -147,19 +164,19 @@ class EfficientDQN(OwnModule):
             Downsample(space=2, dim=first_channel_out, downsample=2),  # [N, C, 16]
             
             # Second residual stage - double channels
-            nn.Conv2d(first_channel_out, first_channel_out * 2, 1, bias=False),  # Channel expansion
+            nn.Conv2d(first_channel_out, first_channel_out * 2, 1, bias=False),
             ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=type(self.phi), depth=1),
             Downsample(space=2, dim=first_channel_out * 2, downsample=2),  # [N, 2C, 8]
             
-            # Third residual stage - double channels again
-            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 1, bias=False),  # Channel expansion
-            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=2),
+            # Third residual stage - double channels again, with kernel
+            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 3, bias=False),
+            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=2), # [N, 4C, 6]
             
             # Channel reduction with residual connection
             ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=type(self.phi), depth=1),
             
             # Final spatial reduction and channel adjustment
-            nn.Conv2d(first_channel_out * 4, first_channel_out, 3, stride=2, padding=1),
+            nn.Conv2d(first_channel_out * 4, first_channel_out * 2, 3, stride=3, padding=1), # [N, C, 2]
             self.phi,
             
             # Global average pooling -> one pixel per channel
@@ -167,7 +184,7 @@ class EfficientDQN(OwnModule):
             nn.Flatten(),
             
             # Output projection
-            nn.Linear(first_channel_out, self.feature_dim_cnns),
+            nn.Linear(first_channel_out * 2, self.feature_dim_cnns),
             self.phi
         )
     
@@ -191,9 +208,11 @@ class EfficientDQN(OwnModule):
         else:
             fused_features = features[0]
         
+        head_logits = self.head_first(fused_features)
+        
         # Dueling network computation
-        value = self.value_head(fused_features)
-        advantage = self.advantage_head(fused_features)
+        value = self.value_head(head_logits)
+        advantage = self.advantage_head(head_logits)
         
         # Combine value and advantage
         q_values = value + advantage - advantage.mean(dim=1, keepdim=True)

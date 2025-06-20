@@ -7,15 +7,88 @@ from collections import OrderedDict
 import math
 import random
 
+import numpy as np
+
 from datetime import datetime
 
 from doom_arena.render import render_episode
 from IPython.display import HTML
 import os
 
+    
+from matplotlib import pyplot as plt
+from matplotlib.table import Table
+
+import pandas as pd
+
+
+
+        
+class LossLogger():
+    """ Class to log the losses during training or evaluation. """
+    def __init__(self):
+        self.all_losses = list()
+        self.loss: float = 0.0
+        self.num_batches: int = 0
+        
+    def add(self, loss: torch.Tensor):
+        """ Adds the loss tensor. """
+        self.loss += loss.detach().item()
+        self.num_batches += 1
+
+    def get_loss(self)-> float:
+        """ Returns the average loss as float. """
+        if self.num_batches > 0:
+            return self.loss / self.num_batches
+        else:
+            return 0.0
+        
+    def reset_on_epoch(self):
+        """ Resets the losses after an epoch. """
+        if self.num_batches > 0:
+            self.all_losses.append(self.get_loss())
+            self.loss = 0.0
+            self.num_batches = 0
+
+
+class FileLogger():
+    def __init__(self, path: str, filename: str = "logs.txt", also_print: bool = False):
+        """ Initialize a logger class that logs the messages to a file but is also capable of printing it.
+
+        Args:
+            path (str): Path to store the log file
+            also_print (bool, optional): Whether every log should also be printed (Tipp: self.log() allows for one-time printing, too!). Defaults to False.
+        """
+        self.path = path
+        self.filename = filename
+        self.also_print = also_print
+        
+        self.file_path = os.path.join(self.path, self.filename)
+        
+        self.create_log_file()
+    
+    def create_log_file(self):
+        # Ensure the directory exists
+        if not os.path.exists(self.path):
+            os.makedirs(self.path, exist_ok=True)
+            
+        with open(self.file_path, "w") as f:
+            f.write(F"LOGGER INITIALIZED AT {datetime.now().strftime("%Y%m%d-%H%M%S")}\n")
+    
+    def log(self, msg: str, print_once: bool = False, end="\n"):
+        with open(self.file_path, "a") as f:
+            f.write(msg + end)
+        
+        if self.also_print or print_once:
+            print(msg)
+            
+            
 class Parallel(nn.Module):
-    def __init__(self, *modules: dict[str, torch.nn.Module]):
+    def __init__(self, modules: dict[str, torch.nn.Module]):
         super().__init__()
+        if not isinstance(modules, dict):
+            raise ValueError("Modules are not dicts!")
+        
         self.modules = modules
 
     def forward(self, inputs: dict[str, torch.Tensor]):
@@ -134,7 +207,7 @@ def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype 
         
         state_dim_idx = obs.ndim - 1 if permute else obs.ndim - 3 # if permute last channel, regular case: channel 0 if 3 dimensions, otherwise channel 1 as 0 is batches.
         
-        # Put state channel at the end
+        # Put state channel at the end for plotting
         if permute and obs.ndim == 3:
             obs = obs.permute(1,2,0)
             
@@ -151,11 +224,14 @@ def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype 
 def epsilon_greedy_multi_buffer(env, model: nn.Module, obs: torch.Tensor, epsilon: float, device: str, state_dims: dict, dtype = torch.float32):
     """Epsilon-greedy action selection for multi-buffer observations"""
 
+    num_players = len(obs)
     
-    # TODO: select_action method OR simplify with epsilon greedy?
     if random.random() < epsilon:
-        return env.action_space.sample()
-    else:
+        return env.action_space.sample() # Single value or tuple
+
+    elif num_players == 1:
+        obs = obs[0]
+        
         model.eval()
         with torch.no_grad():
             processed_obs = process_observation(obs, state_dims, device, dtype, permute=False)
@@ -164,6 +240,14 @@ def epsilon_greedy_multi_buffer(env, model: nn.Module, obs: torch.Tensor, epsilo
                 processed_obs[key] = processed_obs[key].unsqueeze(0)
             q_values = model(processed_obs)
             return q_values.argmax().item()
+    
+    else: # num_players > 2
+        model.eval()
+        with torch.no_grad():
+            obs_batch = torch.stack(obs)
+            processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
+            q_values = model(processed_obs)
+            return q_values.argmax(dim=1).tolist() # return list of actions
 
 def hard_update_target_network(target_net, main_net):
     """Hard update of target network"""
@@ -194,24 +278,29 @@ def soft_update_target_network(local_model: nn.Module, target_model: nn.Module, 
     target_model.load_state_dict(target_state_dict)
     
     
-def replay_episode(env, model, device, extra_state_dims, dtype, store: bool = False):
+def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", store: bool = False):
     # ----------------------------------------------------------------
     # Hint for replay visualisation:
     # ----------------------------------------------------------------
+
     env.enable_replay()
 
     # Tracking reward components
     eval_reward = 0.0
 
     # Reset environment
-    eval_obs = env.reset()[0]
+    eval_obs = env.reset()#[player_idx]
+    #eval_ob = eval_obs[player_idx]
     eval_done = False
     model.eval().cpu()
 
+
     while not eval_done:
-        eval_act = epsilon_greedy_multi_buffer(env, model, eval_obs.cpu(), 0.05, "cpu", extra_state_dims, dtype)
+        eval_act = epsilon_greedy_multi_buffer(env, model, [eval_ob.cpu() for eval_ob in eval_obs], 0, "cpu", extra_state_dims, dtype)
         eval_obs, reward_components, eval_done, _ = env.step(eval_act)
-        eval_obs = eval_obs[0]
+        if env.num_players == 1:
+            eval_obs = eval_obs[0]
+
         eval_reward += sum(reward_components)
 
     print(f"Final evaluation - Total reward: {eval_reward:.1f}")
@@ -220,11 +309,92 @@ def replay_episode(env, model, device, extra_state_dims, dtype, store: bool = Fa
     env.disable_replay()
 
     replays = env.get_player_replays()
-    
+
+    # Random Player
+    player_idx = np.random.randint(0, len(replays))
+    player_name = list(replays.keys())[player_idx]
+
+    one_player_replay = {player_name: replays.get(player_name)}
+
     if store:
-        path = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        render_episode(replays, subsample=5, replay_path=path)
+        path = os.path.join(path, f"{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_{eval_reward:.0f}.mp4")
+        render_episode(one_player_replay, subsample=5, replay_path=path)
     else:
-        HTML(render_episode(replays, subsample=5).to_html5_video())
-    
+        HTML(render_episode(one_player_replay, subsample=5).to_html5_video())
+
+    model.train()
     model.to(device)
+    
+
+def plot_images(obs: torch.Tensor, state_dims: dict):
+    
+    obs_processed = process_observation(obs, state_dims, device="cpu", permute=True)
+    
+    plt.subplot(141)
+    plt.imshow(obs_processed.get("screen"))
+    plt.axis("off")
+    plt.title("Screen")
+
+    # Labels 
+    plt.subplot(142)
+    plt.imshow(obs_processed.get("labels"), vmin=0, vmax=1)
+    plt.axis("off")
+    plt.title("Labels")
+    
+    # Get unique values and their counts
+    # unique, counts = torch.unique(obs_processed["labels"], return_counts=True)
+    # table_data = list(zip(unique.tolist(), counts.tolist()))
+    
+    # Depth
+    plt.subplot(143)
+    plt.imshow(obs_processed.get("depth"))
+    plt.axis("off")
+    plt.title("Depth")
+
+
+    # Automap
+    plt.subplot(144)
+    plt.imshow(obs_processed.get("automap"))
+    plt.axis("off")
+    plt.title("Automap")
+
+    
+    plt.tight_layout()
+    plt.show()
+    
+    
+def get_average_result(episode_metrics: Dict[int, dict]) -> dict:
+    """ Returns the average reward from all players for each reward type. """
+    averaged_metrics = dict()
+
+    for values in episode_metrics.values():
+        for key, reward_val in values.items():
+            if isinstance(averaged_metrics.get(key), list):
+                averaged_metrics[key].append(reward_val)
+            else:
+                averaged_metrics[key] = [reward_val]
+                
+    return {key: np.mean(value, dtype=int) for key, value in averaged_metrics.items()}
+        
+
+def get_avg_reward(reward_history: dict, episodes: int = 1, player_idx: int=-1, round:int = 2) -> np.ndarray:
+    """ Returns the average reward for the episode or player id
+
+    Args:
+        reward_history (dict): A dictionary with player id as key and the rewards as values
+        episodes (int, optional): Number of last episode to extract. Defaults to 1 (=last).
+        player_idx (int, optional): Player idx to filter. Defaults to -1.
+
+    Returns:
+        np.ndarray: Average rewards as an array
+    """
+    df_rwds = pd.DataFrame.from_dict(reward_history)
+
+    if player_idx == -1: # all players
+        avg_reward = df_rwds.mean(axis=1)
+    else:
+        avg_reward = df_rwds.iloc[:, player_idx]
+        
+    return np.round(avg_reward[-episodes:].to_numpy(), round)
+        
+    
