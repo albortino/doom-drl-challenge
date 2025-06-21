@@ -2,6 +2,7 @@
 import torch.nn as nn
 import torch
 import math
+import os
         
 class Parallel(nn.Module):
     def __init__(self, modules: list[nn.Module]):
@@ -145,6 +146,65 @@ class OwnModule(nn.Module):
     
         return size_all_mb
     
+    def save_model(self, path: str = "", filename: str = "model.pt"):
+        """ Saves the model's state dict at the provided path in a subfolder based on the date. Name: "model.pt"
+
+        Args:
+            path (str, optional): Path where the model should be stored. Defaults to "".
+        """
+        
+        try:
+            dir_path = os.path.dirname(os.path.realpath(__file__)) if path == "" else path     
+            os.makedirs(dir_path, exist_ok=True)
+            
+            file_path = os.path.join(dir_path, filename)
+            
+            checkpoint = dict(
+                architecture= dict(
+                    obs_state_infos=self.obs_state_infos,
+                    action_space=self.action_space,
+                    feature_dim_cnns = self.feature_dim_cnns,
+                    hidden_dim_heads = self.hidden_dim_heads,
+                    phi = self.phi,
+                ),
+                state_dict = self.state_dict()
+            )
+            
+            torch.save(checkpoint, file_path)
+            
+            print(f"Successfully stored the model: {file_path}")
+        
+        except Exception as e:
+            print(f"Failed to store the model: {e}")
+        
+    
+    @classmethod  
+    def load_model(cls, path: str = ""):
+        """ Loads an instance of this model class from the provided path. 
+
+        Args:
+            path (str, optional): Path to the state dicht. Defaults to "".
+
+        Returns:
+            PM_Model: An instance of the model class.
+        """
+        try:
+            checkpoint = torch.load(path, weights_only=False)
+                        
+            arch_params = checkpoint.get("architecture")
+            state_dict = checkpoint.get("state_dict")
+
+            if arch_params is None or state_dict is None:
+                print(f"Failed to load model: Checkpoint file {path} is missing 'architecture' or 'state_dict'.")
+                return None
+
+            loaded_model = cls(**arch_params)
+            loaded_model.load_state_dict(state_dict)
+            
+            return loaded_model
+        
+        except Exception as e:
+            print(f"Failed to load the model: {e}")
 
 class PreResBlock(OwnModule):
     """ Residual block using skip-connections on pre-activation level. """
