@@ -1,2 +1,43 @@
 LOGGER INITIALIZED AT 20250621-135352
 13:53:54 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+13:57:55 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+13:58:13 | Episode: 0 | Training for 50 epochs
+13:58:18 | Episode: 0 | Updating target network...
+13:58:18 | Episode: 0 | Rewards:
+	Reward: [195. 200.] | Avg Reward: 198.0 | Loss: 0.0500 | ε: 0.995 | LR: 4.98e-05
+	Metrics - ['frags: 0', 'hits: 6', 'damage_taken: 0', 'movement: 187', 'ammo_efficiency: 5', 'survival: -1', 'health_pickup: 1']
+	Actions - 0: 170, 1: 364, 2: 693, 3: 516, 4: 508, 5: 717, 6: 715, 7: 317
+13:58:18 | Episode: 0 | Replaying animation...
+13:59:00 | Episode: 0 | Running quick evaluation...
+13:59:29 | Episode: 1 | Steps done: 2000 | Gathering rollout (currently 4000)
+13:59:47 | Episode: 1 | Training for 50 epochs
+13:59:49 | Episode: 1 | Updating target network...
+13:59:49 | Episode: 1 | Rewards:
+	Reward: [137. 141.] | Avg Reward: 168.0 | Loss: 0.0192 | ε: 0.990 | LR: 4.90e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 135', 'ammo_efficiency: 3', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 160, 1: 330, 2: 683, 3: 531, 4: 565, 5: 714, 6: 685, 7: 332
+13:59:49 | Episode: 1 | Running quick evaluation...
+14:00:17 | Episode: 2 | Steps done: 4000 | Gathering rollout (currently 8000)
+14:00:35 | Episode: 2 | Training for 50 epochs
+14:00:36 | Episode: 2 | Updating target network...
+14:00:36 | Episode: 2 | Rewards:
+	Reward: [155. 221.] | Avg Reward: 175.0 | Loss: 0.0343 | ε: 0.985 | LR: 4.78e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: -1', 'movement: 181', 'ammo_efficiency: 4', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 180, 1: 373, 2: 693, 3: 532, 4: 500, 5: 700, 6: 673, 7: 349
+14:00:36 | Episode: 2 | Running quick evaluation...
+14:01:05 | Episode: 3 | Steps done: 6000 | Gathering rollout (currently 12000)
+14:01:23 | Episode: 3 | Training for 50 epochs
+14:01:25 | Episode: 3 | Updating target network...
+14:01:25 | Episode: 3 | Rewards:
+	Reward: [152. 201.] | Avg Reward: 175.0 | Loss: 0.0321 | ε: 0.980 | LR: 4.62e-05
+	Metrics - ['frags: 0', 'hits: 5', 'damage_taken: 0', 'movement: 168', 'ammo_efficiency: 4', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 138, 1: 334, 2: 702, 3: 519, 4: 567, 5: 691, 6: 686, 7: 363
+14:01:25 | Episode: 3 | Running quick evaluation...
+14:01:53 | Episode: 4 | Steps done: 8000 | Gathering rollout (currently 16000)
+14:02:12 | Episode: 4 | Training for 50 epochs
+14:02:13 | Episode: 4 | Updating target network...
+14:02:13 | Episode: 4 | Rewards:
+	Reward: [138. 140.] | Avg Reward: 168.0 | Loss: 0.0499 | ε: 0.975 | LR: 4.41e-05
+	Metrics - ['frags: 0', 'hits: 2', 'damage_taken: 0', 'movement: 135', 'ammo_efficiency: 3', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 179, 1: 341, 2: 668, 3: 522, 4: 571, 5: 700, 6: 698, 7: 321
+14:02:13 | Episode: 4 | Running quick evaluation...

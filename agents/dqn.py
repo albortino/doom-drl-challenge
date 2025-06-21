@@ -118,6 +118,7 @@ class EfficientDQN(OwnModule):
     
         super().__init__()
         
+        self.obs_state_infos = obs_state_infos
         self.action_space = action_space
         self.hidden_dim_heads = hidden_dim_heads
         self.phi = phi
@@ -130,15 +131,19 @@ class EfficientDQN(OwnModule):
         self.obs_states_num = obs_state_infos.num_states
         
         # Separate encoders for each buffer type
-        self.encoder = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
-        
-        self.head_first = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
-            self.phi,
-            nn.Dropout(0.3))
+        #self.encoder = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
+        self.encoders = nn.ModuleList([self._build_encoder(dim) for dim in self.obs_state_dims])
+            
+        #self.head_first = nn.Sequential(
+        #    nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
+        #    self.phi,
+        #    nn.Dropout(0.3))
         
         # Dueling network heads
         self.value_head = nn.Sequential(
+            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
+            nn.Dropout(0.2),
+            self.phi,
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
             nn.Dropout(0.2),
             self.phi,
@@ -148,6 +153,9 @@ class EfficientDQN(OwnModule):
         )
         
         self.advantage_head = nn.Sequential(
+            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
+            nn.Dropout(0.2),
+            self.phi,
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
             nn.Dropout(0.2),
             self.phi,
@@ -156,14 +164,14 @@ class EfficientDQN(OwnModule):
             nn.Linear(action_space * self.obs_states_num, action_space) # one prediction per action
         )
         
-        params_encoder = sum(p.numel() for p in self.encoder.parameters() if p.requires_grad)
-        params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)
+        params_encoder = sum(p.numel() for p in self.encoders.parameters() if p.requires_grad)
+        #params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)
         params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
         
         self.init_weights()
         
-        print(f"Initialized model with {params_encoder + params_head_first + params_advantage_head + params_value_head} parameters!")
+        print(f"Initialized model with {params_encoder  + params_advantage_head + params_value_head} parameters!") #+ params_head_first
     
     def _build_encoder(self, input_channels: int) -> nn.Module:
         """Build CNN encoder with residual blocks for visual input"""
@@ -201,7 +209,7 @@ class EfficientDQN(OwnModule):
             
             # Output projection
             nn.Linear(first_channel_out * 2, self.feature_dim_cnns),
-            self.phi
+            #self.phi
         )
     
     
@@ -213,14 +221,25 @@ class EfficientDQN(OwnModule):
             observations: Tensor for "screen", "depth", "labels", "automap"
         """                
         # Encode each visual buffer and split the observations
-        features = self.encoder(observations.split(self.obs_state_dims, dim=1))
+        #features = self.encoder(observations.split(self.obs_state_dims, dim=1))
+        
+        features_list = []
+        current_channel_idx = 0
+        for i, dim in enumerate(self.obs_state_dims):
+            # Extract the sub-tensor for the current buffer
+            sub_observation = observations[:, current_channel_idx : current_channel_idx + dim, :, :]
+            features_list.append(self.encoders[i](sub_observation))
+            current_channel_idx += dim
+
+        # Concatenate all features
+        features = torch.cat(features_list, dim=1)
         
         # Use one head for the dueling network                
-        head_logits = self.head_first(features)
+        #head_logits = self.head_first(features)
         
         # Dueling network computation
-        value = self.value_head(head_logits)
-        advantage = self.advantage_head(head_logits)
+        value = self.value_head(features)
+        advantage = self.advantage_head(features)
         
         # Combine value and advantage
         q_values = value + advantage - advantage.mean(dim=1, keepdim=True)
@@ -242,7 +261,7 @@ class EfficientDQN(OwnModule):
             
             checkpoint = dict(
                 architecture= dict(
-                    input_channels_dict=self.input_channels_dict,
+                    obs_state_infos=self.obs_state_infos,
                     action_space=self.action_space,
                     feature_dim_cnns = self.feature_dim_cnns,
                     hidden_dim_heads = self.hidden_dim_heads,
