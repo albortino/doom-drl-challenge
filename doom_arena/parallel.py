@@ -79,7 +79,7 @@ class ParallelEnv(gym.Env):
 
         self._par = RunParallel()
 
-    def reset(self):
+    def reset(self, **kwargs):
         observations = self._par.run((e.reset) for e in self.envs)
         return observations
 

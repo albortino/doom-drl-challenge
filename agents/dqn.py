@@ -51,8 +51,11 @@ def epsilon_greedy(env, model: nn.Module, obs: list, epsilon: float, env_actions
         
     else:
         model.eval()
-        obs_batch = torch.stack(obs)
-        processed_obs = process_observation(obs_batch, device=device, dtype=dtype, permute=False)
+        
+        if not isinstance(obs, torch.Tensor):
+            obs = torch.stack(obs) # stack players
+        
+        processed_obs = process_observation(obs, device=device, dtype=dtype, permute=False)
         q_values = model(processed_obs)
         
         # Indices are necessary if buttons don't start at 0 but at 1 (e.g., if there wouldn't be a noop option)
