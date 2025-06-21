@@ -3,10 +3,66 @@ import torch
 import os
 from datetime import datetime
 import numpy as np
-from typing import Dict, Tuple
 from doom_arena.reward import VizDoomReward
 from collections import defaultdict
 from functools import singledispatchmethod
+from tqdm.notebook import trange
+
+class TqdmProgress:
+    """A tqdm progress bar wrapper for training loops."""
+
+    def __init__(self, total: int, desc: str = "Training", unit: str = "episode"):
+        """
+        Initializes the progress bar.
+
+        Args:
+            total (int): The total number of iterations (e.g., episodes).
+            desc (str): A description for the progress bar.
+            unit (str): The unit for one iteration.
+        """
+        self._iterable_pbar = trange(total, total=total, desc=desc, unit=f" {unit}")
+        self.pbar = self._iterable_pbar
+        self._total_steps = 0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def __iter__(self):
+        yield from self._iterable_pbar
+
+    def update_step_count(self, steps: int = 1):
+        """
+        Increments the total step counter.
+
+        Args:
+            steps (int): The number of steps to add.
+        """
+        self._total_steps += steps
+
+    def set_description(self, current_episode: int):
+        """
+        Updates the description of the progress bar.
+
+        Args:
+            current_episode (int): The current episode number (0-indexed).
+        """
+        desc = f"Episode {current_episode + 1}/{self.pbar.total} | Total Training Steps: {self._total_steps:,}"
+        self.pbar.set_description(desc)
+
+    def set_postfix(self, stats: dict):
+        """
+        Updates the postfix of the progress bar with training statistics.
+        """
+        self.pbar.set_postfix(stats)
+
+    def close(self):
+        """Closes the progress bar."""
+        self.pbar.close()
+
+
 
 class YourReward(VizDoomReward):
     def __init__(self, num_players: int):
@@ -16,7 +72,7 @@ class YourReward(VizDoomReward):
         self.prev_position = {}
         self.survival_bonus = 0
         
-    def __call__(self, vizdoom_reward: float, game_var: Dict[str, float], game_var_old: Dict[str, float], player_id: int) -> Tuple:
+    def __call__(self, vizdoom_reward: float, game_var: dict[str, float], game_var_old: dict[str, float], player_id: int) -> tuple:
         """
         Custom reward functions
         * +100 for frags (kills)
@@ -70,7 +126,7 @@ class YourReward(VizDoomReward):
         
         # Obstacle detection: Subtract movement if standing still for a long time
         if self._step > 100 and self._step %30 == 0:
-            prev_x, prev_y = self.prev_position.get(player_id)
+            prev_x, prev_y = self.prev_position.get(player_id, (pos_x, pos_y)) ## Use current pos if not in dict
             movement_dist = calc_movement(pos_x, pos_y, prev_x, prev_y)
             
             if movement_dist < 1:
@@ -151,7 +207,7 @@ class EnvActions():
             'Turn Right': 0.15,
             'Jump': 0.1}
     
-    def __init__(self, env, seed: int = 149, rng: np.random.default_rng = None) -> None:
+    def __init__(self, env, seed: int = 149, rng = None) -> None:
         self.set_actions_from_env(env)
         self.action_space = len(self)
         
@@ -180,7 +236,7 @@ class EnvActions():
         return self.actions
     
     def get_action_name(self, action_num: int) -> str:
-        return self.actions.get(action_num)
+        return self.actions.get(action_num, "Unknown Action")
     
     @singledispatchmethod
     def get_action_value(self, arg1, arg2):
@@ -188,7 +244,7 @@ class EnvActions():
         raise NotImplementedError(f"Cannot get action value for types {type(arg1)} and {type(arg2)}")
 
     @get_action_value.register
-    def _(self, index: int, num=1) -> int|tuple:    
+    def _(self, index: int, num=1) -> int|list:    
         all_buttons = list(self.actions.keys())
     
         if num == 1:
@@ -197,7 +253,7 @@ class EnvActions():
         return [all_buttons[index] for _ in range(num)]
     
     @get_action_value.register
-    def _(self, indices: list, num) -> list:
+    def _(self, indices: list) -> list:
         return [self.get_action_value(index) for index in indices]
     
     def get_action_proba(self) -> np.ndarray:
@@ -231,7 +287,7 @@ class ActionCounter:
         """ Increments the count for a given action. """
         self.counts[action] += 1
 
-    def get_counts(self) -> Dict[int, int]:
+    def get_counts(self) -> dict[int, int]:
         """ Returns the current action counts. """
         return dict(self.counts) # Return a regular dict
 
@@ -288,7 +344,7 @@ class FileLogger():
             os.makedirs(self.path, exist_ok=True)
             
         with open(self.file_path, "w") as f:
-            f.write(F"LOGGER INITIALIZED AT {datetime.now().strftime("%Y%m%d-%H%M%S")}\n")
+            f.write(F"LOGGER INITIALIZED AT {datetime.now().strftime('%Y%m%d-%H%M%S')}\n")
     
     def log(self, msg: str, print_once: bool = False, end="\n"):
         with open(self.file_path, "a") as f:

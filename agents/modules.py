@@ -161,8 +161,9 @@ class OwnModule(nn.Module):
             
             checkpoint = dict(
                 architecture= dict(
-                    obs_state_infos=self.obs_state_infos,
+                    input_dim = self.input_dim,
                     action_space=self.action_space,
+                    obs_state_infos=self.obs_state_infos,
                     feature_dim_cnns = self.feature_dim_cnns,
                     hidden_dim_heads = self.hidden_dim_heads,
                     phi = self.phi,
@@ -176,6 +177,23 @@ class OwnModule(nn.Module):
         
         except Exception as e:
             print(f"Failed to store the model: {e}")
+            
+    def init_weights(self, debug: bool=False):  
+        """ Initialize weights for Linear features. Kaiming He for (Leaky-)Relu otherwise Xavier """
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                if isinstance(self.phi, nn.ReLU):
+                    nn.init.kaiming_uniform_(module.weight, nonlinearity="relu")
+                    print("Weights initialized with Kaiming He") if debug else None
+                elif isinstance(self.phi, nn.LeakyReLU):
+                    nn.init.kaiming_uniform_(module.weight, nonlinearity="leaky_relu")
+                    print("Weights initialized with Kaiming He") if debug else None
+                else:
+                    nn.init.xavier_uniform_(module.weight) 
+                    print("Weights initialized with Glorot") if debug else None
+                    
+                if module.bias is not None:
+                    nn.init.zeros_(module.bias)
         
     
     @classmethod  

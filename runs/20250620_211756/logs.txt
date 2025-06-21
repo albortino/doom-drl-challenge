@@ -1,2 +1,0 @@
-LOGGER INITIALIZED AT 20250620-211756
-21:17:58 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)

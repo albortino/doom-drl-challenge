@@ -991,7 +991,6 @@ class Agent:
 
     def select_action(self, frames):
         frames = frames.unsqueeze(0).to(DEVICE, dtype=DTYPE)
-        print(len(frames), frames.shape)
         logits = self.model(frames)
         if isinstance(logits, tuple):
             logits, _ = logits
