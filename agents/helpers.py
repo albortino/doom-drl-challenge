@@ -109,8 +109,8 @@ class YourReward(VizDoomReward):
 
         # Combat reward from hits
         rwd_frag = 100.0 * (game_var["FRAGCOUNT"] - game_var_old["FRAGCOUNT"])
-        rwd_hit = 2.0 * (game_var["HITCOUNT"] - game_var_old["HITCOUNT"])
-        rwd_hit_taken = -0.5 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
+        rwd_hit = 5.0 * (game_var["HITCOUNT"] - game_var_old["HITCOUNT"])
+        rwd_hit_taken = -0.8 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
         
         # Movement reward
         pos_x = game_var.get("POSITION_X", 0)
@@ -119,7 +119,7 @@ class YourReward(VizDoomReward):
         pos_y_old = game_var_old.get("POSITION_Y", 0)
                 
         movement_dist = calc_movement(pos_x, pos_y, pos_x_old, pos_y_old)
-        rwd_movement = 1 * min((movement_dist if movement_dist else -5e-1) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
+        rwd_movement = 0.5 * min((movement_dist if movement_dist else -5e-2) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
         
         if self._step%30 == 0:
             self.prev_position[player_id] = (pos_x, pos_y)
@@ -130,7 +130,7 @@ class YourReward(VizDoomReward):
             movement_dist = calc_movement(pos_x, pos_y, prev_x, prev_y)
             
             if movement_dist < 1:
-                rwd_movement -= 0.1
+                rwd_movement -= 0.5
             
         # Ammo efficiency
         ammo_used = game_var_old.get("SELECTED_WEAPON_AMMO", 0) - game_var.get("SELECTED_WEAPON_AMMO", 0)
@@ -147,10 +147,10 @@ class YourReward(VizDoomReward):
             rwd_ammo_efficiency = 0.0
             
         # Survival bonus
-        rwd_survival = -1e-3 if game_var["HEALTH"] > 0 else -10.0 #-20 # Moving AND surviving improves score slightly
+        rwd_survival = 1e-3 if game_var["HEALTH"] > 0 else -10.0 #-20 # Moving or surviving improves score slightly
         
         # Bonus point if a reward is picked up
-        rwd_health_pickup = +3.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
+        rwd_health_pickup = +2.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
         
         return rwd_frag, rwd_hit, rwd_hit_taken, rwd_movement, rwd_ammo_efficiency, rwd_survival, rwd_health_pickup
 
@@ -199,13 +199,13 @@ class ExtraStates():
 class EnvActions():
     action_weights = {
             'Noop': 0.05,
-            'Move Forward': 0.15,
+            'Move Forward': 0.12,
             'Attack': 0.22,
             'Move Left': 0.12,
             'Move Right': 0.12,
             'Turn Left': 0.15,
             'Turn Right': 0.15,
-            'Jump': 0.1}
+            'Jump': 0.05}
     
     def __init__(self, env, seed: int = 149, rng = None) -> None:
         self.set_actions_from_env(env)

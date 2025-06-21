@@ -208,6 +208,7 @@ def find_all_videos(run_folder_path):
         return []
     videos = glob.glob(os.path.join(run_folder_path, '*.mp4'))
     videos.sort(key=os.path.getmtime)
+    print(videos)
     return [os.path.basename(v) for v in videos]
 
 # --- DASH APP ---
