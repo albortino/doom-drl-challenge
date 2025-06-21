@@ -468,11 +468,11 @@ class EfficientDQN(OwnModule):
         features = torch.cat(features_list, dim=1)
         
         # Use one head for the dueling network                
-        head_logits = self.head_first(features)
+        #head_logits = self.head_first(features)
         
         # Dueling network computation
-        value = self.value_head(head_logits)
-        advantage = self.advantage_head(head_logits)
+        value = self.value_head(features)
+        advantage = self.advantage_head(features)
         
         # Combine value and advantage
         q_values = value + advantage - advantage.mean(dim=1, keepdim=True)
@@ -483,4 +483,3 @@ if __name__ == "__main__":
     obs_states = ExtraStates(["screen", "depth", "labels", "automap"], 1)
     model = EfficientDQN(obs_states, 8)
     
-     
