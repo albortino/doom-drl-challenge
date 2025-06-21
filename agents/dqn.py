@@ -80,7 +80,7 @@ def epsilon_greedy(env, model: nn.Module, obs: list, epsilon: float, env_actions
 
     return chosen_actions
 
-def hard_update_target_network(target_net, main_net):
+def hard_update_target_network(target_net: nn.Module, main_net: nn.Module):
     """Hard update of target network"""
     target_net.load_state_dict(main_net.state_dict())
     

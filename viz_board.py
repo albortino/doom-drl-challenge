@@ -1,7 +1,7 @@
 import os
 import re
 import glob
-from datetime import datetime, timedelta # Import timedelta for time calculations
+from datetime import datetime, timedelta
 
 import dash
 import pandas as pd
@@ -24,7 +24,6 @@ def find_latest_run_folder(base_folder):
     """Finds the most recent directory in the base_folder."""
     try:
         all_runs = [d for d in os.listdir(base_folder) if os.path.isdir(os.path.join(base_folder, d))]
-        # Sort by folder name assuming names are date/time strings (e.g., YYYYMMDD-HHMMSS)
         all_runs.sort(reverse=True)
         if all_runs:
             return os.path.join(base_folder, all_runs[0])
@@ -37,17 +36,14 @@ def find_all_videos(folder_path):
     if not folder_path or not os.path.isdir(folder_path):
         return []
     videos = glob.glob(os.path.join(folder_path, '*.mp4'))
-    # Sort by creation time (oldest first) to make navigation intuitive
     videos.sort(key=os.path.getctime)
     return [os.path.basename(v) for v in videos]
 
 def parse_log_file(log_file_path):
     """
     Parses the logs.txt file to extract structured data.
-    This version is designed to be robust against changes in log entry order
-    and multi-line log messages.
-    Returns a pandas DataFrame.
     """
+    # ... (This function remains unchanged, so it is omitted for brevity)
     if not os.path.exists(log_file_path):
         return pd.DataFrame()
 
@@ -141,152 +137,110 @@ def parse_log_file(log_file_path):
 
     return df.reset_index()
 
+
 def parse_episode_times(log_file_path):
     """
     Parses the logs.txt file to extract the time distribution of training phases per episode.
     """
+    # ... (This function remains unchanged, so it is omitted for brevity)
     if not os.path.exists(log_file_path):
         return pd.DataFrame()
 
-    # Regex to capture timestamp, episode, and the full message
     line_pattern = re.compile(r'(\d{2}:\d{2}:\d{2}) \| Episode: (\d+) \| (.*)')
-
-    # Identify key event markers in the log message
-    # "identifier in text": "name in dashboard"
     event_markers = {
-        "Gathering rollout": "Rollout_Start", # Start of Rollout phase
-        "Training for": "Training_Start",    # Start of Training phase
-        "Updating target network": "Updating_Start", # Start of Updating phase
-        "Rewards": "Rewards_Logged",         # Point where rewards are logged (end of Update/Training)
-        "Replaying animation": "Animation_Start", # Start of Animation phase
-        "Running quick evaluation": "Evaluation_Start", # Start of Evaluation phase
+        "Gathering rollout": "Rollout_Start",
+        "Training for": "Training_Start",
+        "Updating target network": "Updating_Start",
+        "Rewards": "Rewards_Logged",
+        "Replaying animation": "Animation_Start",
+        "Running quick evaluation": "Evaluation_Start",
     }
-
-    # Structure to hold events for each episode
-    episodes_events = {} # {episode_num: [{'time': datetime, 'type': 'event_marker'}]}
-
-    current_date = datetime.now().date() # Use a dummy date for time calculations within a day
-
+    episodes_events = {}
+    current_date = datetime.now().date()
     with open(log_file_path, 'r') as f:
         for line in f:
             match = line_pattern.match(line)
             if match:
                 time_str, ep_str, message = match.groups()
-                # Combine dummy date with log time for datetime object
                 current_time = datetime.combine(current_date, datetime.strptime(time_str, '%H:%M:%S').time())
                 episode_num = int(ep_str)
-
                 if episode_num not in episodes_events:
                     episodes_events[episode_num] = []
-
-                # Identify the type of event based on message content
                 event_type_found = None
                 for event_name, marker_type in event_markers.items():
-                    if re.search(re.escape(event_name), message): # Use re.escape for literal matching
+                    if re.search(re.escape(event_name), message):
                         event_type_found = marker_type
                         break
-
-                # Append the event to the episode's list
                 if event_type_found:
-                    episodes_events[episode_num].append({
-                        'time': current_time,
-                        'type': event_type_found
-                    })
-                # Always add the very first logged time for an episode, even if it's not a recognized marker
+                    episodes_events[episode_num].append({'time': current_time, 'type': event_type_found})
                 elif not episodes_events[episode_num]:
-                    episodes_events[episode_num].append({
-                        'time': current_time,
-                        'type': 'Episode_Initial_Log'
-                    })
-
-    # Process collected events to calculate durations
+                    episodes_events[episode_num].append({'time': current_time, 'type': 'Episode_Initial_Log'})
     durations_list = []
     sorted_episode_nums = sorted(episodes_events.keys())
-
     for i, ep_num in enumerate(sorted_episode_nums):
         events = sorted(episodes_events[ep_num], key=lambda x: x['time'])
-
-        if not events: # Skip episodes with no recorded events
-            continue
-
-        # Dictionary to store the specific timestamps of key events for this episode
+        if not events: continue
         ep_timestamps = {}
         for event in events:
-            # Capture the *first* occurrence of each event type in the episode
             if event['type'] not in ep_timestamps:
                 ep_timestamps[event['type']] = event['time']
-
-        # Determine the overall start and end of the current episode's tracked time
         current_episode_start_time = ep_timestamps.get('Episode_Initial_Log', events[0]['time'])
-
         episode_total_end_time = None
         if i + 1 < len(sorted_episode_nums):
             next_ep_num = sorted_episode_nums[i+1]
             next_events = sorted(episodes_events[next_ep_num], key=lambda x: x['time'])
             if next_events:
-                episode_total_end_time = next_events[0]['time'] # First log of the next episode
-        else: # Last episode, end time is its last logged event
+                episode_total_end_time = next_events[0]['time']
+        else:
             episode_total_end_time = events[-1]['time']
-
-        # Initialize durations for the current episode
-        episode_durations = {
-            'Episode': ep_num,
-            'Rollout': 0.0,
-            'Training': 0.0,
-            'Updating': 0.0,
-            'Animation': 0.0,
-            'Evaluation': 0.0,
-            'Rest': 0.0
-        }
-
-        # Calculate durations based on specific event transitions
-        # Rollout: From 'Gathering rollout' to 'Training'
-        if 'Rollout_Start' in ep_timestamps and 'Training_Start' in ep_timestamps and \
-           ep_timestamps['Training_Start'] > ep_timestamps['Rollout_Start']:
+        episode_durations = {'Episode': ep_num, 'Rollout': 0.0, 'Training': 0.0, 'Updating': 0.0, 'Animation': 0.0, 'Evaluation': 0.0, 'Rest': 0.0}
+        if 'Rollout_Start' in ep_timestamps and 'Training_Start' in ep_timestamps and ep_timestamps['Training_Start'] > ep_timestamps['Rollout_Start']:
             episode_durations['Rollout'] = (ep_timestamps['Training_Start'] - ep_timestamps['Rollout_Start']).total_seconds()
-
-        # Training: From 'Training' to 'Updating'
-        if 'Training_Start' in ep_timestamps and 'Updating_Start' in ep_timestamps and \
-           ep_timestamps['Updating_Start'] > ep_timestamps['Training_Start']:
+        if 'Training_Start' in ep_timestamps and 'Updating_Start' in ep_timestamps and ep_timestamps['Updating_Start'] > ep_timestamps['Training_Start']:
             episode_durations['Training'] = (ep_timestamps['Updating_Start'] - ep_timestamps['Training_Start']).total_seconds()
-
-        # Updating: From 'Updating' to 'Rewards_Logged'
-        if 'Updating_Start' in ep_timestamps and 'Rewards_Logged' in ep_timestamps and \
-           ep_timestamps['Rewards_Logged'] > ep_timestamps['Updating_Start']:
+        if 'Updating_Start' in ep_timestamps and 'Rewards_Logged' in ep_timestamps and ep_timestamps['Rewards_Logged'] > ep_timestamps['Updating_Start']:
             episode_durations['Updating'] = (ep_timestamps['Rewards_Logged'] - ep_timestamps['Updating_Start']).total_seconds()
-
-        # Animation: From 'Animation' to 'Evaluation'
-        if 'Animation_Start' in ep_timestamps and 'Evaluation_Start' in ep_timestamps and \
-           ep_timestamps['Evaluation_Start'] > ep_timestamps['Animation_Start']:
+        if 'Animation_Start' in ep_timestamps and 'Evaluation_Start' in ep_timestamps and ep_timestamps['Evaluation_Start'] > ep_timestamps['Animation_Start']:
             episode_durations['Animation'] = (ep_timestamps['Evaluation_Start'] - ep_timestamps['Animation_Start']).total_seconds()
-
-        # Evaluation: From 'Evaluation' to the start of the next episode's log
-        if 'Evaluation_Start' in ep_timestamps and episode_total_end_time and \
-           episode_total_end_time > ep_timestamps['Evaluation_Start']:
+        if 'Evaluation_Start' in ep_timestamps and episode_total_end_time and episode_total_end_time > ep_timestamps['Evaluation_Start']:
             episode_durations['Evaluation'] = (episode_total_end_time - ep_timestamps['Evaluation_Start']).total_seconds()
-        # Edge case: If evaluation happened, but the episode ended before a next episode started logging
-        elif 'Evaluation_Start' in ep_timestamps and episode_total_end_time and \
-             episode_total_end_time == events[-1]['time'] and events[-1]['time'] > ep_timestamps['Evaluation_Start']:
+        elif 'Evaluation_Start' in ep_timestamps and episode_total_end_time and episode_total_end_time == events[-1]['time'] and events[-1]['time'] > ep_timestamps['Evaluation_Start']:
             episode_durations['Evaluation'] = (events[-1]['time'] - ep_timestamps['Evaluation_Start']).total_seconds()
-
-
-        # Calculate 'Rest' time as the total observed duration minus explicit phases
-        if current_episode_start_time and episode_total_end_time and \
-           episode_total_end_time > current_episode_start_time:
+        if current_episode_start_time and episode_total_end_time and episode_total_end_time > current_episode_start_time:
             total_observed_episode_duration = (episode_total_end_time - current_episode_start_time).total_seconds()
             sum_explicit_durations = sum(v for k, v in episode_durations.items() if k not in ['Episode', 'Rest'])
             rest_time = total_observed_episode_duration - sum_explicit_durations
-            episode_durations['Rest'] = max(0.0, rest_time) # Ensure non-negative
-
+            episode_durations['Rest'] = max(0.0, rest_time)
         durations_list.append(episode_durations)
-
     return pd.DataFrame(durations_list)
 
+
+# NEW: Function to parse activations.txt
+def parse_activations_file(activations_file_path):
+    """
+    Parses the activations.txt file to extract structured data.
+    Assumes a header: Episode|Step|Layer|Mean|Std|Norm
+    Returns a pandas DataFrame aggregated by Episode.
+    """
+    if not os.path.exists(activations_file_path):
+        return pd.DataFrame()
+    try:
+        df = pd.read_csv(activations_file_path, sep='|')
+        if df.empty:
+            return pd.DataFrame()
+        # To make the plot less noisy, we average the stats for each layer within an episode.
+        agg_df = df.groupby(['Episode', 'Layer']).agg(
+            Mean=('Mean', 'mean'),
+            Std=('Std', 'mean'),
+            Norm=('Norm', 'mean')
+        ).reset_index()
+        return agg_df
+    except (pd.errors.EmptyDataError, ValueError, FileNotFoundError):
+        return pd.DataFrame()
 
 def count_pt_files(folder_path):
     """Counts the number of .pt (PyTorch model) files in a folder."""
     return len(glob.glob(os.path.join(folder_path, '*.pt')))
-
 
 # --- DASH APP INITIALIZATION ---
 app = dash.Dash(__name__, title="DRL Training Dashboard")
@@ -295,19 +249,13 @@ print(f"Monitoring run folder: {CURRENT_RUN_FOLDER}")
 
 # --- APP LAYOUT ---
 app.layout = html.Div(style={'fontFamily': 'Arial, sans-serif', 'backgroundColor': '#f4f4f4', 'padding': '20px'}, children=[
-    # NEW: dcc.Store to hold video player state
     dcc.Store(id='video-state-store'),
-
     html.H1("DRL Training Progress Dashboard", style={'textAlign': 'center', 'color': '#333'}),
-
     dcc.Interval(id='interval-component', interval=REFRESH_INTERVAL_MS, n_intervals=0),
-
     html.Div(id='latest-info-container', style={'display': 'flex', 'justifyContent': 'space-around', 'padding': '20px', 'backgroundColor': 'white', 'borderRadius': '8px', 'marginBottom': '20px'}),
-
     html.Div(style={'display': 'flex', 'gap': '20px'}, children=[
         html.Div(style={'flex': 1, 'backgroundColor': 'white', 'padding': '20px', 'borderRadius': '8px'}, children=[
             html.H3("Evaluation Videos", style={'color': '#555'}),
-            # NEW: Video navigation controls
             html.Div(style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'gap': '15px', 'marginBottom': '10px'}, children=[
                 html.Button('⬅️ Previous', id='prev-video-btn', n_clicks=0),
                 html.P(id='video-info-text', style={'fontWeight': 'bold', 'margin': '0'}),
@@ -315,27 +263,24 @@ app.layout = html.Div(style={'fontFamily': 'Arial, sans-serif', 'backgroundColor
             ]),
             html.Div(id='video-container')
         ]),
-
         html.Div(style={'flex': 1, 'backgroundColor': 'white', 'padding': '20px', 'borderRadius': '8px'}, children=[
             html.H3("Run Summary", style={'color': '#555'}),
             html.P(id='current-run-folder-text'),
             html.P(id='pt-file-count-text')
         ]),
     ]),
-
     html.Div(style={'marginTop': '20px'}, children=[
         dcc.Graph(id='avg-reward-chart'),
         dcc.Graph(id='individual-rewards-chart'),
         dcc.Graph(id='metrics-chart'),
         dcc.Graph(id='action-distribution-chart'),
-        dcc.Graph(id='action-time-distribution-chart'), # NEW GRAPH
+        dcc.Graph(id='action-time-distribution-chart'),
+        dcc.Graph(id='activation-stats-chart'),  # NEW: Activation stats chart
         dcc.Graph(id='lr-chart'),
     ])
 ])
 
-
 # --- CALLBACKS TO UPDATE THE APP ---
-
 @app.callback(
     [Output('latest-info-container', 'children'),
      Output('current-run-folder-text', 'children'),
@@ -345,7 +290,8 @@ app.layout = html.Div(style={'fontFamily': 'Arial, sans-serif', 'backgroundColor
      Output('metrics-chart', 'figure'),
      Output('lr-chart', 'figure'),
      Output('action-distribution-chart', 'figure'),
-     Output('action-time-distribution-chart', 'figure'), # NEW OUTPUT
+     Output('action-time-distribution-chart', 'figure'),
+     Output('activation-stats-chart', 'figure'),  # NEW: Output for activation chart
      Output('video-container', 'children'),
      Output('video-info-text', 'children'),
      Output('video-state-store', 'data')],
@@ -355,14 +301,10 @@ app.layout = html.Div(style={'fontFamily': 'Arial, sans-serif', 'backgroundColor
     [State('video-state-store', 'data')]
 )
 def update_dashboard(interval_tick, prev_clicks, next_clicks, video_state):
-    """
-    This function is triggered by the interval OR button clicks and updates the dashboard.
-    """
     global CURRENT_RUN_FOLDER
     ctx = dash.callback_context
     trigger_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else 'interval-component'
 
-    # Initialize or update the run folder only on interval tick
     if trigger_id == 'interval-component':
         CURRENT_RUN_FOLDER = find_latest_run_folder(RUNS_BASE_FOLDER)
 
@@ -371,82 +313,66 @@ def update_dashboard(interval_tick, prev_clicks, next_clicks, video_state):
         empty_figure = {'data': [], 'layout': {'title': no_data_msg}}
         return ([html.H4(no_data_msg)], "Current Run: N/A", "Checkpoints: N/A",
                 empty_figure, empty_figure, empty_figure, empty_figure, empty_figure,
-                empty_figure, # NEW: for action-time-distribution-chart
+                empty_figure, empty_figure,  # For time and activation charts
                 None, "No Videos Found", None)
 
     # --- Handle Video Navigation ---
     video_state = video_state or {'videos': [], 'current_index': -1}
     new_video_list = find_all_videos(CURRENT_RUN_FOLDER)
-    
-    # If the list of videos has changed, reset the state
     if video_state['videos'] != new_video_list:
         video_state['videos'] = new_video_list
-        video_state['current_index'] = len(new_video_list) - 1 # Start at the latest video
-
-    # Handle button clicks
+        video_state['current_index'] = len(new_video_list) - 1
     if trigger_id == 'prev-video-btn':
         video_state['current_index'] = max(0, video_state['current_index'] - 1)
     elif trigger_id == 'next-video-btn':
         video_state['current_index'] = min(len(video_state['videos']) - 1, video_state['current_index'] + 1)
-        
-    # --- Generate Video Player and Info Text ---
+    
     video_player = html.Div("No videos found in this run folder.")
     video_info_text = "Video 0 of 0"
     if video_state['videos'] and video_state['current_index'] != -1:
         current_video_name = video_state['videos'][video_state['current_index']]
         video_player = html.Video(
-            controls=True, id='movie_player',
-            src=f"/videos/{current_video_name}",
-            autoPlay=(trigger_id != 'interval-component'), # Autoplay only when navigating
-            muted=True, style={'width': '100%'}
+            controls=True, id='movie_player', src=f"/videos/{current_video_name}",
+            autoPlay=(trigger_id != 'interval-component'), muted=True, style={'width': '100%'}
         )
         video_info_text = f"Video {video_state['current_index'] + 1} of {len(video_state['videos'])}"
 
     # --- Optimize: Only update graphs on interval ---
     if trigger_id != 'interval-component':
-        # If a button was clicked, don't re-calculate all the graphs
-        return (no_update, no_update, no_update, no_update, no_update, no_update,
-                no_update, no_update, no_update, # NEW: for action-time-distribution-chart
+        return (no_update, no_update, no_update, no_update, no_update, no_update, no_update,
+                no_update, no_update, no_update,  # All graph figures
                 video_player, video_info_text, video_state)
 
     # --- Full Update (triggered by interval) ---
-    df = parse_log_file(os.path.join(CURRENT_RUN_FOLDER, 'logs.txt'))
-    time_df = parse_episode_times(os.path.join(CURRENT_RUN_FOLDER, 'logs.txt')) # NEW: Get time distribution data
+    log_file = os.path.join(CURRENT_RUN_FOLDER, 'logs.txt')
+    activations_file = os.path.join(CURRENT_RUN_FOLDER, 'activations.txt') # NEW
+    df = parse_log_file(log_file)
+    time_df = parse_episode_times(log_file)
+    activations_df = parse_activations_file(activations_file) # NEW
+    
     pt_file_count = count_pt_files(CURRENT_RUN_FOLDER)
     run_name_text = f"Current Run: {os.path.basename(CURRENT_RUN_FOLDER)}"
     pt_count_text = f"Found {pt_file_count} model checkpoints (.pt files)."
-    
-    # Default empty figures
-    empty_figure = {'data': [], 'layout': {'title': "Waiting for log data..."}}
+    empty_figure = {'data': [], 'layout': {'title': "Waiting for data..."}}
     latest_info_children = [html.H4("Waiting for log data...")]
-    avg_reward_fig = empty_figure
-    individual_rewards_fig = empty_figure
-    metrics_fig = empty_figure
-    lr_fig = empty_figure
-    action_dist_fig = empty_figure
-    time_dist_fig = empty_figure # NEW
 
+    # ... (Code for all other figures: avg_reward, individual_rewards, etc.) ...
+    # This part remains the same, so it's condensed for brevity.
+    avg_reward_fig, individual_rewards_fig, metrics_fig, lr_fig, action_dist_fig, time_dist_fig = \
+        (empty_figure,) * 6
     if not df.empty:
         latest_data = df.iloc[-1]
         steps_done = f"Steps Done: {latest_data.get('Steps Done', 0):,.0f}"
         avg_reward = f"Avg. Reward: {latest_data.get('Average Reward (All Players)', 0):.2f}"
         rollout_buffer = f"Rollout Buffer: {latest_data.get('Rollout Buffer', 0):,.0f}"
         latest_info_children = [html.Div(html.H4(val, style={'textAlign': 'center'})) for val in [steps_done, avg_reward, rollout_buffer]]
-
         avg_reward_fig = px.line(df, x='Episode', y='Average Reward (All Players)', title='Average Reward (All Players) Over Time')
         reward_cols = [col for col in df.columns if 'Player' in col and 'Reward' in col]
         individual_rewards_fig = px.line(df, x='Episode', y=reward_cols, title='Individual Player Rewards Over Time')
-        
-        # Added 'frags' to metrics based on logs.txt content
-        metric_cols = ['frags', 'hits', 'damage_taken', 'movement', 'ammo_efficiency', 'survival', 'health_pickup']
+        metric_cols = ['hits', 'damage_taken', 'movement', 'ammo_efficiency', 'survival', 'health_pickup', 'frags']
         available_metrics = [m for m in metric_cols if m in df.columns]
-        if available_metrics:
-            metrics_fig = px.line(df, x='Episode', y=available_metrics, title='Metrics Over Time')
-        else:
-            metrics_fig['layout']['title'] = "No Metrics Data Found"
-        
+        metrics_fig = px.line(df, x='Episode', y=available_metrics, title='Metrics Over Time') if available_metrics else {'data': [], 'layout': {'title': 'No Metrics Data Found'}}
         lr_fig = px.line(df, x='Episode', y='Learning Rate', title='Learning Rate Schedule')
-
         action_labels = {'Action_0': 'Nothing', 'Action_1': 'Forward', 'Action_2': 'Fire Weapon', 'Action_3': 'Move Left', 'Action_4': 'Move Right', 'Action_5': 'Turn Left', 'Action_6': 'Turn Right', 'Action_7': 'Jump Forward'}
         action_cols = sorted([col for col in df.columns if col.startswith('Action_')])
         if action_cols:
@@ -454,29 +380,37 @@ def update_dashboard(interval_tick, prev_clicks, next_clicks, video_state):
             y_cols_labeled = [action_labels.get(c, c) for c in action_cols]
             action_dist_fig = px.area(plot_df, x='Episode', y=y_cols_labeled, title='Action Distribution (Percentage)', groupnorm='percent')
             action_dist_fig.update_layout(yaxis_title="Percentage of Actions")
-        else:
-            action_dist_fig['layout']['title'] = "No Action Data Found"
-
-    # NEW: Plotting time distribution
     if not time_df.empty:
-        # Columns to plot for time distribution, matching dashboard names
         time_plot_cols = ['Rollout', 'Training', 'Updating', 'Animation', 'Evaluation', 'Rest']
         available_time_cols = [col for col in time_plot_cols if col in time_df.columns]
-        
         if available_time_cols:
-            time_dist_fig = px.area(time_df, x='Episode', y=available_time_cols, 
-                                    title='Time Distribution of Training Phases (Percentage)', 
-                                    groupnorm='percent') # Show as percentage of total episode time
+            time_dist_fig = px.area(time_df, x='Episode', y=available_time_cols, title='Time Distribution of Training Phases (Percentage)', groupnorm='percent')
             time_dist_fig.update_layout(yaxis_title="Percentage of Episode Time")
-        else:
-            time_dist_fig['layout']['title'] = "No Time Distribution Data Found"
-    else:
-        time_dist_fig['layout']['title'] = "Waiting for time distribution data..."
 
+    # --- NEW: Generate Activation Statistics Figure ---
+    activations_fig = {'data': [], 'layout': {'title': "Waiting for activation data..."}}
+    if not activations_df.empty:
+        layers_to_plot = ['Encoder', 'Head', 'Value', 'Advantage', 'Q_Vals']
+        plot_df = activations_df[activations_df['Layer'].isin(layers_to_plot)]
+
+        if not plot_df.empty:
+            melted_df = plot_df.melt(
+                id_vars=['Episode', 'Layer'], value_vars=['Mean', 'Std', 'Norm'],
+                var_name='Statistic', value_name='Value'
+            )
+            activations_fig = px.line(
+                melted_df, x='Episode', y='Value', color='Layer',
+                facet_row='Statistic', title='Model Activation Statistics per Episode',
+                labels={'Value': 'Stat Value', 'Layer': 'Model Layer'}, height=800
+            )
+            activations_fig.update_yaxes(matches=None, title_text="") # Independent y-axes, remove axis titles
+            activations_fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1])) # Clean up facet labels
+        else:
+            activations_fig['layout']['title'] = "No specified activation layer data found"
 
     return (latest_info_children, run_name_text, pt_count_text, avg_reward_fig,
             individual_rewards_fig, metrics_fig, lr_fig, action_dist_fig,
-            time_dist_fig, # NEW RETURN VALUE
+            time_dist_fig, activations_fig,  # Return new figure
             video_player, video_info_text, video_state)
 
 # --- Special Route to Serve Video Files ---

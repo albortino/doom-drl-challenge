@@ -322,7 +322,7 @@ class LossLogger():
             self.num_batches = 0
 
 
-class FileLogger():
+class Logger():
     def __init__(self, path: str, filename: str = "logs.txt", also_print: bool = False):
         """ Initialize a logger class that logs the messages to a file but is also capable of printing it.
 
@@ -330,14 +330,28 @@ class FileLogger():
             path (str): Path to store the log file
             also_print (bool, optional): Whether every log should also be printed (Tipp: self.log() allows for one-time printing, too!). Defaults to False.
         """
+       
         self.path = path
         self.filename = filename
         self.also_print = also_print
-        
         self.file_path = os.path.join(self.path, self.filename)
         
         self.create_log_file()
     
+    def log(self, msg: str, print_once: bool = False, improve_file_output: bool = False, end="\n"):
+        
+        if self.also_print or print_once:
+            print(msg)
+            
+        with open(self.file_path, "a") as f:
+            if improve_file_output:
+                msg = msg.replace("|", ",")
+                msg = msg.replace("\t", "")
+                msg = msg.replace("  ", "")
+                msg = msg.strip()
+            
+            f.write(msg + end)
+
     def create_log_file(self):
         # Ensure the directory exists
         if not os.path.exists(self.path):
@@ -345,10 +359,68 @@ class FileLogger():
             
         with open(self.file_path, "w") as f:
             f.write(F"LOGGER INITIALIZED AT {datetime.now().strftime('%Y%m%d-%H%M%S')}\n")
-    
-    def log(self, msg: str, print_once: bool = False, end="\n"):
-        with open(self.file_path, "a") as f:
-            f.write(msg + end)
+             
+            
+class ActivationLogger(Logger):
+    def __init__(self, path: str, filename: str = "activations.txt", also_print: bool = False):
+        super().__init__(path, filename, also_print)
         
-        if self.also_print or print_once:
-            print(msg)
+    def analyze_activations(self, activations: torch.Tensor, episode: int = -1, title: str = "", print_once: bool = False) -> str:
+        return f"Episode {episode} | {title:<15}| Shape: {list(activations.shape)},\tMean: {activations.mean().item():.2f},\tStd: {activations.std().item():.2f},\tNorm: {torch.norm(activations).item():.2f}"
+            
+    @torch.no_grad()
+    def log_model_activations(self, obs:tuple[torch.Tensor], model: torch.nn.Module, model_sequence: list = [None, 0, 1, 1], episode: int = -1, print_once: bool = False, return_activations_from_idx:  int = -1):       
+        
+        model.eval().cpu()
+        if isinstance(obs, tuple):
+            obs = tuple([o.cpu() for o in obs])
+        
+        elif isinstance(obs, list):
+            obs = [o.cpu() for o in obs]
+            
+        elif isinstance(obs, torch.Tensor):
+            obs = obs.cpu()
+            
+        # Get all modules ot the model except for activation functions        
+        all_modules = [name for name, _ in model.named_children() if name != "phi"]
+        
+        # Create a dictionary with relevant information that stores all data
+        module_info = {idx: {"name": module, 
+                             "sequence": sequence, 
+                             "logits": None} 
+                       for idx, (module, sequence) in enumerate(zip(all_modules, model_sequence))}
+        
+        # Store all texts at one place
+        log_str = ""
+        
+        # Iterate over provided sequences and log 
+        for module_idx, module_vals in module_info.items():
+            name = module_vals.get("name", "Unknown Module") # Get the name
+            sequence = module_vals.get("sequence") # Get the sequence, that is order where to retrieve from
+            module: torch.nn.Module = getattr(model, name) # Get the module as instance
+
+            if sequence is None:
+                module_input = obs
+            else:
+                module_input = module_info.get(sequence).get("logits") # If module needs logits form previously get them
+            
+            module_logits = module.forward(module_input) # Make forward pass
+            module_info[module_idx]["logits"] = module_logits # Append forward pass to module info dictionary
+            
+            log_str += self.analyze_activations(module_logits, episode, name, print_once) + "\n" # Analyze the logits
+            
+        # Log all values together
+        self.log(log_str, print_once, improve_file_output=True)
+
+        # Return the last X activations if necessary
+        if return_activations_from_idx is not None:
+            return_idx = len(all_modules) + return_activations_from_idx if return_activations_from_idx < 0 else return_activations_from_idx
+            
+            all_indices = list(module_info.keys())
+            selected_indices = all_indices[return_idx:]
+            
+            return [value.get("logits") for key, value in module_info.items() if key in selected_indices]
+            
+            
+                
+        
