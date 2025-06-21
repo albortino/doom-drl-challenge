@@ -294,6 +294,11 @@ class ActionCounter:
     def reset(self):
         """ Resets all action counts. """
         self.counts.clear()
+        
+    def get_name_counts(self, env_actions: EnvActions) -> dict[str, int]:
+        """ Returns the current action counts and names. """
+        return {env_actions.get_action_name(key): self.counts.get(key, 0) for key in sorted(self.counts.keys())}
+        
 
 class LossLogger():
     """ Class to log the losses during training or evaluation. """
