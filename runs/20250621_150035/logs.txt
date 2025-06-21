@@ -1,0 +1,18 @@
+LOGGER INITIALIZED AT 20250621-150035
+15:00:36 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+15:00:52 | Episode: 0 | Training for 20 epochs
+15:00:58 | Episode: 0 | Updating target network...
+15:00:58 | Episode: 0 | Rewards:
+	Reward: [19.] | Avg Reward: 19.0 | Loss: 0.0173 | ε: 0.995 | LR: 4.97e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 6', 'ammo_efficiency: 2', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 91, 1: 279, 2: 415, 3: 219, 4: 236, 5: 287, 6: 292, 7: 181
+15:00:58 | Episode: 0 | Replaying animation...
+15:01:26 | Episode: 0 | Running quick evaluation...
+15:01:51 | Episode: 1 | Steps done: 2000 | Gathering rollout (currently 2000)
+15:02:07 | Episode: 1 | Training for 20 epochs
+15:02:08 | Episode: 1 | Updating target network...
+15:02:08 | Episode: 1 | Rewards:
+	Reward: [17.] | Avg Reward: 18.0 | Loss: 0.0102 | ε: 0.990 | LR: 4.88e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 4', 'ammo_efficiency: 2', 'survival: -1', 'health_pickup: 0']
+	Actions - 0: 99, 1: 321, 2: 384, 3: 226, 4: 214, 5: 298, 6: 291, 7: 167
+15:02:08 | Episode: 1 | Running quick evaluation...

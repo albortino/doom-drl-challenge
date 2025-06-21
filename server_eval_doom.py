@@ -991,6 +991,7 @@ class Agent:
 
     def select_action(self, frames):
         frames = frames.unsqueeze(0).to(DEVICE, dtype=DTYPE)
+        print(len(frames), frames.shape)
         logits = self.model(frames)
         if isinstance(logits, tuple):
             logits, _ = logits
@@ -1023,12 +1024,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
     model_file = args.submission
     n_episodes = args.episodes
+    
+    #model_file = "/Users/matsschneider/Documents/Studium/JKU/Deep Reinforcement Learning/365.277 UE DRL/Final/jku.wad/runs/20250621_150035/enhanced_doom_agent.onnx"
+    #n_episodes = 10
 
     # Load model
     model = onnx.load(model_file)
-    config = next(
-        (json.loads(p.value) for p in model.metadata_props if p.key == "config"), {}
-    )
+    config = next((json.loads(p.value) for p in model.metadata_props if p.key == "config"), {})
     model = ConvertModel(model)
     model.eval()
     model = model.to(DEVICE, dtype=DTYPE)

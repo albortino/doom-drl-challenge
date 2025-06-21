@@ -63,7 +63,7 @@ class YourReward(VizDoomReward):
         pos_y_old = game_var_old.get("POSITION_Y", 0)
                 
         movement_dist = calc_movement(pos_x, pos_y, pos_x_old, pos_y_old)
-        rwd_movement = 1 * min((movement_dist if movement_dist else -5e-1) / 10.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
+        rwd_movement = 1 * min((movement_dist if movement_dist else -5e-1) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
         
         if self._step%30 == 0:
             self.prev_position[player_id] = (pos_x, pos_y)
@@ -143,12 +143,12 @@ class ExtraStates():
 class EnvActions():
     action_weights = {
             'Noop': 0.05,
-            'Move Forward': 0.1,
-            'Attack': 0.2,
-            'Move Left': 0.15,
-            'Move Right': 0.15,
-            'Turn Left': 0.2,
-            'Turn Right': 0.2,
+            'Move Forward': 0.15,
+            'Attack': 0.22,
+            'Move Left': 0.12,
+            'Move Right': 0.12,
+            'Turn Left': 0.15,
+            'Turn Right': 0.15,
             'Jump': 0.1}
     
     def __init__(self, env, seed: int = 149, rng: np.random.default_rng = None) -> None:
@@ -183,17 +183,21 @@ class EnvActions():
         return self.actions.get(action_num)
     
     @singledispatchmethod
-    def get_action_value(self, arg):
+    def get_action_value(self, arg1, arg2):
         """Gets the action value(s) for the given index or list of indices."""
-        raise NotImplementedError(f"Cannot get action value for type {type(arg)}")
+        raise NotImplementedError(f"Cannot get action value for types {type(arg1)} and {type(arg2)}")
 
     @get_action_value.register
-    def _(self, index: int) -> int:    
+    def _(self, index: int, num=1) -> int|tuple:    
         all_buttons = list(self.actions.keys())
-        return all_buttons[index]
-
+    
+        if num == 1:
+            return all_buttons[index]
+        
+        return [all_buttons[index] for _ in range(num)]
+    
     @get_action_value.register
-    def _(self, indices: list) -> list:
+    def _(self, indices: list, num) -> list:
         return [self.get_action_value(index) for index in indices]
     
     def get_action_proba(self) -> np.ndarray:
