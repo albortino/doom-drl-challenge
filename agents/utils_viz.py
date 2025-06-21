@@ -81,7 +81,7 @@ def plot_training_metrics(reward_history, loss_history, epsilon_history):
     plt.show()
     
     
-def plot_images(obs: torch.Tensor, state_dims: dict):
+def plot_images(obs: torch.Tensor, state_dims: dict, **kwargs):
     """ Plots each state of the observations in one plot. """
     
     num_plots = len(state_dims)
@@ -89,6 +89,9 @@ def plot_images(obs: torch.Tensor, state_dims: dict):
     obs_processed = process_observation(obs, state_dims, device="cpu", permute=True)
     
     last_plot = 1
+    
+    if kwargs:
+        plt.suptitle(kwargs.get("title", ""))
     
     def add_plot(data, last_plot, title):
         plt.subplot(100 + 10*num_plots + last_plot)

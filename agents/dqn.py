@@ -7,18 +7,15 @@ import os
 import random
 from typing import Dict
 from agents.modules import ResidualBlock, Downsample, Parallel, OwnModule
-from agents.helpers import ActionCounter
-from agents.utils import get_buttons
+from agents.helpers import ActionCounter, ExtraStates, EnvActions
 import numpy as np
 
 @torch.no_grad()
-def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype = torch.float32, permute: bool = False) -> Dict[str, torch.Tensor]:
+def process_observation(obs: torch.Tensor, state_dims: dict = {}, device: str = "cpu", dtype = torch.float32, permute: bool = False) -> torch.Tensor|Dict[str, torch.Tensor]:
     """Process multi-buffer observation from environment, for training and for plotting. Returns a dictionary with the state as key and data as value. """
-    
+    """ NOTE: state dims is only for splitting it -> depreceated as model now does the transformation itself!"""
     if isinstance(obs, torch.Tensor) and obs.size()[1] > 1:
-        
-        state_dim_idx = obs.ndim - 1 if permute else obs.ndim - 3 # if permute last channel, regular case: channel 0 if 3 dimensions, otherwise channel 1 as 0 is batches.
-        
+                
         # Put state channel at the end for plotting (color detection)
         if permute and obs.ndim == 3:
             obs = obs.permute(1,2,0)
@@ -27,70 +24,50 @@ def process_observation(obs: torch.Tensor, state_dims: dict, device: str, dtype 
             obs = obs.permute(0,2,3,1)
         
         obs = obs.to(device, dtype=dtype)
-        obs_states = obs.split(list(state_dims.values()), dim=state_dim_idx)
-        obs_processed = dict(zip(state_dims.keys(), obs_states))
-        return obs_processed
+        
+        if state_dims:
+            state_dim_idx = obs.ndim - 1 if permute else obs.ndim - 3 # if permute last channel, regular case: channel 0 if 3 dimensions, otherwise channel 1 as 0 is batches.
+            obs_states = obs.split(list(state_dims.values()), dim=state_dim_idx)
+            return dict(zip(state_dims.keys(), obs_states))
+        
+        return obs
         
     else:
-        # Single observation case
+        # Fallback: Single observation case
         return {'screen': obs.to(device, dtype=dtype)}
 
 
 @torch.no_grad()
-def epsilon_greedy(env, model: nn.Module, obs: torch.Tensor, epsilon: float, device: str, state_dims: dict, dtype = torch.float32, action_counter: ActionCounter = None, debug: bool = False):
+def epsilon_greedy(env, model: nn.Module, obs: list, epsilon: float, env_actions: EnvActions, device: str = "cpu", dtype = torch.float32, action_counter: ActionCounter = None, debug: bool = False):
     """Epsilon-greedy action selection for multi-buffer observations"""
 
-    possible_actions = get_buttons(env).keys()
     num_players = env.num_players
     
     if random.random() < epsilon:
        
-        action_weights = {
-            'Move Forward': 0.2,
-            'Attack': 0.2,
-            'Move Left': 0.1,
-            'Move Right': 0.1,
-            'Turn Left': 0.1,
-            'Turn Right': 0.1,
-            'Jump': 0.15}
-
-        # Calculate the probability of each action
-        action_weight_vals = np.array(list(action_weights.values()))
-        action_proba = action_weight_vals / action_weight_vals.sum()
-
-        # The action values (1-7)
-        action_vals = np.array(list(action_weights.keys()))
-        
-        # One different action per player
-        chosen_actions = [np.random.choice(action_vals, p=action_proba).item() for player in range(num_players)]
-
+        # One different action (1-7) per player
+        chosen_actions = env_actions.get_random_action(n=num_players, use_proba=True)
         print("WITHIN EPSILON:", chosen_actions) if debug else None
         
     else:
-    # elif num_players == 1:
-    #     model.eval()
-    #     with torch.no_grad():
-    #         obs_batch = torch.stack(obs)
-    #         processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
-    #         # Add batch dimension
-    #         for key in processed_obs:
-    #             processed_obs[key] = processed_obs[key].unsqueeze(0)
-    #         q_values = model(processed_obs)
-    #         return q_values.argmax().item()
-    
         model.eval()
         obs_batch = torch.stack(obs)
-        processed_obs = process_observation(obs_batch, state_dims, device, dtype, permute=False)
+        processed_obs = process_observation(obs_batch, device=device, dtype=dtype, permute=False)
         q_values = model(processed_obs)
         
+        # Indices are necessary if buttons don't start at 0 but at 1 (e.g., if there wouldn't be a noop option)
+    
         if num_players == 1:
-            chosen_actions = q_values.argmax().item()
-            print("DEBUG EPSILON NUM PLAYERS=1:", chosen_actions, q_values)  if debug else None
+            chosen_actions_idx = q_values.argmax().item() # Single action
+            print("DEBUG EPSILON NUM PLAYERS=1:", chosen_actions_idx, q_values, end="")  if debug else None
         else:
-            chosen_actions = q_values.argmax(dim=1).tolist() # list of actions
-            print("DEBUG EPSILON NUM PLAYERS>1:", chosen_actions, q_values)  if debug else None
-
-
+            chosen_actions_idx = q_values.argmax(dim=1).tolist() # list of actions
+            print("DEBUG EPSILON NUM PLAYERS>1:", chosen_actions_idx, q_values, end="")  if debug else None
+        
+        chosen_actions = env_actions.get_action_value(chosen_actions_idx) 
+        print(chosen_actions) if debug else None
+        
+    # Add to action counter
     if action_counter:
         if isinstance(chosen_actions, list):
             for action in chosen_actions:
@@ -137,7 +114,7 @@ class EfficientDQN(OwnModule):
     TODO
     """
     
-    def __init__(self, input_channels_dict: Dict[str, int], action_space: int, feature_dim_cnns: int = 128, hidden_dim_heads: int = 1024, phi: nn.Module = nn.ELU()):
+    def __init__(self, obs_state_infos: ExtraStates, action_space: int, feature_dim_cnns: int = 128, hidden_dim_heads: int = 1024, phi: nn.Module = nn.ELU()):
     
         super().__init__()
         
@@ -147,19 +124,18 @@ class EfficientDQN(OwnModule):
         
         # Feature dimension after encoding
         self.feature_dim_cnns = feature_dim_cnns
-        
-        self.input_channels_dict = input_channels_dict
-        self.num_buffers = len(input_channels_dict)
+
+        # Observation states info
+        self.obs_state_dims = obs_state_infos.get_dims(return_dict=False) # Indices to split the observation
+        self.obs_states_num = obs_state_infos.num_states
         
         # Separate encoders for each buffer type
-        encoder_dict = {key: self._build_encoder(dims) for key, dims in input_channels_dict.items()}
-        self.encoder = Parallel(encoder_dict)
+        self.encoder = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
         
         self.head_first = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns * self.num_buffers, self.hidden_dim_heads),
+            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
             self.phi,
-            nn.Dropout(0.3),
-        )
+            nn.Dropout(0.3))
         
         # Dueling network heads
         self.value_head = nn.Sequential(
@@ -175,15 +151,17 @@ class EfficientDQN(OwnModule):
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
             nn.Dropout(0.2),
             self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, action_space * self.num_buffers),
+            nn.Linear(self.hidden_dim_heads // 4, action_space * self.obs_states_num),
             self.phi,
-            nn.Linear(action_space * self.num_buffers, action_space) # one prediction per action
+            nn.Linear(action_space * self.obs_states_num, action_space) # one prediction per action
         )
         
         params_encoder = sum(p.numel() for p in self.encoder.parameters() if p.requires_grad)
         params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)
         params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
+        
+        self.init_weights()
         
         print(f"Initialized model with {params_encoder + params_head_first + params_advantage_head + params_value_head} parameters!")
     
@@ -227,20 +205,18 @@ class EfficientDQN(OwnModule):
         )
     
     
-    def forward(self, observations: dict[str, torch.Tensor]) -> torch.Tensor:
+    def forward(self, observations: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through multi-buffer DQN
         
         Args:
             observations: Tensor for "screen", "depth", "labels", "automap"
         """                
-        # Encode each visual buffer
-        features = self.encoder(observations)
+        # Encode each visual buffer and split the observations
+        features = self.encoder(observations.split(self.obs_state_dims, dim=1))
         
-        #if len(features) > 1:
-        fused_features = torch.cat(features, dim=1)  # (batch, feature_dim * num_buffers)
-        
-        head_logits = self.head_first(fused_features)
+        # Use one head for the dueling network                
+        head_logits = self.head_first(features)
         
         # Dueling network computation
         value = self.value_head(head_logits)
@@ -313,6 +289,7 @@ class EfficientDQN(OwnModule):
 
     
 if __name__ == "__main__":
-    model = EfficientDQN({'screen': 3, 'labels': 1, 'depth': 1, 'automap': 3}, 8)
+    obs_states = ExtraStates(["screen", "depth", "labels", "automap"], 1)
+    model = EfficientDQN(obs_states, 8)
     
      

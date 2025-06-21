@@ -9,21 +9,25 @@ import os
 import pandas as pd
 import contextlib
 from agents.dqn import epsilon_greedy
+from agents.helpers import EnvActions
 
-def get_buttons(env) -> dict:
-    """ Returns a dictionary with the button key and description """
-    buttons = dict()
+# def get_buttons(env, return_vals_list: bool = False) -> dict|list:
+#     """ Returns a dictionary or list with the button key and description """
+#     buttons = {0: "Noop"}
 
-    for player_env in env.envs:
-        for idx, button in enumerate(player_env.game.get_available_buttons()):
-            button_name = str(button).split(".")[1].split(":")[0].replace("_", " ")
-            button_val = idx + 1
+#     for player_env in env.envs:
+#         for idx, button in enumerate(player_env.game.get_available_buttons()):
+#             button_name = str(button).split(".")[1].split(":")[0].replace("_", " ")
+#             button_val = idx + 1
             
-            buttons[button_val] = button_name.title()
-            
-    return buttons
+#             buttons[button_val] = button_name.title()
+        
+#     if return_vals_list:
+#         return list(buttons.keys())
     
-def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", store: bool = False):
+#     return buttons
+    
+def replay_episode(env, model, device, dtype, path: str = "", store: bool = False, random_player: bool = True):
     # ----------------------------------------------------------------
     # Hint for replay visualisation:
     # ----------------------------------------------------------------
@@ -34,18 +38,17 @@ def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", 
     eval_reward = 0.0
 
     # Reset environment
-    eval_obs = env.reset()#[player_idx]
-    #eval_ob = eval_obs[player_idx]
+    with suppress_output():
+        eval_obs = env.reset()
+    
     eval_done = False
-    model.eval().cpu()
-
+    model.cpu()
 
     while not eval_done:
-        eval_act = epsilon_greedy(env, model, [eval_ob.cpu() for eval_ob in eval_obs], 0, "cpu", extra_state_dims, dtype)
+        env_actions = EnvActions(env)
+        
+        eval_act = epsilon_greedy(env, model, eval_obs, 0, env_actions, "cpu", dtype=dtype)
         eval_obs, reward_components, eval_done, _ = env.step(eval_act)
-        #if env.num_players == 1:
-        #    eval_obs = eval_obs[0]
-
         eval_reward += sum(reward_components)
 
     print(f"Final evaluation - Total reward: {eval_reward:.1f}")
@@ -55,16 +58,17 @@ def replay_episode(env, model, device, extra_state_dims, dtype, path: str = "", 
 
     replays = env.get_player_replays()
 
-    # Random Player
-    player_idx = np.random.randint(0, len(replays))
-    player_name = list(replays.keys())[player_idx]
-    one_player_replay = {player_name: replays.get(player_name)}
-
+    if random_player:
+        # Random Player
+        player_idx = np.random.randint(0, len(replays))
+        player_name = list(replays.keys())[player_idx]
+        replays = {player_name: replays.get(player_name)}
+    
     if store:
         path = os.path.join(path, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{eval_reward:.0f}.mp4")
-        render_episode(one_player_replay, subsample=5, replay_path=path)
+        render_episode(replays, subsample=5, replay_path=path)
     else:
-        HTML(render_episode(one_player_replay, subsample=5).to_html5_video())
+        HTML(render_episode(replays, subsample=5).to_html5_video())
 
     model.train()
     model.to(device)

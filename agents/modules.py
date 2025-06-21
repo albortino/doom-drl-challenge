@@ -4,15 +4,21 @@ import torch
 import math
         
 class Parallel(nn.Module):
-    def __init__(self, modules: dict[str, nn.Module]):
+    def __init__(self, modules: list[nn.Module]):
         super().__init__()
-        if not isinstance(modules, dict):
-            raise ValueError("Modules are not dicts!")
+        if not isinstance(modules, list):
+            raise ValueError("Modules are not lists!")
         
-        self.model = nn.ModuleDict(modules) # Otherwise modeules are not registered correctly
+        self.model = nn.ModuleList(modules)
+        #self.model = nn.ModuleDict(modules) # Otherwise modules are not registered correctly
 
-    def forward(self, inputs: dict[str, torch.Tensor]):
-        return [module(inputs[name]) for name, module in self.model.items()]
+    def forward(self, inputs: tuple) -> torch.Tensor:
+        all_logits = []
+        
+        for module, input in zip(self.model, inputs):
+            all_logits.append(module(input))
+            
+        return torch.cat(all_logits, dim=1)
     
 
 class Downsample(nn.Module):

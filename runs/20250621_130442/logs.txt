@@ -1,0 +1,10 @@
+LOGGER INITIALIZED AT 20250621-130442
+13:04:42 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+13:04:59 | Episode: 0 | Training for 50 epochs
+13:05:06 | Episode: 0 | Updating target network...
+13:05:06 | Episode: 0 | Rewards:
+	Reward: [6.] | Avg Reward: 6.0 | Loss: 0.0018 | ε: 0.995 | LR: 4.98e-05
+	Metrics - ['frags: 0', 'hits: 0', 'damage_taken: 0', 'movement: 3', 'ammo_efficiency: 2', 'survival: 0', 'health_pickup: 0']
+	Actions - 0: 61, 1: 446, 2: 389, 3: 190, 4: 204, 5: 213, 6: 184, 7: 313
+13:05:34 | Episode: 0 | Running quick evaluation...
+13:06:00 | Episode: 1 | Steps done: 2000 | Gathering rollout (currently 2000)
