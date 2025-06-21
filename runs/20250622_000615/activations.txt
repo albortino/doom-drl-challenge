@@ -1,0 +1,7 @@
+LOGGER INITIALIZED AT 20250622-000615
+Episode 0 , encoders , Shape: [2, 256],Mean: 0.00,Std: 0.06,Norm: 1.33
+Episode 0 , head_first , Shape: [2, 1024],Mean: 0.02,Std: 0.03,Norm: 1.59
+Episode 0 , value_head , Shape: [2, 1],Mean: -0.07,Std: 0.00,Norm: 0.10
+Episode 0 , advantage_head , Shape: [2, 8],Mean: -0.02,Std: 0.15,Norm: 0.60
+Episode 0 , Qvalues, Shape: [2, 8],Mean: -0.07,Std: 0.15,Norm: 0.66
+Episode 0 , Actions, Shape: [2],Mean: 3.00,Std: 0.00,Norm: 4.24

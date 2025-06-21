@@ -253,7 +253,7 @@ class EnvActions():
         return [all_buttons[index] for _ in range(num)]
     
     @get_action_value.register
-    def _(self, indices: list) -> list:
+    def _(self, indices: list, num=1) -> list:
         return [self.get_action_value(index) for index in indices]
     
     def get_action_proba(self) -> np.ndarray:
@@ -371,6 +371,7 @@ class ActivationLogger(Logger):
     @torch.no_grad()
     def log_model_activations(self, obs:tuple[torch.Tensor], model: torch.nn.Module, model_sequence: list = [None, 0, 1, 1], episode: int = -1, print_once: bool = False, return_activations_from_idx:  int = -1):       
         
+        orig_device = next(model.parameters()).device
         model.eval().cpu()
         if isinstance(obs, tuple):
             obs = tuple([o.cpu() for o in obs])
@@ -412,6 +413,9 @@ class ActivationLogger(Logger):
         # Log all values together
         self.log(log_str, print_once, improve_file_output=True)
 
+        # Put model on original device
+        model.to(orig_device)
+        
         # Return the last X activations if necessary
         if return_activations_from_idx is not None:
             return_idx = len(all_modules) + return_activations_from_idx if return_activations_from_idx < 0 else return_activations_from_idx

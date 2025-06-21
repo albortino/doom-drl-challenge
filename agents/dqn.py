@@ -61,10 +61,10 @@ def epsilon_greedy(env, model: nn.Module, obs: list, epsilon: float, env_actions
         # Indices are necessary if buttons don't start at 0 but at 1 (e.g., if there wouldn't be a noop option)
     
         if num_players == 1:
-            chosen_actions_idx = q_values.argmax().item() # Single action
+            chosen_actions_idx = q_values.argmax().to(dtype=int).item() # Single action
             print("DEBUG EPSILON NUM PLAYERS=1:", chosen_actions_idx, q_values, end="")  if debug else None
         else:
-            chosen_actions_idx = q_values.argmax(dim=1).tolist() # list of actions
+            chosen_actions_idx = q_values.argmax(dim=1).to(dtype=int).tolist() # list of actions
             print("DEBUG EPSILON NUM PLAYERS>1:", chosen_actions_idx, q_values, end="")  if debug else None
         
         chosen_actions = env_actions.get_action_value(chosen_actions_idx) 
