@@ -400,13 +400,7 @@ class EfficientDQN(OwnModule):
             nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
             
-            # Global average pooling -> one pixel per channel
-            #nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
-            
-            # Output projection
-            #nn.Linear(first_channel_out * 4 * 2 * 2, self.feature_dim_cnns),
-            #nn.Dropout(self.dropout_p),
         )
 
     

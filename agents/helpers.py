@@ -85,19 +85,19 @@ class YourReward(VizDoomReward):
         """
         
         """
-            {'HEALTH': 100.0,
+            {'HEALTH': 100.0,  Can be higher then 100!
             'AMMO3': 0.0,
-            'FRAGCOUNT': 0.0,
+            'FRAGCOUNT': 0.0, # Number of players/bots killed, minus the number of committed suicides. Useful only in multiplayer mode
             'ARMOR': 0.0,
-            'HITCOUNT': 0.0,
-            'HITS_TAKEN': 0.0,
+            'HITCOUNT': 0.0, # Counts number of hit monsters/players/bots during the current episode.
+            'HITS_TAKEN': 0.0, # Counts number of hits taken by the player during the current episode.
             'DEAD': 0.0,
-            'DEATHCOUNT': 0.0,
-            'DAMAGECOUNT': 0.0,
+            'DEATHCOUNT': 0.0, # Counts the number of players deaths during the current episode. Useful only in multiplayer mode.
+            'DAMAGECOUNT': 0.0, # Counts number of damage dealt to monsters/players/bots during the current episode. 
             'DAMAGE_TAKEN': 0.0,
             'KILLCOUNT': 0.0,
             'SELECTED_WEAPON': 2.0,
-            'SELECTED_WEAPON_AMMO': 94.0,
+            'SELECTED_WEAPON_AMMO': 94.0, # Ammo for selected weapon.
             'POSITION_X': 389.96946716308594,
             'POSITION_Y': 274.2670135498047}
         """
@@ -109,28 +109,16 @@ class YourReward(VizDoomReward):
 
         # Combat reward from hits
         rwd_frag = 100.0 * (game_var["FRAGCOUNT"] - game_var_old["FRAGCOUNT"])
-        rwd_hit = 1.0 * (game_var["DAMAGECOUNT"] - game_var_old["DAMAGECOUNT"])
-        rwd_hit_taken = -2.0 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
+        rwd_hit = 5.0 * (game_var["DAMAGECOUNT"] - game_var_old["DAMAGECOUNT"])
+        rwd_hit_taken = -1 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
         
         # Movement reward
         pos_x, pos_y = game_var.get("POSITION_X", 0), game_var.get("POSITION_Y", 0)
         pos_x_old, pos_y_old = game_var_old.get("POSITION_X", 0), game_var_old.get("POSITION_Y", 0)
                 
         movement_dist = calc_movement(pos_x, pos_y, pos_x_old, pos_y_old)
-        #rwd_movement = 0.5 * min((movement_dist if movement_dist else -5e-2) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
-        #rwd_movement = 0.25 * min(movement_dist / 100.0, 1.0) # Max movement factor is 1
-        rwd_movement = 0.1 * np.tanh(movement_dist / 50.0)  # Smooth saturation
-        #if self._step%30 == 0:
-        #    self.prev_position[player_id] = (pos_x, pos_y)
-        
-        # Obstacle detection: Subtract movement if standing still for a long time
-        #if self._step > 100 and self._step %30 == 0:
-        #    prev_x, prev_y = self.prev_position.get(player_id, (pos_x, pos_y)) ## Use current pos if not in dict
-        #    movement_dist = calc_movement(pos_x, pos_y, prev_x, prev_y)
-        #    
-        #    if movement_dist < 1:
-        #        rwd_movement -= 0.5
-            
+        rwd_movement = 0 #0.05 * min(movement_dist / 100.0, 1.0) # Max movement factor is 1
+    
         # Ammo efficiency
         ammo_used = game_var_old.get("SELECTED_WEAPON_AMMO", 0) - game_var.get("SELECTED_WEAPON_AMMO", 0)
         hits_made = game_var["HITCOUNT"] - game_var_old["HITCOUNT"]
@@ -146,10 +134,9 @@ class YourReward(VizDoomReward):
             rwd_ammo_efficiency = 0.0
             
         # Survival bonus
-        #rwd_survival = 0.01 if game_var["HEALTH"] > 0 else -15.0 #1e-3 if game_var["HEALTH"] > 0 else -10.0 #-20 # Moving or surviving improves score slightly
         health_ratio = game_var["HEALTH"] / 100.0
         is_alive = game_var["HEALTH"] > 0
-        rwd_survival = (0.01 + 0.005 * health_ratio) if is_alive else -20.0 # THe higher the health percentage the higher the reward, not linearly
+        rwd_survival = (-0.01 + 0.005 * health_ratio) if is_alive else -20.0 # THe higher the health percentage the higher the reward, not linearly
 
         # Bonus point if a reward is picked up
         rwd_health_pickup = +5.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
@@ -201,12 +188,12 @@ class ExtraStates():
 class EnvActions():
     action_weights = {
             'Noop': 0.05,
-            'Move Forward': 0.18,
-            'Attack': 0.2,
+            'Move Forward': 0.2,
+            'Attack': 0.25,
             'Move Left': 0.10,
             'Move Right': 0.10,
-            'Turn Left': 0.15,
-            'Turn Right': 0.15,
+            'Turn Left': 0.12,
+            'Turn Right': 0.12,
             'Jump': 0.05}
     
     def __init__(self, env, seed: int = 149, rng = None) -> None:
