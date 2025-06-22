@@ -1,0 +1,601 @@
+LOGGER INITIALIZED AT 20250622-122402
+Episode 0 , encoders , Shape: [4, 768],Mean: -0.23,Std: 0.25,Norm: 18.88
+Episode 0 , head_first , Shape: [4, 1024],Mean: -0.24,Std: 0.29,Norm: 24.25
+Episode 0 , value_head , Shape: [4, 1],Mean: 0.09,Std: 0.03,Norm: 0.18
+Episode 0 , advantage_head , Shape: [4, 8],Mean: 0.06,Std: 0.14,Norm: 0.84
+Episode 0 , Qvalues, Shape: [4, 8],Mean: 0.09,Std: 0.14,Norm: 0.92
+Episode 0 , Actions, Shape: [4],Mean: 5.00,Std: 1.15,Norm: 10.20
+Episode 1 , encoders , Shape: [4, 768],Mean: -0.00,Std: 0.88,Norm: 48.86
+Episode 1 , head_first , Shape: [4, 1024],Mean: 0.00,Std: 0.93,Norm: 59.32
+Episode 1 , value_head , Shape: [4, 1],Mean: 0.23,Std: 0.28,Norm: 0.67
+Episode 1 , advantage_head , Shape: [4, 8],Mean: 0.25,Std: 0.38,Norm: 2.53
+Episode 1 , Qvalues, Shape: [4, 8],Mean: 0.23,Std: 0.43,Norm: 2.74
+Episode 1 , Actions, Shape: [4],Mean: 5.50,Std: 1.73,Norm: 11.40
+Episode 2 , encoders , Shape: [4, 768],Mean: 0.66,Std: 2.00,Norm: 116.99
+Episode 2 , head_first , Shape: [4, 1024],Mean: 0.80,Std: 2.18,Norm: 148.82
+Episode 2 , value_head , Shape: [4, 1],Mean: 0.57,Std: 1.07,Norm: 2.16
+Episode 2 , advantage_head , Shape: [4, 8],Mean: 0.20,Std: 1.08,Norm: 6.13
+Episode 2 , Qvalues, Shape: [4, 8],Mean: 0.57,Std: 1.42,Norm: 8.51
+Episode 2 , Actions, Shape: [4],Mean: 3.75,Std: 2.50,Norm: 8.66
+Episode 3 , encoders , Shape: [4, 768],Mean: 1.24,Std: 2.91,Norm: 175.64
+Episode 3 , head_first , Shape: [4, 1024],Mean: 1.57,Std: 3.51,Norm: 246.03
+Episode 3 , value_head , Shape: [4, 1],Mean: -1.91,Std: 1.52,Norm: 4.63
+Episode 3 , advantage_head , Shape: [4, 8],Mean: -0.17,Std: 1.64,Norm: 9.16
+Episode 3 , Qvalues, Shape: [4, 8],Mean: -1.91,Std: 2.03,Norm: 15.63
+Episode 3 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 4 , encoders , Shape: [4, 768],Mean: 1.77,Std: 3.66,Norm: 225.43
+Episode 4 , head_first , Shape: [4, 1024],Mean: 2.08,Std: 4.29,Norm: 305.07
+Episode 4 , value_head , Shape: [4, 1],Mean: -0.77,Std: 1.82,Norm: 3.51
+Episode 4 , advantage_head , Shape: [4, 8],Mean: 0.26,Std: 2.47,Norm: 13.84
+Episode 4 , Qvalues, Shape: [4, 8],Mean: -0.77,Std: 2.93,Norm: 16.86
+Episode 4 , Actions, Shape: [4],Mean: 1.25,Std: 0.50,Norm: 2.65
+Episode 5 , encoders , Shape: [4, 768],Mean: 1.83,Std: 3.75,Norm: 231.36
+Episode 5 , head_first , Shape: [4, 1024],Mean: 2.18,Std: 4.43,Norm: 315.80
+Episode 5 , value_head , Shape: [4, 1],Mean: -1.85,Std: 1.36,Norm: 4.38
+Episode 5 , advantage_head , Shape: [4, 8],Mean: -0.11,Std: 2.27,Norm: 12.64
+Episode 5 , Qvalues, Shape: [4, 8],Mean: -1.85,Std: 2.55,Norm: 17.65
+Episode 5 , Actions, Shape: [4],Mean: 2.25,Std: 1.26,Norm: 5.00
+Episode 6 , encoders , Shape: [4, 768],Mean: 1.91,Std: 3.80,Norm: 235.44
+Episode 6 , head_first , Shape: [4, 1024],Mean: 2.22,Std: 4.49,Norm: 320.46
+Episode 6 , value_head , Shape: [4, 1],Mean: -0.85,Std: 2.65,Norm: 4.90
+Episode 6 , advantage_head , Shape: [4, 8],Mean: 0.33,Std: 2.55,Norm: 14.33
+Episode 6 , Qvalues, Shape: [4, 8],Mean: -0.85,Std: 3.43,Norm: 19.70
+Episode 6 , Actions, Shape: [4],Mean: 2.00,Std: 0.00,Norm: 4.00
+Episode 7 , encoders , Shape: [4, 768],Mean: 1.82,Std: 3.68,Norm: 227.43
+Episode 7 , head_first , Shape: [4, 1024],Mean: 2.18,Std: 4.32,Norm: 309.86
+Episode 7 , value_head , Shape: [4, 1],Mean: -0.80,Std: 1.12,Norm: 2.51
+Episode 7 , advantage_head , Shape: [4, 8],Mean: -0.29,Std: 2.26,Norm: 12.68
+Episode 7 , Qvalues, Shape: [4, 8],Mean: -0.80,Std: 2.46,Norm: 14.41
+Episode 7 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 8 , encoders , Shape: [4, 768],Mean: 1.73,Std: 3.50,Norm: 216.15
+Episode 8 , head_first , Shape: [4, 1024],Mean: 1.95,Std: 4.07,Norm: 288.64
+Episode 8 , value_head , Shape: [4, 1],Mean: -1.10,Std: 1.08,Norm: 2.89
+Episode 8 , advantage_head , Shape: [4, 8],Mean: 0.21,Std: 2.01,Norm: 11.24
+Episode 8 , Qvalues, Shape: [4, 8],Mean: -1.10,Std: 2.19,Norm: 13.68
+Episode 8 , Actions, Shape: [4],Mean: 2.25,Std: 1.26,Norm: 5.00
+Episode 9 , encoders , Shape: [4, 768],Mean: 1.98,Std: 4.01,Norm: 247.70
+Episode 9 , head_first , Shape: [4, 1024],Mean: 2.43,Std: 4.93,Norm: 351.35
+Episode 9 , value_head , Shape: [4, 1],Mean: -0.31,Std: 3.61,Norm: 6.28
+Episode 9 , advantage_head , Shape: [4, 8],Mean: -0.27,Std: 2.76,Norm: 15.44
+Episode 9 , Qvalues, Shape: [4, 8],Mean: -0.31,Std: 4.12,Norm: 23.00
+Episode 9 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 10 , encoders , Shape: [4, 768],Mean: 1.98,Std: 3.99,Norm: 246.89
+Episode 10 , head_first , Shape: [4, 1024],Mean: 2.37,Std: 4.78,Norm: 341.26
+Episode 10 , value_head , Shape: [4, 1],Mean: 1.03,Std: 2.38,Norm: 4.61
+Episode 10 , advantage_head , Shape: [4, 8],Mean: 0.03,Std: 2.44,Norm: 13.59
+Episode 10 , Qvalues, Shape: [4, 8],Mean: 1.03,Std: 3.17,Norm: 18.60
+Episode 10 , Actions, Shape: [4],Mean: 4.00,Std: 2.16,Norm: 8.83
+Episode 11 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.83,Norm: 236.94
+Episode 11 , head_first , Shape: [4, 1024],Mean: 2.22,Std: 4.46,Norm: 318.69
+Episode 11 , value_head , Shape: [4, 1],Mean: -0.27,Std: 3.46,Norm: 6.02
+Episode 11 , advantage_head , Shape: [4, 8],Mean: -0.09,Std: 2.55,Norm: 14.19
+Episode 11 , Qvalues, Shape: [4, 8],Mean: -0.27,Std: 3.86,Norm: 21.55
+Episode 11 , Actions, Shape: [4],Mean: 2.00,Std: 1.83,Norm: 5.10
+Episode 12 , encoders , Shape: [4, 768],Mean: 1.79,Std: 3.58,Norm: 222.07
+Episode 12 , head_first , Shape: [4, 1024],Mean: 2.09,Std: 4.27,Norm: 304.28
+Episode 12 , value_head , Shape: [4, 1],Mean: -0.19,Std: 2.30,Norm: 4.01
+Episode 12 , advantage_head , Shape: [4, 8],Mean: 0.75,Std: 2.55,Norm: 14.81
+Episode 12 , Qvalues, Shape: [4, 8],Mean: -0.19,Std: 3.21,Norm: 17.93
+Episode 12 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 13 , encoders , Shape: [4, 768],Mean: 1.79,Std: 3.70,Norm: 227.45
+Episode 13 , head_first , Shape: [4, 1024],Mean: 2.17,Std: 4.28,Norm: 307.15
+Episode 13 , value_head , Shape: [4, 1],Mean: -0.94,Std: 1.49,Norm: 3.20
+Episode 13 , advantage_head , Shape: [4, 8],Mean: 0.06,Std: 2.44,Norm: 13.57
+Episode 13 , Qvalues, Shape: [4, 8],Mean: -0.94,Std: 2.66,Norm: 15.76
+Episode 13 , Actions, Shape: [4],Mean: 1.75,Std: 1.71,Norm: 4.58
+Episode 14 , encoders , Shape: [4, 768],Mean: 1.93,Std: 3.86,Norm: 239.13
+Episode 14 , head_first , Shape: [4, 1024],Mean: 2.26,Std: 4.46,Norm: 320.19
+Episode 14 , value_head , Shape: [4, 1],Mean: -0.01,Std: 1.49,Norm: 2.57
+Episode 14 , advantage_head , Shape: [4, 8],Mean: -0.49,Std: 2.56,Norm: 14.54
+Episode 14 , Qvalues, Shape: [4, 8],Mean: -0.01,Std: 2.81,Norm: 15.63
+Episode 14 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 15 , encoders , Shape: [4, 768],Mean: 1.90,Std: 3.89,Norm: 240.19
+Episode 15 , head_first , Shape: [4, 1024],Mean: 2.17,Std: 4.40,Norm: 313.75
+Episode 15 , value_head , Shape: [4, 1],Mean: 1.21,Std: 0.76,Norm: 2.75
+Episode 15 , advantage_head , Shape: [4, 8],Mean: -0.20,Std: 1.93,Norm: 10.82
+Episode 15 , Qvalues, Shape: [4, 8],Mean: 1.21,Std: 2.02,Norm: 13.17
+Episode 15 , Actions, Shape: [4],Mean: 2.50,Std: 1.00,Norm: 5.29
+Episode 16 , encoders , Shape: [4, 768],Mean: 1.87,Std: 3.93,Norm: 241.33
+Episode 16 , head_first , Shape: [4, 1024],Mean: 2.32,Std: 4.68,Norm: 334.18
+Episode 16 , value_head , Shape: [4, 1],Mean: -0.67,Std: 1.65,Norm: 3.15
+Episode 16 , advantage_head , Shape: [4, 8],Mean: -0.42,Std: 2.49,Norm: 14.09
+Episode 16 , Qvalues, Shape: [4, 8],Mean: -0.67,Std: 2.87,Norm: 16.41
+Episode 16 , Actions, Shape: [4],Mean: 3.50,Std: 2.38,Norm: 8.12
+Episode 17 , encoders , Shape: [4, 768],Mean: 1.80,Std: 3.69,Norm: 227.81
+Episode 17 , head_first , Shape: [4, 1024],Mean: 2.16,Std: 4.39,Norm: 313.04
+Episode 17 , value_head , Shape: [4, 1],Mean: -0.21,Std: 1.42,Norm: 2.50
+Episode 17 , advantage_head , Shape: [4, 8],Mean: -0.16,Std: 2.43,Norm: 13.56
+Episode 17 , Qvalues, Shape: [4, 8],Mean: -0.21,Std: 2.69,Norm: 15.05
+Episode 17 , Actions, Shape: [4],Mean: 2.50,Std: 2.38,Norm: 6.48
+Episode 18 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.80,Norm: 235.06
+Episode 18 , head_first , Shape: [4, 1024],Mean: 2.11,Std: 4.36,Norm: 309.93
+Episode 18 , value_head , Shape: [4, 1],Mean: -0.26,Std: 2.60,Norm: 4.54
+Episode 18 , advantage_head , Shape: [4, 8],Mean: 0.07,Std: 2.40,Norm: 13.35
+Episode 18 , Qvalues, Shape: [4, 8],Mean: -0.26,Std: 3.31,Norm: 18.49
+Episode 18 , Actions, Shape: [4],Mean: 3.00,Std: 1.15,Norm: 6.32
+Episode 19 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.78,Norm: 232.87
+Episode 19 , head_first , Shape: [4, 1024],Mean: 2.27,Std: 4.63,Norm: 329.90
+Episode 19 , value_head , Shape: [4, 1],Mean: -0.53,Std: 2.27,Norm: 4.07
+Episode 19 , advantage_head , Shape: [4, 8],Mean: 0.51,Std: 2.21,Norm: 12.64
+Episode 19 , Qvalues, Shape: [4, 8],Mean: -0.53,Std: 2.95,Norm: 16.72
+Episode 19 , Actions, Shape: [4],Mean: 3.75,Std: 2.06,Norm: 8.31
+Episode 20 , encoders , Shape: [4, 768],Mean: 1.90,Std: 3.89,Norm: 240.02
+Episode 20 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.67,Norm: 333.32
+Episode 20 , value_head , Shape: [4, 1],Mean: 0.52,Std: 1.48,Norm: 2.76
+Episode 20 , advantage_head , Shape: [4, 8],Mean: -0.55,Std: 2.57,Norm: 14.64
+Episode 20 , Qvalues, Shape: [4, 8],Mean: 0.52,Std: 2.69,Norm: 15.27
+Episode 20 , Actions, Shape: [4],Mean: 2.00,Std: 2.71,Norm: 6.16
+Episode 21 , encoders , Shape: [4, 768],Mean: 1.83,Std: 3.79,Norm: 232.94
+Episode 21 , head_first , Shape: [4, 1024],Mean: 2.29,Std: 4.48,Norm: 321.97
+Episode 21 , value_head , Shape: [4, 1],Mean: -0.34,Std: 1.43,Norm: 2.56
+Episode 21 , advantage_head , Shape: [4, 8],Mean: -0.52,Std: 2.35,Norm: 13.43
+Episode 21 , Qvalues, Shape: [4, 8],Mean: -0.34,Std: 2.59,Norm: 14.56
+Episode 21 , Actions, Shape: [4],Mean: 2.50,Std: 1.29,Norm: 5.48
+Episode 22 , encoders , Shape: [4, 768],Mean: 1.69,Std: 3.54,Norm: 217.11
+Episode 22 , head_first , Shape: [4, 1024],Mean: 1.91,Std: 4.03,Norm: 285.35
+Episode 22 , value_head , Shape: [4, 1],Mean: -0.41,Std: 1.51,Norm: 2.74
+Episode 22 , advantage_head , Shape: [4, 8],Mean: 0.20,Std: 2.03,Norm: 11.38
+Episode 22 , Qvalues, Shape: [4, 8],Mean: -0.41,Std: 2.40,Norm: 13.55
+Episode 22 , Actions, Shape: [4],Mean: 3.00,Std: 2.71,Norm: 7.62
+Episode 23 , encoders , Shape: [4, 768],Mean: 1.78,Std: 3.73,Norm: 229.20
+Episode 23 , head_first , Shape: [4, 1024],Mean: 2.10,Std: 4.30,Norm: 306.54
+Episode 23 , value_head , Shape: [4, 1],Mean: 1.16,Std: 2.37,Norm: 4.71
+Episode 23 , advantage_head , Shape: [4, 8],Mean: 0.30,Std: 1.86,Norm: 10.50
+Episode 23 , Qvalues, Shape: [4, 8],Mean: 1.16,Std: 2.77,Norm: 16.74
+Episode 23 , Actions, Shape: [4],Mean: 3.25,Std: 2.50,Norm: 7.81
+Episode 24 , encoders , Shape: [4, 768],Mean: 1.95,Std: 3.91,Norm: 242.33
+Episode 24 , head_first , Shape: [4, 1024],Mean: 2.44,Std: 4.92,Norm: 351.42
+Episode 24 , value_head , Shape: [4, 1],Mean: -0.93,Std: 1.35,Norm: 2.99
+Episode 24 , advantage_head , Shape: [4, 8],Mean: -0.33,Std: 2.32,Norm: 13.06
+Episode 24 , Qvalues, Shape: [4, 8],Mean: -0.93,Std: 2.58,Norm: 15.28
+Episode 24 , Actions, Shape: [4],Mean: 1.75,Std: 0.50,Norm: 3.61
+Episode 25 , encoders , Shape: [4, 768],Mean: 2.01,Std: 4.06,Norm: 251.08
+Episode 25 , head_first , Shape: [4, 1024],Mean: 2.37,Std: 4.77,Norm: 340.59
+Episode 25 , value_head , Shape: [4, 1],Mean: -1.93,Std: 1.99,Norm: 5.17
+Episode 25 , advantage_head , Shape: [4, 8],Mean: -0.92,Std: 2.42,Norm: 14.42
+Episode 25 , Qvalues, Shape: [4, 8],Mean: -1.93,Std: 2.93,Norm: 19.61
+Episode 25 , Actions, Shape: [4],Mean: 2.25,Std: 1.89,Norm: 5.57
+Episode 26 , encoders , Shape: [4, 768],Mean: 1.95,Std: 3.93,Norm: 243.18
+Episode 26 , head_first , Shape: [4, 1024],Mean: 2.41,Std: 4.76,Norm: 341.53
+Episode 26 , value_head , Shape: [4, 1],Mean: -0.72,Std: 1.19,Norm: 2.51
+Episode 26 , advantage_head , Shape: [4, 8],Mean: -0.20,Std: 2.54,Norm: 14.18
+Episode 26 , Qvalues, Shape: [4, 8],Mean: -0.72,Std: 2.71,Norm: 15.62
+Episode 26 , Actions, Shape: [4],Mean: 4.25,Std: 1.71,Norm: 9.00
+Episode 27 , encoders , Shape: [4, 768],Mean: 1.90,Std: 3.80,Norm: 235.61
+Episode 27 , head_first , Shape: [4, 1024],Mean: 2.21,Std: 4.50,Norm: 320.81
+Episode 27 , value_head , Shape: [4, 1],Mean: -1.12,Std: 2.24,Norm: 4.48
+Episode 27 , advantage_head , Shape: [4, 8],Mean: 0.29,Std: 2.60,Norm: 14.58
+Episode 27 , Qvalues, Shape: [4, 8],Mean: -1.12,Std: 3.23,Norm: 19.07
+Episode 27 , Actions, Shape: [4],Mean: 3.25,Std: 2.22,Norm: 7.55
+Episode 28 , encoders , Shape: [4, 768],Mean: 1.93,Std: 3.96,Norm: 244.03
+Episode 28 , head_first , Shape: [4, 1024],Mean: 2.34,Std: 4.60,Norm: 330.25
+Episode 28 , value_head , Shape: [4, 1],Mean: -0.16,Std: 1.82,Norm: 3.18
+Episode 28 , advantage_head , Shape: [4, 8],Mean: 0.16,Std: 2.40,Norm: 13.37
+Episode 28 , Qvalues, Shape: [4, 8],Mean: -0.16,Std: 2.87,Norm: 16.00
+Episode 28 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 29 , encoders , Shape: [4, 768],Mean: 1.88,Std: 3.84,Norm: 237.26
+Episode 29 , head_first , Shape: [4, 1024],Mean: 2.27,Std: 4.59,Norm: 327.68
+Episode 29 , value_head , Shape: [4, 1],Mean: -0.94,Std: 0.39,Norm: 2.00
+Episode 29 , advantage_head , Shape: [4, 8],Mean: 0.52,Std: 2.51,Norm: 14.28
+Episode 29 , Qvalues, Shape: [4, 8],Mean: -0.94,Std: 2.52,Norm: 15.00
+Episode 29 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 30 , encoders , Shape: [4, 768],Mean: 1.88,Std: 3.74,Norm: 232.25
+Episode 30 , head_first , Shape: [4, 1024],Mean: 2.26,Std: 4.35,Norm: 313.68
+Episode 30 , value_head , Shape: [4, 1],Mean: -0.08,Std: 1.48,Norm: 2.57
+Episode 30 , advantage_head , Shape: [4, 8],Mean: 0.21,Std: 2.56,Norm: 14.29
+Episode 30 , Qvalues, Shape: [4, 8],Mean: -0.08,Std: 2.85,Norm: 15.89
+Episode 30 , Actions, Shape: [4],Mean: 2.00,Std: 0.00,Norm: 4.00
+Episode 31 , encoders , Shape: [4, 768],Mean: 1.92,Std: 3.87,Norm: 239.56
+Episode 31 , head_first , Shape: [4, 1024],Mean: 2.42,Std: 4.65,Norm: 335.70
+Episode 31 , value_head , Shape: [4, 1],Mean: 1.00,Std: 1.34,Norm: 3.08
+Episode 31 , advantage_head , Shape: [4, 8],Mean: -0.08,Std: 2.61,Norm: 14.56
+Episode 31 , Qvalues, Shape: [4, 8],Mean: 1.00,Std: 2.80,Norm: 16.59
+Episode 31 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 32 , encoders , Shape: [4, 768],Mean: 1.88,Std: 3.80,Norm: 234.75
+Episode 32 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.62,Norm: 330.05
+Episode 32 , value_head , Shape: [4, 1],Mean: -0.74,Std: 4.47,Norm: 7.88
+Episode 32 , advantage_head , Shape: [4, 8],Mean: 0.46,Std: 2.51,Norm: 14.24
+Episode 32 , Qvalues, Shape: [4, 8],Mean: -0.74,Std: 4.65,Norm: 26.25
+Episode 32 , Actions, Shape: [4],Mean: 2.00,Std: 0.00,Norm: 4.00
+Episode 33 , encoders , Shape: [4, 768],Mean: 1.80,Std: 3.74,Norm: 230.12
+Episode 33 , head_first , Shape: [4, 1024],Mean: 2.20,Std: 4.41,Norm: 315.37
+Episode 33 , value_head , Shape: [4, 1],Mean: -0.75,Std: 2.42,Norm: 4.46
+Episode 33 , advantage_head , Shape: [4, 8],Mean: 0.16,Std: 2.49,Norm: 13.88
+Episode 33 , Qvalues, Shape: [4, 8],Mean: -0.75,Std: 3.23,Norm: 18.48
+Episode 33 , Actions, Shape: [4],Mean: 1.75,Std: 0.50,Norm: 3.61
+Episode 34 , encoders , Shape: [4, 768],Mean: 1.83,Std: 3.71,Norm: 229.12
+Episode 34 , head_first , Shape: [4, 1024],Mean: 2.11,Std: 4.28,Norm: 305.64
+Episode 34 , value_head , Shape: [4, 1],Mean: 1.40,Std: 2.74,Norm: 5.51
+Episode 34 , advantage_head , Shape: [4, 8],Mean: 0.04,Std: 2.28,Norm: 12.71
+Episode 34 , Qvalues, Shape: [4, 8],Mean: 1.40,Std: 3.32,Norm: 20.10
+Episode 34 , Actions, Shape: [4],Mean: 2.50,Std: 2.38,Norm: 6.48
+Episode 35 , encoders , Shape: [4, 768],Mean: 1.86,Std: 3.67,Norm: 227.72
+Episode 35 , head_first , Shape: [4, 1024],Mean: 2.07,Std: 4.30,Norm: 305.28
+Episode 35 , value_head , Shape: [4, 1],Mean: 0.28,Std: 1.82,Norm: 3.20
+Episode 35 , advantage_head , Shape: [4, 8],Mean: 0.41,Std: 2.46,Norm: 13.89
+Episode 35 , Qvalues, Shape: [4, 8],Mean: 0.28,Std: 2.84,Norm: 15.90
+Episode 35 , Actions, Shape: [4],Mean: 2.00,Std: 1.41,Norm: 4.69
+Episode 36 , encoders , Shape: [4, 768],Mean: 1.82,Std: 3.75,Norm: 231.09
+Episode 36 , head_first , Shape: [4, 1024],Mean: 2.27,Std: 4.52,Norm: 323.94
+Episode 36 , value_head , Shape: [4, 1],Mean: -1.55,Std: 1.59,Norm: 4.15
+Episode 36 , advantage_head , Shape: [4, 8],Mean: 0.26,Std: 2.22,Norm: 12.46
+Episode 36 , Qvalues, Shape: [4, 8],Mean: -1.55,Std: 2.61,Norm: 17.00
+Episode 36 , Actions, Shape: [4],Mean: 3.50,Std: 1.73,Norm: 7.62
+Episode 37 , encoders , Shape: [4, 768],Mean: 1.86,Std: 3.95,Norm: 241.94
+Episode 37 , head_first , Shape: [4, 1024],Mean: 2.34,Std: 4.75,Norm: 338.62
+Episode 37 , value_head , Shape: [4, 1],Mean: 1.49,Std: 0.78,Norm: 3.26
+Episode 37 , advantage_head , Shape: [4, 8],Mean: 0.18,Std: 2.18,Norm: 12.16
+Episode 37 , Qvalues, Shape: [4, 8],Mean: 1.49,Std: 2.23,Norm: 14.99
+Episode 37 , Actions, Shape: [4],Mean: 4.25,Std: 1.71,Norm: 9.00
+Episode 38 , encoders , Shape: [4, 768],Mean: 1.72,Std: 3.58,Norm: 219.81
+Episode 38 , head_first , Shape: [4, 1024],Mean: 2.02,Std: 4.13,Norm: 294.26
+Episode 38 , value_head , Shape: [4, 1],Mean: -0.51,Std: 1.20,Norm: 2.31
+Episode 38 , advantage_head , Shape: [4, 8],Mean: 0.07,Std: 2.21,Norm: 12.31
+Episode 38 , Qvalues, Shape: [4, 8],Mean: -0.51,Std: 2.42,Norm: 13.75
+Episode 38 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 39 , encoders , Shape: [4, 768],Mean: 1.72,Std: 3.48,Norm: 214.87
+Episode 39 , head_first , Shape: [4, 1024],Mean: 1.95,Std: 3.99,Norm: 284.16
+Episode 39 , value_head , Shape: [4, 1],Mean: 0.11,Std: 0.80,Norm: 1.41
+Episode 39 , advantage_head , Shape: [4, 8],Mean: 0.24,Std: 2.21,Norm: 12.39
+Episode 39 , Qvalues, Shape: [4, 8],Mean: 0.11,Std: 2.31,Norm: 12.85
+Episode 39 , Actions, Shape: [4],Mean: 3.00,Std: 1.83,Norm: 6.78
+Episode 40 , encoders , Shape: [4, 768],Mean: 1.88,Std: 3.88,Norm: 239.15
+Episode 40 , head_first , Shape: [4, 1024],Mean: 2.25,Std: 4.59,Norm: 326.99
+Episode 40 , value_head , Shape: [4, 1],Mean: 1.03,Std: 3.34,Norm: 6.15
+Episode 40 , advantage_head , Shape: [4, 8],Mean: -0.01,Std: 2.12,Norm: 11.79
+Episode 40 , Qvalues, Shape: [4, 8],Mean: 1.03,Std: 3.59,Norm: 20.84
+Episode 40 , Actions, Shape: [4],Mean: 2.50,Std: 1.00,Norm: 5.29
+Episode 41 , encoders , Shape: [4, 768],Mean: 1.94,Std: 3.88,Norm: 240.45
+Episode 41 , head_first , Shape: [4, 1024],Mean: 2.31,Std: 4.56,Norm: 327.35
+Episode 41 , value_head , Shape: [4, 1],Mean: -0.37,Std: 1.69,Norm: 3.02
+Episode 41 , advantage_head , Shape: [4, 8],Mean: -0.05,Std: 1.92,Norm: 10.72
+Episode 41 , Qvalues, Shape: [4, 8],Mean: -0.37,Std: 2.35,Norm: 13.27
+Episode 41 , Actions, Shape: [4],Mean: 1.25,Std: 0.96,Norm: 3.00
+Episode 42 , encoders , Shape: [4, 768],Mean: 2.00,Std: 3.89,Norm: 242.40
+Episode 42 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.59,Norm: 328.57
+Episode 42 , value_head , Shape: [4, 1],Mean: -0.23,Std: 2.49,Norm: 4.33
+Episode 42 , advantage_head , Shape: [4, 8],Mean: 0.06,Std: 2.24,Norm: 12.50
+Episode 42 , Qvalues, Shape: [4, 8],Mean: -0.23,Std: 3.07,Norm: 17.15
+Episode 42 , Actions, Shape: [4],Mean: 3.25,Std: 2.63,Norm: 7.94
+Episode 43 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.77,Norm: 232.62
+Episode 43 , head_first , Shape: [4, 1024],Mean: 2.19,Std: 4.30,Norm: 308.95
+Episode 43 , value_head , Shape: [4, 1],Mean: 0.88,Std: 1.25,Norm: 2.79
+Episode 43 , advantage_head , Shape: [4, 8],Mean: -0.44,Std: 2.70,Norm: 15.21
+Episode 43 , Qvalues, Shape: [4, 8],Mean: 0.88,Std: 2.90,Norm: 16.90
+Episode 43 , Actions, Shape: [4],Mean: 2.25,Std: 2.50,Norm: 6.24
+Episode 44 , encoders , Shape: [4, 768],Mean: 1.83,Std: 3.74,Norm: 230.60
+Episode 44 , head_first , Shape: [4, 1024],Mean: 2.16,Std: 4.53,Norm: 321.20
+Episode 44 , value_head , Shape: [4, 1],Mean: -1.21,Std: 1.65,Norm: 3.76
+Episode 44 , advantage_head , Shape: [4, 8],Mean: 0.25,Std: 2.38,Norm: 13.35
+Episode 44 , Qvalues, Shape: [4, 8],Mean: -1.21,Std: 2.78,Norm: 16.96
+Episode 44 , Actions, Shape: [4],Mean: 2.00,Std: 0.00,Norm: 4.00
+Episode 45 , encoders , Shape: [4, 768],Mean: 1.83,Std: 3.71,Norm: 229.11
+Episode 45 , head_first , Shape: [4, 1024],Mean: 2.17,Std: 4.47,Norm: 317.96
+Episode 45 , value_head , Shape: [4, 1],Mean: -1.11,Std: 1.31,Norm: 3.18
+Episode 45 , advantage_head , Shape: [4, 8],Mean: -0.08,Std: 2.57,Norm: 14.31
+Episode 45 , Qvalues, Shape: [4, 8],Mean: -1.11,Std: 2.75,Norm: 16.57
+Episode 45 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 46 , encoders , Shape: [4, 768],Mean: 1.93,Std: 3.85,Norm: 238.70
+Episode 46 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.57,Norm: 327.30
+Episode 46 , value_head , Shape: [4, 1],Mean: -1.56,Std: 1.01,Norm: 3.58
+Episode 46 , advantage_head , Shape: [4, 8],Mean: -0.03,Std: 2.77,Norm: 15.45
+Episode 46 , Qvalues, Shape: [4, 8],Mean: -1.56,Std: 2.84,Norm: 18.09
+Episode 46 , Actions, Shape: [4],Mean: 3.75,Std: 2.75,Norm: 8.89
+Episode 47 , encoders , Shape: [4, 768],Mean: 1.88,Std: 3.73,Norm: 231.60
+Episode 47 , head_first , Shape: [4, 1024],Mean: 2.16,Std: 4.40,Norm: 313.91
+Episode 47 , value_head , Shape: [4, 1],Mean: -0.52,Std: 2.51,Norm: 4.47
+Episode 47 , advantage_head , Shape: [4, 8],Mean: 0.29,Std: 2.55,Norm: 14.30
+Episode 47 , Qvalues, Shape: [4, 8],Mean: -0.52,Std: 3.36,Norm: 18.93
+Episode 47 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 48 , encoders , Shape: [4, 768],Mean: 1.87,Std: 3.76,Norm: 232.84
+Episode 48 , head_first , Shape: [4, 1024],Mean: 2.17,Std: 4.36,Norm: 311.72
+Episode 48 , value_head , Shape: [4, 1],Mean: -0.40,Std: 2.18,Norm: 3.86
+Episode 48 , advantage_head , Shape: [4, 8],Mean: -0.19,Std: 2.37,Norm: 13.23
+Episode 48 , Qvalues, Shape: [4, 8],Mean: -0.40,Std: 3.01,Norm: 16.93
+Episode 48 , Actions, Shape: [4],Mean: 2.00,Std: 2.16,Norm: 5.48
+Episode 49 , encoders , Shape: [4, 768],Mean: 1.92,Std: 4.05,Norm: 248.50
+Episode 49 , head_first , Shape: [4, 1024],Mean: 2.40,Std: 4.83,Norm: 345.42
+Episode 49 , value_head , Shape: [4, 1],Mean: -1.35,Std: 1.72,Norm: 4.01
+Episode 49 , advantage_head , Shape: [4, 8],Mean: -0.29,Std: 2.38,Norm: 13.35
+Episode 49 , Qvalues, Shape: [4, 8],Mean: -1.35,Std: 2.81,Norm: 17.43
+Episode 49 , Actions, Shape: [4],Mean: 1.25,Std: 0.50,Norm: 2.65
+Episode 50 , encoders , Shape: [4, 768],Mean: 1.97,Std: 3.88,Norm: 240.92
+Episode 50 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.53,Norm: 325.29
+Episode 50 , value_head , Shape: [4, 1],Mean: 0.21,Std: 0.27,Norm: 0.62
+Episode 50 , advantage_head , Shape: [4, 8],Mean: -0.75,Std: 2.77,Norm: 16.01
+Episode 50 , Qvalues, Shape: [4, 8],Mean: 0.21,Std: 2.70,Norm: 15.07
+Episode 50 , Actions, Shape: [4],Mean: 3.75,Std: 2.63,Norm: 8.77
+Episode 51 , encoders , Shape: [4, 768],Mean: 1.81,Std: 3.69,Norm: 228.07
+Episode 51 , head_first , Shape: [4, 1024],Mean: 2.03,Std: 4.16,Norm: 296.49
+Episode 51 , value_head , Shape: [4, 1],Mean: -0.27,Std: 1.49,Norm: 2.64
+Episode 51 , advantage_head , Shape: [4, 8],Mean: 0.19,Std: 2.02,Norm: 11.29
+Episode 51 , Qvalues, Shape: [4, 8],Mean: -0.27,Std: 2.37,Norm: 13.30
+Episode 51 , Actions, Shape: [4],Mean: 2.25,Std: 2.50,Norm: 6.24
+Episode 52 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.80,Norm: 233.85
+Episode 52 , head_first , Shape: [4, 1024],Mean: 2.28,Std: 4.51,Norm: 323.36
+Episode 52 , value_head , Shape: [4, 1],Mean: 1.52,Std: 1.39,Norm: 3.87
+Episode 52 , advantage_head , Shape: [4, 8],Mean: 0.39,Std: 3.24,Norm: 18.19
+Episode 52 , Qvalues, Shape: [4, 8],Mean: 1.52,Std: 3.41,Norm: 20.81
+Episode 52 , Actions, Shape: [4],Mean: 3.00,Std: 1.15,Norm: 6.32
+Episode 53 , encoders , Shape: [4, 768],Mean: 1.77,Std: 3.64,Norm: 224.11
+Episode 53 , head_first , Shape: [4, 1024],Mean: 2.02,Std: 4.19,Norm: 297.58
+Episode 53 , value_head , Shape: [4, 1],Mean: 0.41,Std: 0.37,Norm: 1.04
+Episode 53 , advantage_head , Shape: [4, 8],Mean: 0.46,Std: 2.34,Norm: 13.30
+Episode 53 , Qvalues, Shape: [4, 8],Mean: 0.41,Std: 2.25,Norm: 12.72
+Episode 53 , Actions, Shape: [4],Mean: 4.00,Std: 2.94,Norm: 9.49
+Episode 54 , encoders , Shape: [4, 768],Mean: 1.73,Std: 3.66,Norm: 224.33
+Episode 54 , head_first , Shape: [4, 1024],Mean: 1.99,Std: 4.15,Norm: 294.82
+Episode 54 , value_head , Shape: [4, 1],Mean: 0.07,Std: 2.24,Norm: 3.89
+Episode 54 , advantage_head , Shape: [4, 8],Mean: 0.13,Std: 2.08,Norm: 11.59
+Episode 54 , Qvalues, Shape: [4, 8],Mean: 0.07,Std: 2.77,Norm: 15.42
+Episode 54 , Actions, Shape: [4],Mean: 2.50,Std: 2.52,Norm: 6.63
+Episode 55 , encoders , Shape: [4, 768],Mean: 1.87,Std: 3.75,Norm: 232.19
+Episode 55 , head_first , Shape: [4, 1024],Mean: 2.28,Std: 4.49,Norm: 322.08
+Episode 55 , value_head , Shape: [4, 1],Mean: 1.18,Std: 1.20,Norm: 3.14
+Episode 55 , advantage_head , Shape: [4, 8],Mean: 0.34,Std: 2.48,Norm: 13.95
+Episode 55 , Qvalues, Shape: [4, 8],Mean: 1.18,Std: 2.48,Norm: 15.35
+Episode 55 , Actions, Shape: [4],Mean: 2.25,Std: 1.26,Norm: 5.00
+Episode 56 , encoders , Shape: [4, 768],Mean: 1.93,Std: 3.74,Norm: 232.97
+Episode 56 , head_first , Shape: [4, 1024],Mean: 2.09,Std: 4.28,Norm: 304.76
+Episode 56 , value_head , Shape: [4, 1],Mean: -0.23,Std: 2.37,Norm: 4.14
+Episode 56 , advantage_head , Shape: [4, 8],Mean: 0.12,Std: 2.24,Norm: 12.48
+Episode 56 , Qvalues, Shape: [4, 8],Mean: -0.23,Std: 3.04,Norm: 16.97
+Episode 56 , Actions, Shape: [4],Mean: 3.00,Std: 1.83,Norm: 6.78
+Episode 57 , encoders , Shape: [4, 768],Mean: 1.68,Std: 3.50,Norm: 215.36
+Episode 57 , head_first , Shape: [4, 1024],Mean: 1.90,Std: 3.93,Norm: 279.52
+Episode 57 , value_head , Shape: [4, 1],Mean: -0.41,Std: 0.68,Norm: 1.44
+Episode 57 , advantage_head , Shape: [4, 8],Mean: -0.37,Std: 2.23,Norm: 12.62
+Episode 57 , Qvalues, Shape: [4, 8],Mean: -0.41,Std: 2.23,Norm: 12.65
+Episode 57 , Actions, Shape: [4],Mean: 4.25,Std: 2.63,Norm: 9.64
+Episode 58 , encoders , Shape: [4, 768],Mean: 1.75,Std: 3.54,Norm: 218.69
+Episode 58 , head_first , Shape: [4, 1024],Mean: 1.98,Std: 4.16,Norm: 294.64
+Episode 58 , value_head , Shape: [4, 1],Mean: 0.02,Std: 3.55,Norm: 6.14
+Episode 58 , advantage_head , Shape: [4, 8],Mean: -0.04,Std: 2.52,Norm: 14.03
+Episode 58 , Qvalues, Shape: [4, 8],Mean: 0.02,Std: 4.00,Norm: 22.29
+Episode 58 , Actions, Shape: [4],Mean: 4.00,Std: 2.45,Norm: 9.06
+Episode 59 , encoders , Shape: [4, 768],Mean: 1.80,Std: 3.65,Norm: 225.31
+Episode 59 , head_first , Shape: [4, 1024],Mean: 2.04,Std: 4.12,Norm: 294.29
+Episode 59 , value_head , Shape: [4, 1],Mean: 1.11,Std: 1.08,Norm: 2.90
+Episode 59 , advantage_head , Shape: [4, 8],Mean: 0.24,Std: 2.27,Norm: 12.72
+Episode 59 , Qvalues, Shape: [4, 8],Mean: 1.11,Std: 2.33,Norm: 14.42
+Episode 59 , Actions, Shape: [4],Mean: 3.25,Std: 2.87,Norm: 8.19
+Episode 60 , encoders , Shape: [4, 768],Mean: 2.11,Std: 4.04,Norm: 252.69
+Episode 60 , head_first , Shape: [4, 1024],Mean: 2.44,Std: 5.00,Norm: 356.15
+Episode 60 , value_head , Shape: [4, 1],Mean: 0.29,Std: 2.44,Norm: 4.27
+Episode 60 , advantage_head , Shape: [4, 8],Mean: 0.30,Std: 3.20,Norm: 17.87
+Episode 60 , Qvalues, Shape: [4, 8],Mean: 0.29,Std: 3.59,Norm: 20.04
+Episode 60 , Actions, Shape: [4],Mean: 4.75,Std: 2.22,Norm: 10.25
+Episode 61 , encoders , Shape: [4, 768],Mean: 1.92,Std: 3.87,Norm: 239.18
+Episode 61 , head_first , Shape: [4, 1024],Mean: 2.30,Std: 4.55,Norm: 326.32
+Episode 61 , value_head , Shape: [4, 1],Mean: -0.69,Std: 2.09,Norm: 3.87
+Episode 61 , advantage_head , Shape: [4, 8],Mean: 0.25,Std: 2.15,Norm: 12.04
+Episode 61 , Qvalues, Shape: [4, 8],Mean: -0.69,Std: 2.80,Norm: 16.08
+Episode 61 , Actions, Shape: [4],Mean: 3.00,Std: 2.45,Norm: 7.35
+Episode 62 , encoders , Shape: [4, 768],Mean: 1.73,Std: 3.58,Norm: 220.27
+Episode 62 , head_first , Shape: [4, 1024],Mean: 2.10,Std: 4.25,Norm: 303.33
+Episode 62 , value_head , Shape: [4, 1],Mean: 0.62,Std: 1.69,Norm: 3.18
+Episode 62 , advantage_head , Shape: [4, 8],Mean: 0.26,Std: 2.85,Norm: 15.94
+Episode 62 , Qvalues, Shape: [4, 8],Mean: 0.62,Std: 3.19,Norm: 18.08
+Episode 62 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 63 , encoders , Shape: [4, 768],Mean: 1.94,Std: 3.86,Norm: 239.46
+Episode 63 , head_first , Shape: [4, 1024],Mean: 2.27,Std: 4.51,Norm: 323.16
+Episode 63 , value_head , Shape: [4, 1],Mean: 0.52,Std: 2.15,Norm: 3.86
+Episode 63 , advantage_head , Shape: [4, 8],Mean: -0.11,Std: 2.30,Norm: 12.84
+Episode 63 , Qvalues, Shape: [4, 8],Mean: 0.52,Std: 2.92,Norm: 16.51
+Episode 63 , Actions, Shape: [4],Mean: 2.25,Std: 1.26,Norm: 5.00
+Episode 64 , encoders , Shape: [4, 768],Mean: 1.75,Std: 3.67,Norm: 225.08
+Episode 64 , head_first , Shape: [4, 1024],Mean: 2.11,Std: 4.33,Norm: 307.89
+Episode 64 , value_head , Shape: [4, 1],Mean: 0.98,Std: 1.57,Norm: 3.35
+Episode 64 , advantage_head , Shape: [4, 8],Mean: 0.18,Std: 2.01,Norm: 11.23
+Episode 64 , Qvalues, Shape: [4, 8],Mean: 0.98,Std: 2.37,Norm: 14.30
+Episode 64 , Actions, Shape: [4],Mean: 2.00,Std: 2.00,Norm: 5.29
+Episode 65 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.81,Norm: 234.35
+Episode 65 , head_first , Shape: [4, 1024],Mean: 2.19,Std: 4.38,Norm: 313.38
+Episode 65 , value_head , Shape: [4, 1],Mean: -0.49,Std: 1.47,Norm: 2.74
+Episode 65 , advantage_head , Shape: [4, 8],Mean: -0.09,Std: 2.41,Norm: 13.44
+Episode 65 , Qvalues, Shape: [4, 8],Mean: -0.49,Std: 2.71,Norm: 15.36
+Episode 65 , Actions, Shape: [4],Mean: 4.00,Std: 2.31,Norm: 8.94
+Episode 66 , encoders , Shape: [4, 768],Mean: 1.98,Std: 3.93,Norm: 243.78
+Episode 66 , head_first , Shape: [4, 1024],Mean: 2.32,Std: 4.79,Norm: 340.58
+Episode 66 , value_head , Shape: [4, 1],Mean: -0.99,Std: 1.57,Norm: 3.37
+Episode 66 , advantage_head , Shape: [4, 8],Mean: -0.24,Std: 2.63,Norm: 14.69
+Episode 66 , Qvalues, Shape: [4, 8],Mean: -0.99,Std: 2.92,Norm: 17.17
+Episode 66 , Actions, Shape: [4],Mean: 2.75,Std: 1.50,Norm: 6.08
+Episode 67 , encoders , Shape: [4, 768],Mean: 1.56,Std: 3.43,Norm: 208.81
+Episode 67 , head_first , Shape: [4, 1024],Mean: 1.70,Std: 3.58,Norm: 253.76
+Episode 67 , value_head , Shape: [4, 1],Mean: -0.15,Std: 1.42,Norm: 2.47
+Episode 67 , advantage_head , Shape: [4, 8],Mean: 0.02,Std: 1.70,Norm: 9.49
+Episode 67 , Qvalues, Shape: [4, 8],Mean: -0.15,Std: 2.08,Norm: 11.62
+Episode 67 , Actions, Shape: [4],Mean: 1.00,Std: 0.82,Norm: 2.45
+Episode 68 , encoders , Shape: [4, 768],Mean: 1.68,Std: 3.52,Norm: 216.15
+Episode 68 , head_first , Shape: [4, 1024],Mean: 1.97,Std: 4.00,Norm: 285.33
+Episode 68 , value_head , Shape: [4, 1],Mean: -0.69,Std: 1.98,Norm: 3.71
+Episode 68 , advantage_head , Shape: [4, 8],Mean: -0.06,Std: 2.46,Norm: 13.72
+Episode 68 , Qvalues, Shape: [4, 8],Mean: -0.69,Std: 3.01,Norm: 17.19
+Episode 68 , Actions, Shape: [4],Mean: 3.50,Std: 1.91,Norm: 7.75
+Episode 69 , encoders , Shape: [4, 768],Mean: 1.79,Std: 3.66,Norm: 226.02
+Episode 69 , head_first , Shape: [4, 1024],Mean: 2.15,Std: 4.35,Norm: 310.63
+Episode 69 , value_head , Shape: [4, 1],Mean: -1.02,Std: 1.27,Norm: 2.99
+Episode 69 , advantage_head , Shape: [4, 8],Mean: -0.11,Std: 2.48,Norm: 13.80
+Episode 69 , Qvalues, Shape: [4, 8],Mean: -1.02,Std: 2.64,Norm: 15.76
+Episode 69 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 70 , encoders , Shape: [4, 768],Mean: 1.80,Std: 3.65,Norm: 225.31
+Episode 70 , head_first , Shape: [4, 1024],Mean: 2.05,Std: 4.29,Norm: 304.19
+Episode 70 , value_head , Shape: [4, 1],Mean: -1.10,Std: 3.04,Norm: 5.71
+Episode 70 , advantage_head , Shape: [4, 8],Mean: 0.22,Std: 2.47,Norm: 13.84
+Episode 70 , Qvalues, Shape: [4, 8],Mean: -1.10,Std: 3.62,Norm: 21.11
+Episode 70 , Actions, Shape: [4],Mean: 2.50,Std: 3.00,Norm: 7.21
+Episode 71 , encoders , Shape: [4, 768],Mean: 1.80,Std: 3.75,Norm: 230.58
+Episode 71 , head_first , Shape: [4, 1024],Mean: 2.11,Std: 4.28,Norm: 305.15
+Episode 71 , value_head , Shape: [4, 1],Mean: 0.97,Std: 2.13,Norm: 4.17
+Episode 71 , advantage_head , Shape: [4, 8],Mean: -0.59,Std: 2.64,Norm: 15.06
+Episode 71 , Qvalues, Shape: [4, 8],Mean: 0.97,Std: 3.23,Norm: 18.81
+Episode 71 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 72 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.75,Norm: 231.18
+Episode 72 , head_first , Shape: [4, 1024],Mean: 2.24,Std: 4.44,Norm: 318.11
+Episode 72 , value_head , Shape: [4, 1],Mean: 0.67,Std: 1.05,Norm: 2.27
+Episode 72 , advantage_head , Shape: [4, 8],Mean: 0.72,Std: 3.04,Norm: 17.44
+Episode 72 , Qvalues, Shape: [4, 8],Mean: 0.67,Std: 3.12,Norm: 17.77
+Episode 72 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 73 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.75,Norm: 232.56
+Episode 73 , head_first , Shape: [4, 1024],Mean: 2.22,Std: 4.39,Norm: 314.85
+Episode 73 , value_head , Shape: [4, 1],Mean: -0.95,Std: 2.04,Norm: 4.00
+Episode 73 , advantage_head , Shape: [4, 8],Mean: -0.53,Std: 1.90,Norm: 10.99
+Episode 73 , Qvalues, Shape: [4, 8],Mean: -0.95,Std: 2.59,Norm: 15.38
+Episode 73 , Actions, Shape: [4],Mean: 2.75,Std: 1.50,Norm: 6.08
+Episode 74 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.86,Norm: 238.09
+Episode 74 , head_first , Shape: [4, 1024],Mean: 2.27,Std: 4.55,Norm: 325.46
+Episode 74 , value_head , Shape: [4, 1],Mean: 0.88,Std: 1.01,Norm: 2.48
+Episode 74 , advantage_head , Shape: [4, 8],Mean: -0.72,Std: 2.06,Norm: 12.18
+Episode 74 , Qvalues, Shape: [4, 8],Mean: 0.88,Std: 2.12,Norm: 12.80
+Episode 74 , Actions, Shape: [4],Mean: 2.75,Std: 1.50,Norm: 6.08
+Episode 75 , encoders , Shape: [4, 768],Mean: 1.91,Std: 3.75,Norm: 232.91
+Episode 75 , head_first , Shape: [4, 1024],Mean: 2.31,Std: 4.64,Norm: 331.60
+Episode 75 , value_head , Shape: [4, 1],Mean: -0.64,Std: 2.92,Norm: 5.23
+Episode 75 , advantage_head , Shape: [4, 8],Mean: 0.21,Std: 2.60,Norm: 14.52
+Episode 75 , Qvalues, Shape: [4, 8],Mean: -0.64,Std: 3.62,Norm: 20.51
+Episode 75 , Actions, Shape: [4],Mean: 2.75,Std: 2.87,Norm: 7.42
+Episode 76 , encoders , Shape: [4, 768],Mean: 1.84,Std: 3.73,Norm: 230.23
+Episode 76 , head_first , Shape: [4, 1024],Mean: 2.16,Std: 4.55,Norm: 322.25
+Episode 76 , value_head , Shape: [4, 1],Mean: -0.83,Std: 1.75,Norm: 3.45
+Episode 76 , advantage_head , Shape: [4, 8],Mean: 0.25,Std: 3.17,Norm: 17.69
+Episode 76 , Qvalues, Shape: [4, 8],Mean: -0.83,Std: 3.40,Norm: 19.50
+Episode 76 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 77 , encoders , Shape: [4, 768],Mean: 1.82,Std: 3.69,Norm: 227.99
+Episode 77 , head_first , Shape: [4, 1024],Mean: 2.06,Std: 4.30,Norm: 305.12
+Episode 77 , value_head , Shape: [4, 1],Mean: -1.57,Std: 0.92,Norm: 3.52
+Episode 77 , advantage_head , Shape: [4, 8],Mean: 0.19,Std: 2.21,Norm: 12.37
+Episode 77 , Qvalues, Shape: [4, 8],Mean: -1.57,Std: 2.33,Norm: 15.71
+Episode 77 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 78 , encoders , Shape: [4, 768],Mean: 1.86,Std: 3.67,Norm: 227.76
+Episode 78 , head_first , Shape: [4, 1024],Mean: 2.05,Std: 4.10,Norm: 293.19
+Episode 78 , value_head , Shape: [4, 1],Mean: -1.36,Std: 0.76,Norm: 3.02
+Episode 78 , advantage_head , Shape: [4, 8],Mean: -0.34,Std: 2.04,Norm: 11.52
+Episode 78 , Qvalues, Shape: [4, 8],Mean: -1.36,Std: 2.09,Norm: 13.94
+Episode 78 , Actions, Shape: [4],Mean: 2.25,Std: 1.89,Norm: 5.57
+Episode 79 , encoders , Shape: [4, 768],Mean: 1.95,Std: 3.88,Norm: 240.76
+Episode 79 , head_first , Shape: [4, 1024],Mean: 2.22,Std: 4.46,Norm: 318.68
+Episode 79 , value_head , Shape: [4, 1],Mean: 1.56,Std: 1.80,Norm: 4.42
+Episode 79 , advantage_head , Shape: [4, 8],Mean: 0.78,Std: 2.56,Norm: 14.93
+Episode 79 , Qvalues, Shape: [4, 8],Mean: 1.56,Std: 2.97,Norm: 18.76
+Episode 79 , Actions, Shape: [4],Mean: 1.25,Std: 0.50,Norm: 2.65
+Episode 80 , encoders , Shape: [4, 768],Mean: 1.82,Std: 3.67,Norm: 227.02
+Episode 80 , head_first , Shape: [4, 1024],Mean: 2.14,Std: 4.36,Norm: 311.03
+Episode 80 , value_head , Shape: [4, 1],Mean: -0.58,Std: 2.75,Norm: 4.90
+Episode 80 , advantage_head , Shape: [4, 8],Mean: 0.31,Std: 2.34,Norm: 13.14
+Episode 80 , Qvalues, Shape: [4, 8],Mean: -0.58,Std: 3.34,Norm: 18.91
+Episode 80 , Actions, Shape: [4],Mean: 2.00,Std: 1.41,Norm: 4.69
+Episode 81 , encoders , Shape: [4, 768],Mean: 1.87,Std: 3.74,Norm: 231.70
+Episode 81 , head_first , Shape: [4, 1024],Mean: 2.04,Std: 4.17,Norm: 296.94
+Episode 81 , value_head , Shape: [4, 1],Mean: -0.20,Std: 1.98,Norm: 3.45
+Episode 81 , advantage_head , Shape: [4, 8],Mean: 0.12,Std: 2.22,Norm: 12.41
+Episode 81 , Qvalues, Shape: [4, 8],Mean: -0.20,Std: 2.80,Norm: 15.60
+Episode 81 , Actions, Shape: [4],Mean: 2.00,Std: 1.41,Norm: 4.69
+Episode 82 , encoders , Shape: [4, 768],Mean: 1.85,Std: 3.69,Norm: 228.87
+Episode 82 , head_first , Shape: [4, 1024],Mean: 2.14,Std: 4.27,Norm: 305.69
+Episode 82 , value_head , Shape: [4, 1],Mean: 0.09,Std: 2.40,Norm: 4.16
+Episode 82 , advantage_head , Shape: [4, 8],Mean: 0.29,Std: 2.60,Norm: 14.55
+Episode 82 , Qvalues, Shape: [4, 8],Mean: 0.09,Std: 3.30,Norm: 18.39
+Episode 82 , Actions, Shape: [4],Mean: 3.75,Std: 2.63,Norm: 8.77
+Episode 83 , encoders , Shape: [4, 768],Mean: 1.85,Std: 3.81,Norm: 234.79
+Episode 83 , head_first , Shape: [4, 1024],Mean: 2.16,Std: 4.40,Norm: 313.41
+Episode 83 , value_head , Shape: [4, 1],Mean: -1.66,Std: 1.38,Norm: 4.09
+Episode 83 , advantage_head , Shape: [4, 8],Mean: -0.61,Std: 2.25,Norm: 12.97
+Episode 83 , Qvalues, Shape: [4, 8],Mean: -1.66,Std: 2.51,Norm: 16.81
+Episode 83 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 84 , encoders , Shape: [4, 768],Mean: 1.90,Std: 3.81,Norm: 235.78
+Episode 84 , head_first , Shape: [4, 1024],Mean: 2.34,Std: 4.66,Norm: 333.82
+Episode 84 , value_head , Shape: [4, 1],Mean: -1.57,Std: 1.24,Norm: 3.81
+Episode 84 , advantage_head , Shape: [4, 8],Mean: 0.10,Std: 2.76,Norm: 15.39
+Episode 84 , Qvalues, Shape: [4, 8],Mean: -1.57,Std: 2.83,Norm: 18.11
+Episode 84 , Actions, Shape: [4],Mean: 3.25,Std: 2.22,Norm: 7.55
+Episode 85 , encoders , Shape: [4, 768],Mean: 1.78,Std: 3.70,Norm: 227.81
+Episode 85 , head_first , Shape: [4, 1024],Mean: 2.17,Std: 4.42,Norm: 315.41
+Episode 85 , value_head , Shape: [4, 1],Mean: -0.51,Std: 1.35,Norm: 2.56
+Episode 85 , advantage_head , Shape: [4, 8],Mean: 0.11,Std: 1.91,Norm: 10.64
+Episode 85 , Qvalues, Shape: [4, 8],Mean: -0.51,Std: 2.24,Norm: 12.82
+Episode 85 , Actions, Shape: [4],Mean: 2.50,Std: 1.73,Norm: 5.83
+Episode 86 , encoders , Shape: [4, 768],Mean: 1.87,Std: 3.71,Norm: 230.20
+Episode 86 , head_first , Shape: [4, 1024],Mean: 2.13,Std: 4.36,Norm: 310.91
+Episode 86 , value_head , Shape: [4, 1],Mean: -0.67,Std: 1.60,Norm: 3.08
+Episode 86 , advantage_head , Shape: [4, 8],Mean: 0.30,Std: 2.15,Norm: 12.09
+Episode 86 , Qvalues, Shape: [4, 8],Mean: -0.67,Std: 2.53,Norm: 14.58
+Episode 86 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 87 , encoders , Shape: [4, 768],Mean: 1.75,Std: 3.65,Norm: 224.07
+Episode 87 , head_first , Shape: [4, 1024],Mean: 2.14,Std: 4.34,Norm: 309.66
+Episode 87 , value_head , Shape: [4, 1],Mean: -0.36,Std: 1.16,Norm: 2.13
+Episode 87 , advantage_head , Shape: [4, 8],Mean: -0.57,Std: 2.07,Norm: 11.95
+Episode 87 , Qvalues, Shape: [4, 8],Mean: -0.36,Std: 2.21,Norm: 12.45
+Episode 87 , Actions, Shape: [4],Mean: 1.75,Std: 2.22,Norm: 5.20
+Episode 88 , encoders , Shape: [4, 768],Mean: 1.86,Std: 3.77,Norm: 233.11
+Episode 88 , head_first , Shape: [4, 1024],Mean: 2.09,Std: 4.32,Norm: 306.98
+Episode 88 , value_head , Shape: [4, 1],Mean: -0.16,Std: 0.74,Norm: 1.32
+Episode 88 , advantage_head , Shape: [4, 8],Mean: 0.47,Std: 2.75,Norm: 15.52
+Episode 88 , Qvalues, Shape: [4, 8],Mean: -0.16,Std: 2.75,Norm: 15.33
+Episode 88 , Actions, Shape: [4],Mean: 4.75,Std: 2.22,Norm: 10.25
+Episode 89 , encoders , Shape: [4, 768],Mean: 1.79,Std: 3.61,Norm: 223.19
+Episode 89 , head_first , Shape: [4, 1024],Mean: 2.04,Std: 4.21,Norm: 299.29
+Episode 89 , value_head , Shape: [4, 1],Mean: 0.23,Std: 0.73,Norm: 1.35
+Episode 89 , advantage_head , Shape: [4, 8],Mean: -0.04,Std: 2.22,Norm: 12.34
+Episode 89 , Qvalues, Shape: [4, 8],Mean: 0.23,Std: 2.30,Norm: 12.86
+Episode 89 , Actions, Shape: [4],Mean: 5.00,Std: 2.00,Norm: 10.58
+Episode 90 , encoders , Shape: [4, 768],Mean: 1.77,Std: 3.65,Norm: 225.08
+Episode 90 , head_first , Shape: [4, 1024],Mean: 2.18,Std: 4.29,Norm: 307.64
+Episode 90 , value_head , Shape: [4, 1],Mean: -0.33,Std: 0.89,Norm: 1.68
+Episode 90 , advantage_head , Shape: [4, 8],Mean: 0.07,Std: 2.50,Norm: 13.93
+Episode 90 , Qvalues, Shape: [4, 8],Mean: -0.33,Std: 2.57,Norm: 14.45
+Episode 90 , Actions, Shape: [4],Mean: 3.25,Std: 2.22,Norm: 7.55
+Episode 91 , encoders , Shape: [4, 768],Mean: 1.78,Std: 3.61,Norm: 222.91
+Episode 91 , head_first , Shape: [4, 1024],Mean: 2.08,Std: 4.26,Norm: 303.36
+Episode 91 , value_head , Shape: [4, 1],Mean: 1.19,Std: 1.60,Norm: 3.65
+Episode 91 , advantage_head , Shape: [4, 8],Mean: -0.27,Std: 2.01,Norm: 11.32
+Episode 91 , Qvalues, Shape: [4, 8],Mean: 1.19,Std: 2.38,Norm: 14.84
+Episode 91 , Actions, Shape: [4],Mean: 2.75,Std: 2.22,Norm: 6.71
+Episode 92 , encoders , Shape: [4, 768],Mean: 1.86,Std: 3.73,Norm: 231.25
+Episode 92 , head_first , Shape: [4, 1024],Mean: 2.15,Std: 4.29,Norm: 306.92
+Episode 92 , value_head , Shape: [4, 1],Mean: 0.63,Std: 1.30,Norm: 2.58
+Episode 92 , advantage_head , Shape: [4, 8],Mean: -0.10,Std: 2.40,Norm: 13.36
+Episode 92 , Qvalues, Shape: [4, 8],Mean: 0.63,Std: 2.62,Norm: 15.02
+Episode 92 , Actions, Shape: [4],Mean: 1.25,Std: 0.50,Norm: 2.65
+Episode 93 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.82,Norm: 236.09
+Episode 93 , head_first , Shape: [4, 1024],Mean: 2.29,Std: 4.61,Norm: 329.30
+Episode 93 , value_head , Shape: [4, 1],Mean: -1.29,Std: 0.63,Norm: 2.80
+Episode 93 , advantage_head , Shape: [4, 8],Mean: -0.76,Std: 2.24,Norm: 13.19
+Episode 93 , Qvalues, Shape: [4, 8],Mean: -1.29,Std: 2.28,Norm: 14.61
+Episode 93 , Actions, Shape: [4],Mean: 4.75,Std: 1.89,Norm: 10.05
+Episode 94 , encoders , Shape: [4, 768],Mean: 1.95,Std: 3.85,Norm: 239.05
+Episode 94 , head_first , Shape: [4, 1024],Mean: 2.23,Std: 4.50,Norm: 321.12
+Episode 94 , value_head , Shape: [4, 1],Mean: -2.24,Std: 1.63,Norm: 5.29
+Episode 94 , advantage_head , Shape: [4, 8],Mean: -0.52,Std: 2.59,Norm: 14.70
+Episode 94 , Qvalues, Shape: [4, 8],Mean: -2.24,Std: 2.83,Norm: 20.22
+Episode 94 , Actions, Shape: [4],Mean: 1.50,Std: 0.58,Norm: 3.16
+Episode 95 , encoders , Shape: [4, 768],Mean: 1.96,Std: 3.92,Norm: 242.89
+Episode 95 , head_first , Shape: [4, 1024],Mean: 2.29,Std: 4.69,Norm: 333.97
+Episode 95 , value_head , Shape: [4, 1],Mean: -0.19,Std: 1.16,Norm: 2.04
+Episode 95 , advantage_head , Shape: [4, 8],Mean: -0.19,Std: 1.89,Norm: 10.55
+Episode 95 , Qvalues, Shape: [4, 8],Mean: -0.19,Std: 2.08,Norm: 11.65
+Episode 95 , Actions, Shape: [4],Mean: 2.00,Std: 2.16,Norm: 5.48
+Episode 96 , encoders , Shape: [4, 768],Mean: 2.06,Std: 4.13,Norm: 256.04
+Episode 96 , head_first , Shape: [4, 1024],Mean: 2.51,Std: 4.88,Norm: 351.13
+Episode 96 , value_head , Shape: [4, 1],Mean: -0.27,Std: 1.67,Norm: 2.94
+Episode 96 , advantage_head , Shape: [4, 8],Mean: 0.67,Std: 2.43,Norm: 14.07
+Episode 96 , Qvalues, Shape: [4, 8],Mean: -0.27,Std: 2.80,Norm: 15.65
+Episode 96 , Actions, Shape: [4],Mean: 2.00,Std: 2.16,Norm: 5.48
+Episode 97 , encoders , Shape: [4, 768],Mean: 1.77,Std: 3.61,Norm: 223.06
+Episode 97 , head_first , Shape: [4, 1024],Mean: 2.10,Std: 4.34,Norm: 308.17
+Episode 97 , value_head , Shape: [4, 1],Mean: 0.18,Std: 1.60,Norm: 2.80
+Episode 97 , advantage_head , Shape: [4, 8],Mean: 0.01,Std: 2.15,Norm: 11.96
+Episode 97 , Qvalues, Shape: [4, 8],Mean: 0.18,Std: 2.47,Norm: 13.78
+Episode 97 , Actions, Shape: [4],Mean: 4.50,Std: 1.73,Norm: 9.49
+Episode 98 , encoders , Shape: [4, 768],Mean: 1.75,Std: 3.62,Norm: 222.69
+Episode 98 , head_first , Shape: [4, 1024],Mean: 2.20,Std: 4.39,Norm: 314.39
+Episode 98 , value_head , Shape: [4, 1],Mean: -0.42,Std: 1.06,Norm: 2.01
+Episode 98 , advantage_head , Shape: [4, 8],Mean: 0.19,Std: 2.48,Norm: 13.83
+Episode 98 , Qvalues, Shape: [4, 8],Mean: -0.42,Std: 2.57,Norm: 14.49
+Episode 98 , Actions, Shape: [4],Mean: 2.50,Std: 2.38,Norm: 6.48
+Episode 99 , encoders , Shape: [4, 768],Mean: 1.89,Std: 3.83,Norm: 236.90
+Episode 99 , head_first , Shape: [4, 1024],Mean: 2.22,Std: 4.48,Norm: 320.16
+Episode 99 , value_head , Shape: [4, 1],Mean: -0.51,Std: 0.51,Norm: 1.35
+Episode 99 , advantage_head , Shape: [4, 8],Mean: 0.35,Std: 2.63,Norm: 14.78
+Episode 99 , Qvalues, Shape: [4, 8],Mean: -0.51,Std: 2.65,Norm: 15.02
+Episode 99 , Actions, Shape: [4],Mean: 2.50,Std: 1.29,Norm: 5.48

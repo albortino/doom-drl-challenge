@@ -112,7 +112,7 @@ class OwnModule(nn.Module):
     def __init__(self):
         super().__init__()
         
-    def init_weights(self, debug: bool=False):  
+    def init_weights(self, bias: bool = True, debug: bool=False):  
         """ Initialize weights for Linear features. Kaiming He for (Leaky-)Relu otherwise Xavier """
         for module in self.modules():
             if isinstance(module, nn.Linear):
@@ -126,7 +126,7 @@ class OwnModule(nn.Module):
                     nn.init.xavier_uniform_(module.weight) 
                     print("Weights initialized with Glorot") if debug else None
                     
-                if module.bias is not None:
+                if bias and module.bias is not None:
                     nn.init.zeros_(module.bias)
                     
     def get_padding(self, kernel_size: int) -> int:

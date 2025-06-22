@@ -1,0 +1,18 @@
+LOGGER INITIALIZED AT 20250622-133249
+N_STACK_FRAMES: 1, NUM_PLAYERS: 4, NUM_BOTS: 6, EPISODE_TIMEOUT: 2000, GAMMA: 0.95, EPISODES: 2, BATCH_SIZE: 128, REPLAY_BUFFER_SIZE: 15000, LEARNING_RATE: 1e-05, EPSILON_START: 1.0, EPSILON_END: 0.1, EPSILON_DECAY: 0.998, N_EPOCHS: 20, FRAME_SKIPPING: 0, FRAME_SKIPPING_STOP: 100, DEBUG: True, PRINT_EVERY: 50, VIDEO_DURING_TRAINING: False, EVALUATION_EVERY: 100algo_type: QVALUE, n_stack_frames: 1, extra_state: ['depth'], hud: none, crosshair: True, screen_format: 0
+13:32:54 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+13:33:14 | Episode: 0 | Training for 20 epochs
+13:33:18 | Episode: 0 | Updating target network...
+13:33:18 | Episode: 0 | Rewards:
+	Reward: [-8. -8. 19. -8.] | Avg Reward: -1.0 | Loss: 9.6779 | ε: 0.998 | LR: 9.99e-06
+	Metrics - ['frags: 0', 'hits: 6', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 2', 'survival: -9', 'health_pickup: 0']
+	Actions - Noop: 395, Move Forward: 1595, Attack: 2028, Move Left: 840, Move Right: 821, Turn Left: 1006, Turn Right: 953, Jump: 362
+13:33:18 | Episode: 0 | Running quick evaluation...
+13:33:21 | Episode: 1 | Steps done: 2000 | Gathering rollout (currently 7996)
+13:33:40 | Episode: 1 | Training for 20 epochs
+13:33:41 | Episode: 1 | Updating target network...
+13:33:41 | Episode: 1 | Rewards:
+	Reward: [-8. -8. 44. 44.] | Avg Reward: 8.0 | Loss: 8.9785 | ε: 0.996 | LR: 9.96e-06
+	Metrics - ['frags: 0', 'hits: 25', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -9', 'health_pickup: 0']
+	Actions - Noop: 389, Move Forward: 1632, Attack: 2012, Move Left: 796, Move Right: 817, Turn Left: 951, Turn Right: 991, Jump: 412
+13:33:41 | Episode: 1 | Running quick evaluation...
