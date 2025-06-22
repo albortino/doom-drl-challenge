@@ -109,37 +109,36 @@ class YourReward(VizDoomReward):
 
         # Combat reward from hits
         rwd_frag = 100.0 * (game_var["FRAGCOUNT"] - game_var_old["FRAGCOUNT"])
-        rwd_hit = 5.0 * (game_var["HITCOUNT"] - game_var_old["HITCOUNT"])
-        rwd_hit_taken = -0.8 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
+        rwd_hit = 1.0 * (game_var["DAMAGECOUNT"] - game_var_old["DAMAGECOUNT"])
+        rwd_hit_taken = -2.0 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
         
         # Movement reward
-        pos_x = game_var.get("POSITION_X", 0)
-        pos_y = game_var.get("POSITION_Y", 0)
-        pos_x_old = game_var_old.get("POSITION_X", 0)
-        pos_y_old = game_var_old.get("POSITION_Y", 0)
+        pos_x, pos_y = game_var.get("POSITION_X", 0), game_var.get("POSITION_Y", 0)
+        pos_x_old, pos_y_old = game_var_old.get("POSITION_X", 0), game_var_old.get("POSITION_Y", 0)
                 
         movement_dist = calc_movement(pos_x, pos_y, pos_x_old, pos_y_old)
-        rwd_movement = 0.5 * min((movement_dist if movement_dist else -5e-2) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
-        
-        if self._step%30 == 0:
-            self.prev_position[player_id] = (pos_x, pos_y)
+        #rwd_movement = 0.5 * min((movement_dist if movement_dist else -5e-2) / 100.0, 1.0) # Max movement factor is 1, miniumum is -0.05 (slight punishment if standing still)
+        #rwd_movement = 0.25 * min(movement_dist / 100.0, 1.0) # Max movement factor is 1
+        rwd_movement = 0.1 * np.tanh(movement_dist / 50.0)  # Smooth saturation
+        #if self._step%30 == 0:
+        #    self.prev_position[player_id] = (pos_x, pos_y)
         
         # Obstacle detection: Subtract movement if standing still for a long time
-        if self._step > 100 and self._step %30 == 0:
-            prev_x, prev_y = self.prev_position.get(player_id, (pos_x, pos_y)) ## Use current pos if not in dict
-            movement_dist = calc_movement(pos_x, pos_y, prev_x, prev_y)
-            
-            if movement_dist < 1:
-                rwd_movement -= 0.5
+        #if self._step > 100 and self._step %30 == 0:
+        #    prev_x, prev_y = self.prev_position.get(player_id, (pos_x, pos_y)) ## Use current pos if not in dict
+        #    movement_dist = calc_movement(pos_x, pos_y, prev_x, prev_y)
+        #    
+        #    if movement_dist < 1:
+        #        rwd_movement -= 0.5
             
         # Ammo efficiency
         ammo_used = game_var_old.get("SELECTED_WEAPON_AMMO", 0) - game_var.get("SELECTED_WEAPON_AMMO", 0)
         hits_made = game_var["HITCOUNT"] - game_var_old["HITCOUNT"]
         
         if ammo_used > 0: # Shots fired
-            accuracy = hits_made / ammo_used
-            rwd_ammo_efficiency = 1 * accuracy
-            
+            accuracy = min(hits_made / ammo_used, 1.0)  # Cap at 100%
+            rwd_ammo_efficiency = 2.0 * accuracy
+    
         elif ammo_used < 0: # Picked up ammunition
             rwd_ammo_efficiency = 2.0
             
@@ -147,10 +146,13 @@ class YourReward(VizDoomReward):
             rwd_ammo_efficiency = 0.0
             
         # Survival bonus
-        rwd_survival = 1e-3 if game_var["HEALTH"] > 0 else -10.0 #-20 # Moving or surviving improves score slightly
-        
+        #rwd_survival = 0.01 if game_var["HEALTH"] > 0 else -15.0 #1e-3 if game_var["HEALTH"] > 0 else -10.0 #-20 # Moving or surviving improves score slightly
+        health_ratio = game_var["HEALTH"] / 100.0
+        is_alive = game_var["HEALTH"] > 0
+        rwd_survival = (0.01 + 0.005 * health_ratio) if is_alive else -20.0 # THe higher the health percentage the higher the reward, not linearly
+
         # Bonus point if a reward is picked up
-        rwd_health_pickup = +2.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
+        rwd_health_pickup = +5.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
         
         return rwd_frag, rwd_hit, rwd_hit_taken, rwd_movement, rwd_ammo_efficiency, rwd_survival, rwd_health_pickup
 
@@ -199,10 +201,10 @@ class ExtraStates():
 class EnvActions():
     action_weights = {
             'Noop': 0.05,
-            'Move Forward': 0.12,
-            'Attack': 0.22,
-            'Move Left': 0.12,
-            'Move Right': 0.12,
+            'Move Forward': 0.18,
+            'Attack': 0.2,
+            'Move Left': 0.10,
+            'Move Right': 0.10,
             'Turn Left': 0.15,
             'Turn Right': 0.15,
             'Jump': 0.05}
@@ -429,7 +431,86 @@ class ActivationLogger(Logger):
             selected_indices = all_indices[return_idx:]
             
             return [value.get("logits") for key, value in module_info.items() if key in selected_indices]
-            
-            
+        
+    def analyze_weights(self, weights: torch.Tensor, episode: int = -1, title: str = "", layer_type: str = "unknown", print_once: bool = False) -> str:
+        """
+        Analyze weight statistics for a given layer
+        
+        Args:
+            weights: Weight tensor to analyze
+            episode: Episode number
+            title: Layer name/title
+            layer_type: Type of layer (conv, linear, etc.)
+            print_once: Whether to print once or always
+        
+        Returns:
+            Formatted string with weight statistics
+        """
+        # Basic statistics
+        mean_val = weights.mean().item()
+        std_val = weights.std().item()
+        norm_val = torch.norm(weights).item()
+        
+        # Advanced statistics for training monitoring
+        min_val = weights.min().item()
+        max_val = weights.max().item()
+        abs_mean = weights.abs().mean().item()
+        
+        # Gradient flow indicators
+        near_zero_ratio = (weights.abs() < 1e-6).float().mean().item()
+        large_weight_ratio = (weights.abs() > 1.0).float().mean().item()
+        
+        # Weight distribution analysis
+        q25 = torch.quantile(weights.flatten(), 0.25).item()
+        q75 = torch.quantile(weights.flatten(), 0.75).item()
+        
+        # Sparsity measure (useful for detecting dead neurons)
+        sparsity = (weights == 0).float().mean().item()
+        
+        return f"Episode {episode} | {title:<15}| Type: {layer_type:<6}| Shape: {list(weights.shape)}, Mean: {mean_val:.4f}, Std: {std_val:.4f}, Norm: {norm_val:.2f}, Range: [{min_val:.4f}, {max_val:.4f}], AbsMean: {abs_mean:.4f}, NearZero%: {near_zero_ratio:.2%}, Large%: {large_weight_ratio:.2%}, Q25/75: [{q25:.4f}, {q75:.4f}], Sparsity: {sparsity:.2%}"
+
+        
+    @torch.no_grad()
+    def log_model_weights(self, model: torch.nn.Module, episode: int = -1, print_once: bool = False, include_bias: bool = True):
+        """
+        Log weight statistics for all layers in the model
+        
+        Args:
+            model: PyTorch model to analyze
+            episode: Episode number
+            print_once: Whether to print once or always
+            include_bias: Whether to include bias terms in analysis
+        """
+        orig_device = next(model.parameters()).device
+        model.cpu()
+        
+         # Get all modules ot the model except for activation functions        
+        all_modules = [name for name, _ in model.named_children() if name != "phi"]
+        
+        log_str = ""
+        
+        for module_name in all_modules:
+            model_module: torch.nn.Module = getattr(model, module_name)
+            for enc_idx, encoder in enumerate(model_module.modules_list):
+                for name, sub_module in encoder.named_modules():
+                    if len(list(sub_module.parameters())) > 0:  # Only modules with parameters
+                        for param_name, param in sub_module.named_parameters():
+                            if 'weight' in param_name or (include_bias and 'bias' in param_name):
+                                layer_type = type(sub_module).__name__.lower()
+                                full_name = f"enc{enc_idx}_{name}_{param_name}" if name else f"enc{enc_idx}_{param_name}"
+                                log_str += self.analyze_weights(param.data, episode, full_name, layer_type, print_once) + "\n"
+        
+        
+        all_weights = torch.cat([p.data.flatten() for p in model.parameters() if p.requires_grad])
+        log_str += self.analyze_weights(all_weights, episode, "ALL_WEIGHTS", "global", print_once) + "\n"
+        
+        log_str += f"{'='*120}\n"
+        
+        # Log everything
+        self.log(log_str, print_once, improve_file_output=True)
+        
+        # Restore original device
+        model.to(orig_device)
+
                 
         

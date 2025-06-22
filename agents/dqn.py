@@ -321,12 +321,9 @@ class SmallDQN(OwnModule):
 class EfficientDQN(OwnModule):
     """
     EfficientDQN with multi-buffer visual processing
-    
-    Architecture:
-    TODO
     """
     
-    def __init__(self, input_dim: int, action_space: int, obs_state_infos: ExtraStates, feature_dim_cnns: int = 128, hidden_dim_heads: int = 1024, phi: nn.Module = nn.LeakyReLU()):
+    def __init__(self, input_dim: int, action_space: int, obs_state_infos: ExtraStates, feature_dim_cnns: int = 256, hidden_dim_heads: int = 1024, phi: nn.Module = nn.LeakyReLU(), dropout_p:float = 0.15):
         #obs_state_infos: ExtraStates = None, 
         super().__init__()
         self.input_dim = input_dim # not used
@@ -334,6 +331,7 @@ class EfficientDQN(OwnModule):
         self.action_space = action_space
         self.hidden_dim_heads = hidden_dim_heads
         self.phi = phi
+        self.dropout_p = dropout_p
         
         # Feature dimension after encoding
         self.feature_dim_cnns = feature_dim_cnns
@@ -344,29 +342,28 @@ class EfficientDQN(OwnModule):
         
         # Separate encoders for each buffer type
         self.encoders = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
-            
+        
+        
         self.head_first = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
-            self.phi,
-            nn.Dropout(0.3))
+            #nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
+            nn.Linear(np.array([2*2*4 * [32 if dim == 3 else 16 for dim in self.obs_state_dims]]).sum(), self.hidden_dim_heads),
+            nn.Dropout(self.dropout_p),
+            self.phi
+        )
         
         # Dueling network heads
         self.value_head = nn.Sequential(
-            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            nn.Dropout(0.2),
+            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 8),
+            nn.Dropout(self.dropout_p),
             self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, 32), # one value prediction
-            self.phi,
-            nn.Linear(32, 1) # one value prediction
+            nn.Linear(self.hidden_dim_heads // 8, 1)
         )
         
         self.advantage_head = nn.Sequential(
-            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            nn.Dropout(0.2),
+            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 8),
+            nn.Dropout(self.dropout_p),
             self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, action_space * self.obs_states_num),
-            self.phi,
-            nn.Linear(action_space * self.obs_states_num, action_space) 
+            nn.Linear(self.hidden_dim_heads // 8, action_space) 
         )
         
         params_encoder = sum(p.numel() for p in self.encoders.parameters() if p.requires_grad)
@@ -385,26 +382,31 @@ class EfficientDQN(OwnModule):
         return nn.Sequential(
             # Initial convolution - reduce spatial dimensions significantly
             nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            self.phi,  # Output [N, C=16/4, WH=32]
-            
+            nn.GroupNorm(4, first_channel_out),
+            self.phi,  # Output [N, C=16/4, WH=32
+
             # Second CNN stage - double channels
-            nn.Conv2d(first_channel_out, first_channel_out * 2, 4, stride=2, padding=1), # [N, 2C, 16]
+            nn.Conv2d(first_channel_out, first_channel_out * 2, 4, stride=3, padding=0), # [N, 2C, 10]
+            nn.GroupNorm(8, first_channel_out * 2),
             self.phi,
             
             # Third residual stage - double channels again, with kernel
-            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 4, stride=2, padding=1), # [N, 4C, 8]
+            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 4, stride=2, padding=0), # [N, 4C, 4]
+            nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
             
             # Fourth residual stage - double channels again, with kernel
-            nn.Conv2d(first_channel_out * 4, first_channel_out * 4, 3, stride=2), # [N, 4C, 3]
+            nn.Conv2d(first_channel_out * 4, first_channel_out * 4, 2, stride=2), # [N, 4C, 4]
+            nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
             
             # Global average pooling -> one pixel per channel
-            nn.AdaptiveAvgPool2d(1),
+            #nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
             
             # Output projection
-            nn.Linear(first_channel_out * 4, self.feature_dim_cnns),
+            #nn.Linear(first_channel_out * 4 * 2 * 2, self.feature_dim_cnns),
+            #nn.Dropout(self.dropout_p),
         )
 
     

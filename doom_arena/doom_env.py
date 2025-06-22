@@ -496,7 +496,7 @@ class VizdoomMPEnv(Env):
             obs = [obs]
             vizdoom_rwds = [vizdoom_rwds]
             dones = [dones]
-        done = all(dones)
+        #done = all(dones) # Edited by Mats
 
         rwds = []
         for player_idx in range(self.num_players):
@@ -510,7 +510,7 @@ class VizdoomMPEnv(Env):
 
         # total rewards
         rwds = [sum(rwd_p) for rwd_p in rwds]
-        return obs, rwds, done, info
+        return obs, rwds, dones, info # Edited by mats
 
     def reset(self, **kwargs):
         self.reward_fn.reset()

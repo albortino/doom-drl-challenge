@@ -41,14 +41,14 @@ def replay_episode(env, model, device, dtype, path: str = "", store: bool = Fals
     with suppress_output():
         eval_obs = env.reset()
     
-    eval_done = False
+    eval_dones = [False]
     model.cpu()
 
-    while not eval_done:
+    while not all(eval_dones):
         env_actions = EnvActions(env)
         
         eval_act = epsilon_greedy(env, model, eval_obs, 0, env_actions, "cpu", dtype=dtype)
-        eval_obs, reward_components, eval_done, _ = env.step(eval_act)
+        eval_obs, reward_components, eval_dones, _ = env.step(eval_act)
         eval_reward += sum(reward_components)
 
     print(f"Final evaluation - Total reward: {eval_reward:.1f}")
