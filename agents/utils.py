@@ -17,6 +17,10 @@ def onnx_dump(env, model, config, filename: str):
     with suppress_output():
         init_state = env.reset()[0].unsqueeze(0)
 
+    orig_device = next(model.parameters()).device
+    
+    model.cpu()
+    
     # Export to ONNX
     torch.onnx.export(
         model.cpu(),
@@ -36,6 +40,10 @@ def onnx_dump(env, model, config, filename: str):
     meta.value = json.dumps(config)
 
     onnx.save(onnx_model, filename)
+    
+    model.to(orig_device)
+    
+    
 
 def analyze_model_tensors(logger: ActivationLogger, episode: int, obs_clean: tuple[torch.Tensor], model: torch.nn.Module, split_dims: list, model_sequence: list = [None, 0, 1, 1], print_once: bool = False, dtype=torch.float32):    
     rand_tensor = torch.rand(size=torch.stack(obs_clean).shape).to("cpu").split(split_dims, dim=1)
@@ -90,7 +98,7 @@ def replay_episode(env, model, device, dtype, path: str = "", store: bool = Fals
         path = os.path.join(path, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{eval_reward:.0f}.mp4")
         _ = render_episode(replays, subsample=5, replay_path=path)
     else:
-        HTML(render_episode(replays, subsample=5).to_html5_video())
+        return HTML(render_episode(replays, subsample=5).to_html5_video())
 
     model.train()
     

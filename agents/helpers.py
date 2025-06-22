@@ -100,7 +100,7 @@ class YourReward(VizDoomReward):
 
         # Combat reward from hits
         rwd_frag = 100.0 * (game_var["FRAGCOUNT"] - game_var_old["FRAGCOUNT"])
-        rwd_hit = 5.0 * (game_var["DAMAGECOUNT"] - game_var_old["DAMAGECOUNT"])
+        rwd_hit = 4.0 * (game_var["DAMAGECOUNT"] - game_var_old["DAMAGECOUNT"])
         rwd_hit_taken = -1 * (game_var["HITS_TAKEN"] - game_var_old["HITS_TAKEN"])
         
         # Movement reward
@@ -181,7 +181,7 @@ class EnvActions():
     action_weights = {
             'Noop': 0.05,
             'Move Forward': 0.17,
-            'Attack': 0.12,
+            'Attack': 0.11,
             'Move Left': 0.10,
             'Move Right': 0.10,
             'Turn Left': 0.15,
