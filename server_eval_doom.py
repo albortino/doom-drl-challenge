@@ -944,7 +944,7 @@ class VizdoomMPEnv(Env):
 
 
 DTYPE = torch.float32
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # Seed random number generators
@@ -1023,13 +1023,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
     model_file = args.submission
     n_episodes = args.episodes
-    
-    #model_file = "/Users/matsschneider/Documents/Studium/JKU/Deep Reinforcement Learning/365.277 UE DRL/Final/jku.wad/runs/20250621_150035/enhanced_doom_agent.onnx"
-    #n_episodes = 10
 
     # Load model
     model = onnx.load(model_file)
-    config = next((json.loads(p.value) for p in model.metadata_props if p.key == "config"), {})
+    config = next(
+        (json.loads(p.value) for p in model.metadata_props if p.key == "config"), {}
+    )
     model = ConvertModel(model)
     model.eval()
     model = model.to(DEVICE, dtype=DTYPE)

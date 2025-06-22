@@ -13,8 +13,8 @@ from plotly.subplots import make_subplots
 from flask import send_from_directory
 
 # --- CONFIGURATION ---
-RUNS_BASE_FOLDER = '/Users/matsschneider/Library/CloudStorage/GoogleDrive-madce31@gmail.com/Meine Ablage/Colab Notebooks/doom-drl-challenge/runs_test'
-REFRESH_INTERVAL_MS = 30000  # 30 seconds
+RUNS_BASE_FOLDER = 'runs'
+REFRESH_INTERVAL_MS = 60000  # 60 seconds
 
 # --- DATA PARSING HELPER FUNCTIONS ---
 

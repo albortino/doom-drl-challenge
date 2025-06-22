@@ -1,0 +1,494 @@
+LOGGER INITIALIZED AT 20250622-183846
+N_STACK_FRAMES: 1, NUM_PLAYERS: 4, NUM_BOTS: 6, EPISODE_TIMEOUT: 1500, GAMMA: 0.98, EPISODES: 250, BATCH_SIZE: 128, REPLAY_BUFFER_SIZE: 25000, LEARNING_RATE: 1e-05, EPSILON_START: 1.0, EPSILON_END: 0.1, EPSILON_DECAY: 0.998, N_EPOCHS: 20, FRAME_SKIPPING: 0, FRAME_SKIPPING_STOP: 100, DEBUG: True, PRINT_EVERY: 50, VIDEO_DURING_TRAINING: True, EVALUATION_EVERY: 25algo_type: QVALUE, n_stack_frames: 1, extra_state: ['depth'], hud: none, crosshair: True, screen_format: 0
+18:40:03 | Episode: 0 | Steps done: 0 | Gathering rollout (currently 0)
+18:40:18 | Episode: 0 | Training for 20 epochs
+18:40:19 | Episode: 0 | Updating target network...
+18:40:19 | Episode: 0 | Rewards:
+	Reward: [ -6. 136. -18. -18.] | Avg Reward: 23.0 | Loss: 6.7557 | ε: 0.998 | LR: 9.99e-06
+	Metrics - ['frags: 0', 'hits: 40', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -21', 'health_pickup: 1']
+	Actions - Noop: 299, Move Forward: 1101, Attack: 902, Move Left: 620, Move Right: 619, Turn Left: 899, Turn Right: 1034, Jump: 526
+18:40:19 | Episode: 0 | Replaying animation...
+18:41:03 | Episode: 0 | Running quick evaluation...
+18:41:07 | Episode: 1 | Steps done: 1500 | Gathering rollout (currently 5996)
+18:41:22 | Episode: 1 | Training for 20 epochs
+18:41:23 | Episode: 1 | Updating target network...
+18:41:23 | Episode: 1 | Rewards:
+	Reward: [ 51. -18. -18.  56.] | Avg Reward: 20.0 | Loss: 6.7356 | ε: 0.996 | LR: 9.96e-06
+	Metrics - ['frags: 0', 'hits: 42', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -28', 'health_pickup: 1']
+	Actions - Noop: 304, Move Forward: 1080, Attack: 907, Move Left: 630, Move Right: 622, Turn Left: 978, Turn Right: 946, Jump: 533
+18:41:23 | Episode: 1 | Running quick evaluation...
+18:41:27 | Episode: 2 | Steps done: 3000 | Gathering rollout (currently 11992)
+18:41:42 | Episode: 2 | Training for 20 epochs
+18:41:44 | Episode: 2 | Updating target network...
+18:41:44 | Episode: 2 | Rewards:
+	Reward: [  79. -131.   20.   61.] | Avg Reward: 16.0 | Loss: 6.5608 | ε: 0.994 | LR: 9.91e-06
+	Metrics - ['frags: 0', 'hits: 128', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 9', 'survival: -132', 'health_pickup: 3']
+	Actions - Noop: 327, Move Forward: 1063, Attack: 943, Move Left: 651, Move Right: 622, Turn Left: 941, Turn Right: 933, Jump: 520
+18:41:44 | Episode: 2 | Running quick evaluation...
+18:41:47 | Episode: 3 | Steps done: 4500 | Gathering rollout (currently 17988)
+18:42:02 | Episode: 3 | Training for 20 epochs
+18:42:03 | Episode: 3 | Updating target network...
+18:42:03 | Episode: 3 | Rewards:
+	Reward: [ 82. -18. -29. 135.] | Avg Reward: 23.0 | Loss: 7.1044 | ε: 0.992 | LR: 9.84e-06
+	Metrics - ['frags: 0', 'hits: 142', 'damage_taken: -5', 'movement: 0', 'ammo_efficiency: 12', 'survival: -109', 'health_pickup: 2']
+	Actions - Noop: 292, Move Forward: 1140, Attack: 898, Move Left: 583, Move Right: 691, Turn Left: 956, Turn Right: 945, Jump: 495
+18:42:03 | Episode: 3 | Running quick evaluation...
+18:42:07 | Episode: 4 | Steps done: 6000 | Gathering rollout (currently 23984)
+18:42:22 | Episode: 4 | Training for 20 epochs
+18:42:24 | Episode: 4 | Updating target network...
+18:42:24 | Episode: 4 | Rewards:
+	Reward: [ 56. -18.  75.  20.] | Avg Reward: 25.0 | Loss: 7.3320 | ε: 0.990 | LR: 9.76e-06
+	Metrics - ['frags: 0', 'hits: 58', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -31', 'health_pickup: 1']
+	Actions - Noop: 341, Move Forward: 1069, Attack: 911, Move Left: 654, Move Right: 629, Turn Left: 920, Turn Right: 955, Jump: 521
+18:42:24 | Episode: 4 | Running quick evaluation...
+18:42:27 | Episode: 5 | Steps done: 7500 | Gathering rollout (currently 25000)
+18:42:42 | Episode: 5 | Training for 20 epochs
+18:42:43 | Episode: 5 | Updating target network...
+18:42:43 | Episode: 5 | Rewards:
+	Reward: [103.  -7. -18. -46.] | Avg Reward: 22.0 | Loss: 6.3589 | ε: 0.988 | LR: 9.65e-06
+	Metrics - ['frags: 0', 'hits: 97', 'damage_taken: -4', 'movement: 0', 'ammo_efficiency: 10', 'survival: -97', 'health_pickup: 2']
+	Actions - Noop: 306, Move Forward: 1049, Attack: 836, Move Left: 658, Move Right: 638, Turn Left: 992, Turn Right: 988, Jump: 533
+18:42:43 | Episode: 5 | Running quick evaluation...
+18:42:47 | Episode: 6 | Steps done: 9000 | Gathering rollout (currently 25000)
+18:43:02 | Episode: 6 | Training for 20 epochs
+18:43:04 | Episode: 6 | Updating target network...
+18:43:04 | Episode: 6 | Rewards:
+	Reward: [136. -24. 224.   1.] | Avg Reward: 31.0 | Loss: 6.8957 | ε: 0.986 | LR: 9.52e-06
+	Metrics - ['frags: 0', 'hits: 117', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 9', 'survival: -42', 'health_pickup: 2']
+	Actions - Noop: 309, Move Forward: 1108, Attack: 880, Move Left: 676, Move Right: 642, Turn Left: 913, Turn Right: 985, Jump: 487
+18:43:04 | Episode: 6 | Running quick evaluation...
+18:43:07 | Episode: 7 | Steps done: 10500 | Gathering rollout (currently 25000)
+18:43:22 | Episode: 7 | Training for 20 epochs
+18:43:24 | Episode: 7 | Updating target network...
+18:43:24 | Episode: 7 | Rewards:
+	Reward: [ 89. -18.  86. 152.] | Avg Reward: 37.0 | Loss: 6.6479 | ε: 0.984 | LR: 9.38e-06
+	Metrics - ['frags: 0', 'hits: 90', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 6', 'survival: -21', 'health_pickup: 2']
+	Actions - Noop: 300, Move Forward: 1118, Attack: 874, Move Left: 673, Move Right: 652, Turn Left: 946, Turn Right: 947, Jump: 490
+18:43:24 | Episode: 7 | Running quick evaluation...
+18:43:28 | Episode: 8 | Steps done: 12000 | Gathering rollout (currently 25000)
+18:43:42 | Episode: 8 | Training for 20 epochs
+18:43:43 | Episode: 8 | Updating target network...
+18:43:43 | Episode: 8 | Rewards:
+	Reward: [-18. -18. -18.  34.] | Avg Reward: 32.0 | Loss: 7.0425 | ε: 0.982 | LR: 9.22e-06
+	Metrics - ['frags: 0', 'hits: 12', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 2', 'survival: -20', 'health_pickup: 0']
+	Actions - Noop: 322, Move Forward: 1038, Attack: 904, Move Left: 695, Move Right: 599, Turn Left: 984, Turn Right: 951, Jump: 507
+18:43:43 | Episode: 8 | Running quick evaluation...
+18:43:47 | Episode: 9 | Steps done: 13500 | Gathering rollout (currently 25000)
+18:44:02 | Episode: 9 | Training for 20 epochs
+18:44:03 | Episode: 9 | Updating target network...
+18:44:03 | Episode: 9 | Rewards:
+	Reward: [ 97. -40. 173.  15.] | Avg Reward: 35.0 | Loss: 6.6064 | ε: 0.980 | LR: 9.05e-06
+	Metrics - ['frags: 0', 'hits: 122', 'damage_taken: -4', 'movement: 0', 'ammo_efficiency: 11', 'survival: -71', 'health_pickup: 3']
+	Actions - Noop: 317, Move Forward: 1067, Attack: 881, Move Left: 624, Move Right: 623, Turn Left: 965, Turn Right: 1028, Jump: 495
+18:44:03 | Episode: 9 | Running quick evaluation...
+18:44:07 | Episode: 10 | Steps done: 15000 | Gathering rollout (currently 25000)
+18:44:21 | Episode: 10 | Training for 20 epochs
+18:44:22 | Episode: 10 | Updating target network...
+18:44:22 | Episode: 10 | Rewards:
+	Reward: [-101.  136.  -18.   58.] | Avg Reward: 33.0 | Loss: 7.4494 | ε: 0.978 | LR: 8.85e-06
+	Metrics - ['frags: 0', 'hits: 55', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 4', 'survival: -40', 'health_pickup: 0']
+	Actions - Noop: 318, Move Forward: 1072, Attack: 954, Move Left: 681, Move Right: 607, Turn Left: 959, Turn Right: 911, Jump: 498
+18:44:22 | Episode: 10 | Running quick evaluation...
+18:44:25 | Episode: 11 | Steps done: 16500 | Gathering rollout (currently 25000)
+18:44:40 | Episode: 11 | Training for 20 epochs
+18:44:41 | Episode: 11 | Updating target network...
+18:44:41 | Episode: 11 | Rewards:
+	Reward: [ 31. -18. -18. 328.] | Avg Reward: 37.0 | Loss: 7.0291 | ε: 0.976 | LR: 8.65e-06
+	Metrics - ['frags: 0', 'hits: 122', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -49', 'health_pickup: 3']
+	Actions - Noop: 318, Move Forward: 1075, Attack: 865, Move Left: 645, Move Right: 639, Turn Left: 989, Turn Right: 976, Jump: 493
+18:44:41 | Episode: 11 | Running quick evaluation...
+18:44:45 | Episode: 12 | Steps done: 18000 | Gathering rollout (currently 25000)
+18:44:59 | Episode: 12 | Training for 20 epochs
+18:45:01 | Episode: 12 | Updating target network...
+18:45:01 | Episode: 12 | Rewards:
+	Reward: [-18. -18.   9. 111.] | Avg Reward: 36.0 | Loss: 7.6797 | ε: 0.974 | LR: 8.42e-06
+	Metrics - ['frags: 0', 'hits: 37', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -20', 'health_pickup: 0']
+	Actions - Noop: 286, Move Forward: 1072, Attack: 947, Move Left: 635, Move Right: 672, Turn Left: 969, Turn Right: 934, Jump: 485
+18:45:01 | Episode: 12 | Running quick evaluation...
+18:45:04 | Episode: 13 | Steps done: 19500 | Gathering rollout (currently 25000)
+18:45:19 | Episode: 13 | Training for 20 epochs
+18:45:20 | Episode: 13 | Updating target network...
+18:45:20 | Episode: 13 | Rewards:
+	Reward: [ 38.  56.  88. -61.] | Avg Reward: 36.0 | Loss: 7.1053 | ε: 0.972 | LR: 8.19e-06
+	Metrics - ['frags: 0', 'hits: 55', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -31', 'health_pickup: 2']
+	Actions - Noop: 327, Move Forward: 1025, Attack: 928, Move Left: 649, Move Right: 614, Turn Left: 960, Turn Right: 968, Jump: 529
+18:45:20 | Episode: 13 | Running quick evaluation...
+18:45:23 | Episode: 14 | Steps done: 21000 | Gathering rollout (currently 25000)
+18:45:38 | Episode: 14 | Training for 20 epochs
+18:45:39 | Episode: 14 | Updating target network...
+18:45:39 | Episode: 14 | Rewards:
+	Reward: [111. -18.  86. 138.] | Avg Reward: 39.0 | Loss: 7.6423 | ε: 0.970 | LR: 7.94e-06
+	Metrics - ['frags: 0', 'hits: 93', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -20', 'health_pickup: 0']
+	Actions - Noop: 323, Move Forward: 1054, Attack: 922, Move Left: 680, Move Right: 641, Turn Left: 888, Turn Right: 960, Jump: 532
+18:45:39 | Episode: 14 | Running quick evaluation...
+18:45:44 | Episode: 15 | Steps done: 22500 | Gathering rollout (currently 25000)
+18:45:59 | Episode: 15 | Training for 20 epochs
+18:46:00 | Episode: 15 | Updating target network...
+18:46:00 | Episode: 15 | Rewards:
+	Reward: [ 73. -88.  90. -18.] | Avg Reward: 37.0 | Loss: 6.6070 | ε: 0.968 | LR: 7.68e-06
+	Metrics - ['frags: 0', 'hits: 46', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -36', 'health_pickup: 0']
+	Actions - Noop: 315, Move Forward: 1086, Attack: 870, Move Left: 625, Move Right: 660, Turn Left: 943, Turn Right: 941, Jump: 560
+18:46:00 | Episode: 15 | Running quick evaluation...
+18:46:03 | Episode: 16 | Steps done: 24000 | Gathering rollout (currently 25000)
+18:46:18 | Episode: 16 | Training for 20 epochs
+18:46:19 | Episode: 16 | Updating target network...
+18:46:19 | Episode: 16 | Rewards:
+	Reward: [-18. -18. 111.   9.] | Avg Reward: 36.0 | Loss: 6.7917 | ε: 0.967 | LR: 7.41e-06
+	Metrics - ['frags: 0', 'hits: 37', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -20', 'health_pickup: 0']
+	Actions - Noop: 338, Move Forward: 1022, Attack: 855, Move Left: 697, Move Right: 671, Turn Left: 952, Turn Right: 929, Jump: 536
+18:46:19 | Episode: 16 | Running quick evaluation...
+18:46:22 | Episode: 17 | Steps done: 25500 | Gathering rollout (currently 25000)
+18:46:37 | Episode: 17 | Training for 20 epochs
+18:46:38 | Episode: 17 | Updating target network...
+18:46:38 | Episode: 17 | Rewards:
+	Reward: [-131.   59.   97.  -18.] | Avg Reward: 34.0 | Loss: 6.4111 | ε: 0.965 | LR: 7.13e-06
+	Metrics - ['frags: 0', 'hits: 45', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -48', 'health_pickup: 1']
+	Actions - Noop: 317, Move Forward: 1073, Attack: 889, Move Left: 722, Move Right: 638, Turn Left: 976, Turn Right: 888, Jump: 497
+18:46:38 | Episode: 17 | Running quick evaluation...
+18:46:42 | Episode: 18 | Steps done: 27000 | Gathering rollout (currently 25000)
+18:46:57 | Episode: 18 | Training for 20 epochs
+18:46:58 | Episode: 18 | Updating target network...
+18:46:58 | Episode: 18 | Rewards:
+	Reward: [  6. -15.   9. -32.] | Avg Reward: 32.0 | Loss: 6.9374 | ε: 0.963 | LR: 6.84e-06
+	Metrics - ['frags: 0', 'hits: 37', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -50', 'health_pickup: 1']
+	Actions - Noop: 324, Move Forward: 1025, Attack: 899, Move Left: 686, Move Right: 674, Turn Left: 947, Turn Right: 936, Jump: 509
+18:46:58 | Episode: 18 | Running quick evaluation...
+18:47:02 | Episode: 19 | Steps done: 28500 | Gathering rollout (currently 25000)
+18:47:17 | Episode: 19 | Training for 20 epochs
+18:47:18 | Episode: 19 | Updating target network...
+18:47:18 | Episode: 19 | Rewards:
+	Reward: [-19. -18. -18. 214.] | Avg Reward: 32.0 | Loss: 7.2545 | ε: 0.961 | LR: 6.55e-06
+	Metrics - ['frags: 0', 'hits: 67', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -33', 'health_pickup: 1']
+	Actions - Noop: 342, Move Forward: 1050, Attack: 851, Move Left: 695, Move Right: 624, Turn Left: 943, Turn Right: 971, Jump: 524
+18:47:18 | Episode: 19 | Running quick evaluation...
+18:47:21 | Episode: 20 | Steps done: 30000 | Gathering rollout (currently 25000)
+18:47:36 | Episode: 20 | Training for 20 epochs
+18:47:37 | Episode: 20 | Updating target network...
+18:47:37 | Episode: 20 | Rewards:
+	Reward: [-48.  36. -18.  46.] | Avg Reward: 31.0 | Loss: 7.3173 | ε: 0.959 | LR: 6.25e-06
+	Metrics - ['frags: 0', 'hits: 27', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 4', 'survival: -27', 'health_pickup: 1']
+	Actions - Noop: 331, Move Forward: 1086, Attack: 909, Move Left: 641, Move Right: 624, Turn Left: 986, Turn Right: 959, Jump: 464
+18:47:37 | Episode: 20 | Running quick evaluation...
+18:47:41 | Episode: 21 | Steps done: 31500 | Gathering rollout (currently 25000)
+18:47:56 | Episode: 21 | Training for 20 epochs
+18:47:58 | Episode: 21 | Updating target network...
+18:47:58 | Episode: 21 | Rewards:
+	Reward: [-120.  198.  -18.   75.] | Avg Reward: 31.0 | Loss: 7.7294 | ε: 0.957 | LR: 5.94e-06
+	Metrics - ['frags: 0', 'hits: 107', 'damage_taken: -3', 'movement: 0', 'ammo_efficiency: 9', 'survival: -83', 'health_pickup: 3']
+	Actions - Noop: 305, Move Forward: 1062, Attack: 974, Move Left: 641, Move Right: 659, Turn Left: 898, Turn Right: 942, Jump: 519
+18:47:58 | Episode: 21 | Running quick evaluation...
+18:48:01 | Episode: 22 | Steps done: 33000 | Gathering rollout (currently 25000)
+18:48:16 | Episode: 22 | Training for 20 epochs
+18:48:17 | Episode: 22 | Updating target network...
+18:48:17 | Episode: 22 | Rewards:
+	Reward: [ 71. -18.  36.  -9.] | Avg Reward: 31.0 | Loss: 6.9042 | ε: 0.955 | LR: 5.63e-06
+	Metrics - ['frags: 0', 'hits: 35', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -22', 'health_pickup: 3']
+	Actions - Noop: 316, Move Forward: 1014, Attack: 920, Move Left: 653, Move Right: 638, Turn Left: 957, Turn Right: 965, Jump: 537
+18:48:17 | Episode: 22 | Running quick evaluation...
+18:48:21 | Episode: 23 | Steps done: 34500 | Gathering rollout (currently 25000)
+18:48:36 | Episode: 23 | Training for 20 epochs
+18:48:37 | Episode: 23 | Updating target network...
+18:48:37 | Episode: 23 | Rewards:
+	Reward: [-17. -18.  -0. -18.] | Avg Reward: 29.0 | Loss: 6.7938 | ε: 0.953 | LR: 5.32e-06
+	Metrics - ['frags: 0', 'hits: 27', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -46', 'health_pickup: 2']
+	Actions - Noop: 333, Move Forward: 1040, Attack: 907, Move Left: 633, Move Right: 616, Turn Left: 962, Turn Right: 954, Jump: 555
+18:48:37 | Episode: 23 | Running quick evaluation...
+18:48:40 | Episode: 24 | Steps done: 36000 | Gathering rollout (currently 25000)
+18:48:55 | Episode: 24 | Training for 20 epochs
+18:48:56 | Episode: 24 | Updating target network...
+18:48:56 | Episode: 24 | Rewards:
+	Reward: [ 43. -11. -22.  -0.] | Avg Reward: 28.0 | Loss: 6.9113 | ε: 0.951 | LR: 5.01e-06
+	Metrics - ['frags: 0', 'hits: 63', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -68', 'health_pickup: 2']
+	Actions - Noop: 324, Move Forward: 1048, Attack: 902, Move Left: 640, Move Right: 650, Turn Left: 934, Turn Right: 973, Jump: 529
+18:48:56 | Episode: 24 | Running quick evaluation...
+18:49:00 | Episode: 25 | Steps done: 37500 | Gathering rollout (currently 25000)
+18:49:15 | Episode: 25 | Training for 20 epochs
+18:49:16 | Episode: 25 | Updating target network...
+18:49:16 | Episode: 25 | Rewards:
+	Reward: [-21.  83.  59.  88.] | Avg Reward: 29.0 | Loss: 7.2130 | ε: 0.949 | LR: 4.69e-06
+	Metrics - ['frags: 0', 'hits: 80', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -34', 'health_pickup: 1']
+	Actions - Noop: 304, Move Forward: 1056, Attack: 920, Move Left: 635, Move Right: 623, Turn Left: 954, Turn Right: 967, Jump: 541
+18:49:16 | Episode: 25 | Replaying animation...
+18:50:01 | Episode: 25 | Running quick evaluation...
+18:50:24 | Episode: 26 | Steps done: 39000 | Gathering rollout (currently 25000)
+18:50:40 | Episode: 26 | Training for 20 epochs
+18:50:41 | Episode: 26 | Updating target network...
+18:50:41 | Episode: 26 | Rewards:
+	Reward: [-176.   36.  283.   34.] | Avg Reward: 29.0 | Loss: 6.9683 | ε: 0.947 | LR: 4.38e-06
+	Metrics - ['frags: 0', 'hits: 98', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -60', 'health_pickup: 2']
+	Actions - Noop: 327, Move Forward: 1088, Attack: 900, Move Left: 637, Move Right: 631, Turn Left: 943, Turn Right: 949, Jump: 525
+18:50:41 | Episode: 26 | Running quick evaluation...
+18:50:45 | Episode: 27 | Steps done: 40500 | Gathering rollout (currently 25000)
+18:51:04 | Episode: 27 | Training for 20 epochs
+18:51:05 | Episode: 27 | Updating target network...
+18:51:05 | Episode: 27 | Rewards:
+	Reward: [24.  9. 61.  9.] | Avg Reward: 29.0 | Loss: 6.6462 | ε: 0.945 | LR: 4.07e-06
+	Metrics - ['frags: 0', 'hits: 56', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -34', 'health_pickup: 0']
+	Actions - Noop: 314, Move Forward: 1066, Attack: 923, Move Left: 622, Move Right: 691, Turn Left: 884, Turn Right: 974, Jump: 526
+18:51:05 | Episode: 27 | Running quick evaluation...
+18:51:08 | Episode: 28 | Steps done: 42000 | Gathering rollout (currently 25000)
+18:51:27 | Episode: 28 | Training for 20 epochs
+18:51:28 | Episode: 28 | Updating target network...
+18:51:28 | Episode: 28 | Rewards:
+	Reward: [-295.  375.    2.  -18.] | Avg Reward: 29.0 | Loss: 7.2503 | ε: 0.944 | LR: 3.76e-06
+	Metrics - ['frags: 0', 'hits: 113', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -103', 'health_pickup: 1']
+	Actions - Noop: 328, Move Forward: 1157, Attack: 899, Move Left: 645, Move Right: 612, Turn Left: 918, Turn Right: 938, Jump: 503
+18:51:28 | Episode: 28 | Running quick evaluation...
+18:51:33 | Episode: 29 | Steps done: 43500 | Gathering rollout (currently 25000)
+18:51:52 | Episode: 29 | Training for 20 epochs
+18:51:53 | Episode: 29 | Updating target network...
+18:51:53 | Episode: 29 | Rewards:
+	Reward: [-37. -66. 140. 174.] | Avg Reward: 29.0 | Loss: 7.8859 | ε: 0.942 | LR: 3.46e-06
+	Metrics - ['frags: 0', 'hits: 107', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 8', 'survival: -65', 'health_pickup: 3']
+	Actions - Noop: 277, Move Forward: 1047, Attack: 901, Move Left: 666, Move Right: 608, Turn Left: 957, Turn Right: 1007, Jump: 537
+18:51:53 | Episode: 29 | Running quick evaluation...
+18:51:57 | Episode: 30 | Steps done: 45000 | Gathering rollout (currently 25000)
+18:52:16 | Episode: 30 | Training for 20 epochs
+18:52:17 | Episode: 30 | Updating target network...
+18:52:17 | Episode: 30 | Rewards:
+	Reward: [-25. -18. -29. 242.] | Avg Reward: 30.0 | Loss: 6.9786 | ε: 0.940 | LR: 3.17e-06
+	Metrics - ['frags: 0', 'hits: 93', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 6', 'survival: -58', 'health_pickup: 2']
+	Actions - Noop: 357, Move Forward: 1041, Attack: 875, Move Left: 639, Move Right: 651, Turn Left: 933, Turn Right: 974, Jump: 530
+18:52:17 | Episode: 30 | Running quick evaluation...
+18:52:21 | Episode: 31 | Steps done: 46500 | Gathering rollout (currently 25000)
+18:52:40 | Episode: 31 | Training for 20 epochs
+18:52:41 | Episode: 31 | Updating target network...
+18:52:41 | Episode: 31 | Rewards:
+	Reward: [-18. -18.   9.  38.] | Avg Reward: 29.0 | Loss: 6.0651 | ε: 0.938 | LR: 2.88e-06
+	Metrics - ['frags: 0', 'hits: 37', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -37', 'health_pickup: 0']
+	Actions - Noop: 346, Move Forward: 1005, Attack: 910, Move Left: 706, Move Right: 591, Turn Left: 947, Turn Right: 972, Jump: 523
+18:52:41 | Episode: 31 | Running quick evaluation...
+18:52:45 | Episode: 32 | Steps done: 48000 | Gathering rollout (currently 25000)
+18:53:04 | Episode: 32 | Training for 20 epochs
+18:53:05 | Episode: 32 | Updating target network...
+18:53:05 | Episode: 32 | Rewards:
+	Reward: [19. 14. 86.  3.] | Avg Reward: 29.0 | Loss: 6.7396 | ε: 0.936 | LR: 2.60e-06
+	Metrics - ['frags: 0', 'hits: 55', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -30', 'health_pickup: 1']
+	Actions - Noop: 338, Move Forward: 1052, Attack: 894, Move Left: 644, Move Right: 647, Turn Left: 936, Turn Right: 978, Jump: 511
+18:53:05 | Episode: 32 | Running quick evaluation...
+18:53:10 | Episode: 33 | Steps done: 49500 | Gathering rollout (currently 25000)
+18:53:29 | Episode: 33 | Training for 20 epochs
+18:53:30 | Episode: 33 | Updating target network...
+18:53:30 | Episode: 33 | Rewards:
+	Reward: [-333.   19.  136.    9.] | Avg Reward: 27.0 | Loss: 7.0047 | ε: 0.934 | LR: 2.33e-06
+	Metrics - ['frags: 0', 'hits: 75', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 7', 'survival: -123', 'health_pickup: 1']
+	Actions - Noop: 306, Move Forward: 1000, Attack: 921, Move Left: 689, Move Right: 659, Turn Left: 931, Turn Right: 970, Jump: 524
+18:53:30 | Episode: 33 | Running quick evaluation...
+18:53:33 | Episode: 34 | Steps done: 51000 | Gathering rollout (currently 25000)
+18:53:52 | Episode: 34 | Training for 20 epochs
+18:53:54 | Episode: 34 | Updating target network...
+18:53:54 | Episode: 34 | Rewards:
+	Reward: [-14.   6.  36. -18.] | Avg Reward: 26.0 | Loss: 6.4467 | ε: 0.932 | LR: 2.07e-06
+	Metrics - ['frags: 0', 'hits: 21', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 4', 'survival: -24', 'health_pickup: 2']
+	Actions - Noop: 322, Move Forward: 1072, Attack: 874, Move Left: 668, Move Right: 661, Turn Left: 910, Turn Right: 984, Jump: 509
+18:53:54 | Episode: 34 | Running quick evaluation...
+18:53:57 | Episode: 35 | Steps done: 52500 | Gathering rollout (currently 25000)
+18:54:16 | Episode: 35 | Training for 20 epochs
+18:54:17 | Episode: 35 | Updating target network...
+18:54:17 | Episode: 35 | Rewards:
+	Reward: [ 76. -26. -51.  34.] | Avg Reward: 26.0 | Loss: 6.5929 | ε: 0.930 | LR: 1.82e-06
+	Metrics - ['frags: 0', 'hits: 83', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 6', 'survival: -81', 'health_pickup: 1']
+	Actions - Noop: 334, Move Forward: 992, Attack: 901, Move Left: 697, Move Right: 624, Turn Left: 970, Turn Right: 951, Jump: 531
+18:54:17 | Episode: 35 | Running quick evaluation...
+18:54:21 | Episode: 36 | Steps done: 54000 | Gathering rollout (currently 25000)
+18:54:40 | Episode: 36 | Training for 20 epochs
+18:54:42 | Episode: 36 | Updating target network...
+18:54:42 | Episode: 36 | Rewards:
+	Reward: [ 1. 83. 47.  9.] | Avg Reward: 26.0 | Loss: 6.7534 | ε: 0.929 | LR: 1.59e-06
+	Metrics - ['frags: 0', 'hits: 75', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 7', 'survival: -47', 'health_pickup: 2']
+	Actions - Noop: 307, Move Forward: 1080, Attack: 858, Move Left: 656, Move Right: 659, Turn Left: 958, Turn Right: 949, Jump: 533
+18:54:42 | Episode: 36 | Running quick evaluation...
+18:54:46 | Episode: 37 | Steps done: 55500 | Gathering rollout (currently 25000)
+18:55:05 | Episode: 37 | Training for 20 epochs
+18:55:06 | Episode: 37 | Updating target network...
+18:55:06 | Episode: 37 | Rewards:
+	Reward: [ 82. -18. 113.  61.] | Avg Reward: 27.0 | Loss: 6.8243 | ε: 0.927 | LR: 1.36e-06
+	Metrics - ['frags: 0', 'hits: 75', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 6', 'survival: -23', 'health_pickup: 2']
+	Actions - Noop: 332, Move Forward: 1039, Attack: 842, Move Left: 649, Move Right: 692, Turn Left: 966, Turn Right: 939, Jump: 541
+18:55:06 | Episode: 37 | Running quick evaluation...
+18:55:09 | Episode: 38 | Steps done: 57000 | Gathering rollout (currently 25000)
+18:55:28 | Episode: 38 | Training for 20 epochs
+18:55:29 | Episode: 38 | Updating target network...
+18:55:29 | Episode: 38 | Rewards:
+	Reward: [ 33.  34. -18. -18.] | Avg Reward: 26.0 | Loss: 6.7093 | ε: 0.925 | LR: 1.16e-06
+	Metrics - ['frags: 0', 'hits: 43', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -39', 'health_pickup: 0']
+	Actions - Noop: 300, Move Forward: 1080, Attack: 825, Move Left: 696, Move Right: 623, Turn Left: 1016, Turn Right: 918, Jump: 542
+18:55:29 | Episode: 38 | Running quick evaluation...
+18:55:33 | Episode: 39 | Steps done: 58500 | Gathering rollout (currently 25000)
+18:55:52 | Episode: 39 | Training for 20 epochs
+18:55:53 | Episode: 39 | Updating target network...
+18:55:53 | Episode: 39 | Rewards:
+	Reward: [  8. -18.  -6.  64.] | Avg Reward: 26.0 | Loss: 6.3681 | ε: 0.923 | LR: 9.64e-07
+	Metrics - ['frags: 0', 'hits: 27', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 4', 'survival: -21', 'health_pickup: 2']
+	Actions - Noop: 326, Move Forward: 1110, Attack: 897, Move Left: 655, Move Right: 638, Turn Left: 879, Turn Right: 976, Jump: 519
+18:55:53 | Episode: 39 | Running quick evaluation...
+18:55:56 | Episode: 40 | Steps done: 60000 | Gathering rollout (currently 25000)
+18:56:16 | Episode: 40 | Training for 20 epochs
+18:56:17 | Episode: 40 | Updating target network...
+18:56:17 | Episode: 40 | Rewards:
+	Reward: [-12. -27. -18. 137.] | Avg Reward: 26.0 | Loss: 6.6458 | ε: 0.921 | LR: 7.88e-07
+	Metrics - ['frags: 0', 'hits: 48', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -35', 'health_pickup: 2']
+	Actions - Noop: 352, Move Forward: 1046, Attack: 935, Move Left: 695, Move Right: 616, Turn Left: 907, Turn Right: 925, Jump: 524
+18:56:17 | Episode: 40 | Running quick evaluation...
+18:56:21 | Episode: 41 | Steps done: 61500 | Gathering rollout (currently 25000)
+18:56:40 | Episode: 41 | Training for 20 epochs
+18:56:41 | Episode: 41 | Updating target network...
+18:56:41 | Episode: 41 | Rewards:
+	Reward: [  9. -18. -59. 113.] | Avg Reward: 25.0 | Loss: 6.3598 | ε: 0.919 | LR: 6.28e-07
+	Metrics - ['frags: 0', 'hits: 62', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -57', 'health_pickup: 1']
+	Actions - Noop: 295, Move Forward: 1041, Attack: 872, Move Left: 672, Move Right: 691, Turn Left: 951, Turn Right: 930, Jump: 548
+18:56:41 | Episode: 41 | Running quick evaluation...
+18:56:44 | Episode: 42 | Steps done: 63000 | Gathering rollout (currently 25000)
+18:57:04 | Episode: 42 | Training for 20 epochs
+18:57:05 | Episode: 42 | Updating target network...
+18:57:05 | Episode: 42 | Rewards:
+	Reward: [-40.   9. -18. -20.] | Avg Reward: 24.0 | Loss: 6.4916 | ε: 0.918 | LR: 4.85e-07
+	Metrics - ['frags: 0', 'hits: 62', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -88', 'health_pickup: 3']
+	Actions - Noop: 328, Move Forward: 1080, Attack: 890, Move Left: 654, Move Right: 662, Turn Left: 929, Turn Right: 961, Jump: 496
+18:57:05 | Episode: 42 | Running quick evaluation...
+18:57:08 | Episode: 43 | Steps done: 64500 | Gathering rollout (currently 25000)
+18:57:24 | Episode: 43 | Training for 20 epochs
+18:57:25 | Episode: 43 | Updating target network...
+18:57:25 | Episode: 43 | Rewards:
+	Reward: [ 83. -18. -18.   9.] | Avg Reward: 24.0 | Loss: 5.9674 | ε: 0.916 | LR: 3.61e-07
+	Metrics - ['frags: 0', 'hits: 31', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -21', 'health_pickup: 1']
+	Actions - Noop: 311, Move Forward: 1042, Attack: 886, Move Left: 639, Move Right: 653, Turn Left: 969, Turn Right: 954, Jump: 546
+18:57:25 | Episode: 43 | Running quick evaluation...
+18:57:28 | Episode: 44 | Steps done: 66000 | Gathering rollout (currently 25000)
+18:57:44 | Episode: 44 | Training for 20 epochs
+18:57:45 | Episode: 44 | Updating target network...
+18:57:45 | Episode: 44 | Rewards:
+	Reward: [ -4. -21. 187.  -3.] | Avg Reward: 25.0 | Loss: 5.8672 | ε: 0.914 | LR: 2.54e-07
+	Metrics - ['frags: 0', 'hits: 53', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -22', 'health_pickup: 3']
+	Actions - Noop: 331, Move Forward: 1022, Attack: 877, Move Left: 699, Move Right: 633, Turn Left: 896, Turn Right: 1030, Jump: 512
+18:57:45 | Episode: 44 | Running quick evaluation...
+18:57:48 | Episode: 45 | Steps done: 67500 | Gathering rollout (currently 25000)
+18:58:04 | Episode: 45 | Training for 20 epochs
+18:58:05 | Episode: 45 | Updating target network...
+18:58:05 | Episode: 45 | Rewards:
+	Reward: [-375.   22.   61.   95.] | Avg Reward: 23.0 | Loss: 6.2159 | ε: 0.912 | LR: 1.67e-07
+	Metrics - ['frags: 0', 'hits: 100', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 9', 'survival: -155', 'health_pickup: 0']
+	Actions - Noop: 317, Move Forward: 1007, Attack: 914, Move Left: 678, Move Right: 657, Turn Left: 914, Turn Right: 985, Jump: 528
+18:58:05 | Episode: 45 | Running quick evaluation...
+18:58:08 | Episode: 46 | Steps done: 69000 | Gathering rollout (currently 25000)
+18:58:23 | Episode: 46 | Training for 20 epochs
+18:58:25 | Episode: 46 | Updating target network...
+18:58:25 | Episode: 46 | Rewards:
+	Reward: [-31. -18.  88.  99.] | Avg Reward: 23.0 | Loss: 6.4304 | ε: 0.910 | LR: 9.85e-08
+	Metrics - ['frags: 0', 'hits: 55', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -27', 'health_pickup: 2']
+	Actions - Noop: 316, Move Forward: 1026, Attack: 891, Move Left: 695, Move Right: 635, Turn Left: 972, Turn Right: 928, Jump: 537
+18:58:25 | Episode: 46 | Running quick evaluation...
+18:58:28 | Episode: 47 | Steps done: 70500 | Gathering rollout (currently 25000)
+18:58:43 | Episode: 47 | Training for 20 epochs
+18:58:45 | Episode: 47 | Updating target network...
+18:58:45 | Episode: 47 | Rewards:
+	Reward: [ 67. -18. -18.  13.] | Avg Reward: 23.0 | Loss: 6.7022 | ε: 0.908 | LR: 4.94e-08
+	Metrics - ['frags: 0', 'hits: 57', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -53', 'health_pickup: 2']
+	Actions - Noop: 340, Move Forward: 1038, Attack: 878, Move Left: 652, Move Right: 653, Turn Left: 1001, Turn Right: 902, Jump: 536
+18:58:45 | Episode: 47 | Running quick evaluation...
+18:58:48 | Episode: 48 | Steps done: 72000 | Gathering rollout (currently 25000)
+18:59:03 | Episode: 48 | Training for 20 epochs
+18:59:04 | Episode: 48 | Updating target network...
+18:59:04 | Episode: 48 | Rewards:
+	Reward: [ 33. -18.  59. -17.] | Avg Reward: 23.0 | Loss: 6.3016 | ε: 0.907 | LR: 1.99e-08
+	Metrics - ['frags: 0', 'hits: 80', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -70', 'health_pickup: 0']
+	Actions - Noop: 333, Move Forward: 1008, Attack: 926, Move Left: 696, Move Right: 636, Turn Left: 962, Turn Right: 922, Jump: 517
+18:59:04 | Episode: 48 | Running quick evaluation...
+18:59:08 | Episode: 49 | Steps done: 73500 | Gathering rollout (currently 25000)
+18:59:23 | Episode: 49 | Training for 20 epochs
+18:59:24 | Episode: 49 | Updating target network...
+18:59:24 | Episode: 49 | Rewards:
+	Reward: [ 86. 127.  34. -36.] | Avg Reward: 23.0 | Loss: 6.7222 | ε: 0.905 | LR: 1.00e-05
+	Metrics - ['frags: 0', 'hits: 71', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -25', 'health_pickup: 2']
+	Actions - Noop: 328, Move Forward: 979, Attack: 894, Move Left: 693, Move Right: 716, Turn Left: 914, Turn Right: 1002, Jump: 474
+18:59:24 | Episode: 49 | Running quick evaluation...
+18:59:28 | Episode: 50 | Steps done: 75000 | Gathering rollout (currently 25000)
+18:59:43 | Episode: 50 | Training for 20 epochs
+18:59:44 | Episode: 50 | Updating target network...
+18:59:44 | Episode: 50 | Rewards:
+	Reward: [-18. -18.  69. -18.] | Avg Reward: 23.0 | Loss: 6.4580 | ε: 0.903 | LR: 9.99e-06
+	Metrics - ['frags: 0', 'hits: 25', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -25', 'health_pickup: 1']
+	Actions - Noop: 301, Move Forward: 1022, Attack: 902, Move Left: 708, Move Right: 624, Turn Left: 928, Turn Right: 959, Jump: 556
+18:59:44 | Episode: 50 | Replaying animation...
+19:00:34 | Episode: 50 | Running quick evaluation...
+19:00:57 | Episode: 51 | Steps done: 76500 | Gathering rollout (currently 25000)
+19:01:12 | Episode: 51 | Training for 20 epochs
+19:01:14 | Episode: 51 | Updating target network...
+19:01:14 | Episode: 51 | Rewards:
+	Reward: [ -8.  86. -18.  98.] | Avg Reward: 23.0 | Loss: 6.4422 | ε: 0.901 | LR: 9.96e-06
+	Metrics - ['frags: 0', 'hits: 57', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 5', 'survival: -23', 'health_pickup: 1']
+	Actions - Noop: 351, Move Forward: 996, Attack: 861, Move Left: 712, Move Right: 683, Turn Left: 878, Turn Right: 943, Jump: 576
+19:01:14 | Episode: 51 | Running quick evaluation...
+19:01:17 | Episode: 52 | Steps done: 78000 | Gathering rollout (currently 25000)
+19:01:33 | Episode: 52 | Training for 20 epochs
+19:01:34 | Episode: 52 | Updating target network...
+19:01:34 | Episode: 52 | Rewards:
+	Reward: [  9. -18. -52. -18.] | Avg Reward: 23.0 | Loss: 7.1600 | ε: 0.899 | LR: 9.91e-06
+	Metrics - ['frags: 0', 'hits: 6', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 2', 'survival: -28', 'health_pickup: 0']
+	Actions - Noop: 320, Move Forward: 986, Attack: 904, Move Left: 661, Move Right: 649, Turn Left: 913, Turn Right: 1041, Jump: 526
+19:01:34 | Episode: 52 | Running quick evaluation...
+19:01:37 | Episode: 53 | Steps done: 79500 | Gathering rollout (currently 25000)
+19:01:52 | Episode: 53 | Training for 20 epochs
+19:01:53 | Episode: 53 | Updating target network...
+19:01:53 | Episode: 53 | Rewards:
+	Reward: [-92. -18.  73. -18.] | Avg Reward: 22.0 | Loss: 6.4199 | ε: 0.898 | LR: 9.84e-06
+	Metrics - ['frags: 0', 'hits: 21', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -37', 'health_pickup: 0']
+	Actions - Noop: 319, Move Forward: 1060, Attack: 937, Move Left: 677, Move Right: 652, Turn Left: 929, Turn Right: 882, Jump: 544
+19:01:53 | Episode: 53 | Running quick evaluation...
+19:01:56 | Episode: 54 | Steps done: 81000 | Gathering rollout (currently 25000)
+19:02:12 | Episode: 54 | Training for 20 epochs
+19:02:13 | Episode: 54 | Updating target network...
+19:02:13 | Episode: 54 | Rewards:
+	Reward: [ -18.  -18.  136. -121.] | Avg Reward: 21.0 | Loss: 6.4371 | ε: 0.896 | LR: 9.76e-06
+	Metrics - ['frags: 0', 'hits: 62', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 4', 'survival: -71', 'health_pickup: 0']
+	Actions - Noop: 321, Move Forward: 1008, Attack: 900, Move Left: 690, Move Right: 646, Turn Left: 976, Turn Right: 927, Jump: 532
+19:02:13 | Episode: 54 | Running quick evaluation...
+19:02:16 | Episode: 55 | Steps done: 82500 | Gathering rollout (currently 25000)
+19:02:32 | Episode: 55 | Training for 20 epochs
+19:02:33 | Episode: 55 | Updating target network...
+19:02:33 | Episode: 55 | Rewards:
+	Reward: [ 83. -18. -18. -95.] | Avg Reward: 21.0 | Loss: 6.4132 | ε: 0.894 | LR: 9.65e-06
+	Metrics - ['frags: 0', 'hits: 23', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -39', 'health_pickup: 1']
+	Actions - Noop: 333, Move Forward: 1009, Attack: 932, Move Left: 723, Move Right: 645, Turn Left: 935, Turn Right: 906, Jump: 517
+19:02:33 | Episode: 55 | Running quick evaluation...
+19:02:36 | Episode: 56 | Steps done: 84000 | Gathering rollout (currently 25000)
+19:02:52 | Episode: 56 | Training for 20 epochs
+19:02:53 | Episode: 56 | Updating target network...
+19:02:53 | Episode: 56 | Rewards:
+	Reward: [ 33. -30.  -6. -22.] | Avg Reward: 19.0 | Loss: 6.6069 | ε: 0.892 | LR: 9.52e-06
+	Metrics - ['frags: 0', 'hits: 13', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 4', 'survival: -24', 'health_pickup: 1']
+	Actions - Noop: 355, Move Forward: 1047, Attack: 907, Move Left: 686, Move Right: 640, Turn Left: 907, Turn Right: 900, Jump: 558
+19:02:53 | Episode: 56 | Running quick evaluation...
+19:02:56 | Episode: 57 | Steps done: 85500 | Gathering rollout (currently 25000)
+19:03:12 | Episode: 57 | Training for 20 epochs
+19:03:13 | Episode: 57 | Updating target network...
+19:03:13 | Episode: 57 | Rewards:
+	Reward: [115. -18.   9.  41.] | Avg Reward: 18.0 | Loss: 6.1972 | ε: 0.890 | LR: 9.38e-06
+	Metrics - ['frags: 0', 'hits: 76', 'damage_taken: -1', 'movement: 0', 'ammo_efficiency: 6', 'survival: -46', 'health_pickup: 2']
+	Actions - Noop: 308, Move Forward: 1001, Attack: 907, Move Left: 680, Move Right: 681, Turn Left: 947, Turn Right: 960, Jump: 516
+19:03:13 | Episode: 57 | Running quick evaluation...
+19:03:16 | Episode: 58 | Steps done: 87000 | Gathering rollout (currently 25000)
+19:03:32 | Episode: 58 | Training for 20 epochs
+19:03:33 | Episode: 58 | Updating target network...
+19:03:33 | Episode: 58 | Rewards:
+	Reward: [ 63. -18.  55. -18.] | Avg Reward: 18.0 | Loss: 6.3893 | ε: 0.889 | LR: 9.22e-06
+	Metrics - ['frags: 0', 'hits: 56', 'damage_taken: -2', 'movement: 0', 'ammo_efficiency: 7', 'survival: -43', 'health_pickup: 2']
+	Actions - Noop: 363, Move Forward: 1032, Attack: 907, Move Left: 636, Move Right: 715, Turn Left: 933, Turn Right: 879, Jump: 535
+19:03:33 | Episode: 58 | Running quick evaluation...
+19:03:36 | Episode: 59 | Steps done: 88500 | Gathering rollout (currently 25000)
+19:03:52 | Episode: 59 | Training for 20 epochs
+19:03:53 | Episode: 59 | Updating target network...
+19:03:53 | Episode: 59 | Rewards:
+	Reward: [-13. -18. 110. 113.] | Avg Reward: 18.0 | Loss: 6.8972 | ε: 0.887 | LR: 9.05e-06
+	Metrics - ['frags: 0', 'hits: 61', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 5', 'survival: -20', 'health_pickup: 2']
+	Actions - Noop: 295, Move Forward: 1006, Attack: 935, Move Left: 681, Move Right: 636, Turn Left: 960, Turn Right: 959, Jump: 528
+19:03:53 | Episode: 59 | Running quick evaluation...
+19:03:57 | Episode: 60 | Steps done: 90000 | Gathering rollout (currently 25000)
+19:04:12 | Episode: 60 | Training for 20 epochs
+19:04:13 | Episode: 60 | Updating target network...
+19:04:13 | Episode: 60 | Rewards:
+	Reward: [-19. -18. -18.  86.] | Avg Reward: 18.0 | Loss: 7.2574 | ε: 0.885 | LR: 8.85e-06
+	Metrics - ['frags: 0', 'hits: 25', 'damage_taken: 0', 'movement: 0', 'ammo_efficiency: 3', 'survival: -21', 'health_pickup: 1']
+	Actions - Noop: 339, Move Forward: 1024, Attack: 868, Move Left: 686, Move Right: 600, Turn Left: 950, Turn Right: 971, Jump: 562
+19:04:13 | Episode: 60 | Running quick evaluation...
+19:04:16 | Episode: 61 | Steps done: 91500 | Gathering rollout (currently 25000)

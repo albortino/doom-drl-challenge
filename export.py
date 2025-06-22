@@ -1142,7 +1142,7 @@ def suppress_output():
 
 # %%
 # Create folder for training
-training_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+training_id = datetime.now().strftime('%Y%m%d_%H%M%S')
 training_folder = os.path.join("runs_test", training_id)
 
 os.makedirs(training_folder, exist_ok=True)

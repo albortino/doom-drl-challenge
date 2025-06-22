@@ -73,16 +73,7 @@ class YourReward(VizDoomReward):
         self.survival_bonus = 0
         
     def __call__(self, vizdoom_reward: float, game_var: dict[str, float], game_var_old: dict[str, float], player_id: int) -> tuple:
-        """
-        Custom reward functions
-        * +100 for frags (kills)
-        * +10 for hits
-        * -2 for damage taken
-        * +3 for movement (exploration)
-        * +1 for ammo efficiency, +2 if ammo pickup
-        * +0.05 survival bonus per step, -20 if dead
-        * +2 if health pickup
-        """
+        """ Custom reward functions """
         
         """
             {'HEALTH': 100.0,  Can be higher then 100!
@@ -125,7 +116,7 @@ class YourReward(VizDoomReward):
         
         if ammo_used > 0: # Shots fired
             accuracy = min(hits_made / ammo_used, 1.0)  # Cap at 100%
-            rwd_ammo_efficiency = 2.0 * accuracy
+            rwd_ammo_efficiency = 4.0 * accuracy
     
         elif ammo_used < 0: # Picked up ammunition
             rwd_ammo_efficiency = 2.0
@@ -136,7 +127,8 @@ class YourReward(VizDoomReward):
         # Survival bonus
         health_ratio = game_var["HEALTH"] / 100.0
         is_alive = game_var["HEALTH"] > 0
-        rwd_survival = (-0.01 + 0.005 * health_ratio) if is_alive else -20.0 # THe higher the health percentage the higher the reward, not linearly
+        #rwd_survival = (-0.01 + 0.005 * health_ratio) if is_alive else -20.0 # THe higher the health percentage the higher the reward, not linearly
+        rwd_survival = -(np.sin(-health_ratio+(np.pi/4))*0.5)-0.12 if is_alive else -20.0 # approx - 0.5 when health ratio is low, -0.015 at 100 positive at 1.028
 
         # Bonus point if a reward is picked up
         rwd_health_pickup = +5.0 if game_var["HEALTH"] > game_var_old["HEALTH"] else 0.0
@@ -188,13 +180,13 @@ class ExtraStates():
 class EnvActions():
     action_weights = {
             'Noop': 0.05,
-            'Move Forward': 0.2,
-            'Attack': 0.3,
+            'Move Forward': 0.17,
+            'Attack': 0.12,
             'Move Left': 0.10,
             'Move Right': 0.10,
             'Turn Left': 0.15,
             'Turn Right': 0.15,
-            'Jump': 0.05}
+            'Jump': 0.08}
     
     def __init__(self, env, seed: int = 149, rng = None) -> None:
         self.set_actions_from_env(env)

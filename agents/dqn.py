@@ -1,9 +1,5 @@
-# dqn.py
-
 import torch
 import torch.nn as nn
-from collections import OrderedDict
-import os
 import random
 from typing import Dict
 from agents.modules import ResidualBlock, Downsample, Parallel, OwnModule
@@ -59,7 +55,6 @@ def epsilon_greedy(env, model: nn.Module, obs: list, epsilon: float, env_actions
         q_values = model(processed_obs)
         
         # Indices are necessary if buttons don't start at 0 but at 1 (e.g., if there wouldn't be a noop option)
-    
         if num_players == 1:
             chosen_actions_idx = q_values.argmax().to(dtype=int).item() # Single action
             print("DEBUG EPSILON NUM PLAYERS=1:", chosen_actions_idx, q_values, end="")  if debug else None
@@ -95,7 +90,6 @@ def soft_update_target_network(local_model: nn.Module, target_model: nn.Module, 
         target_model (PyTorch model): weights will be copied to
         tau (float): interpolation parameter
     """
-    # TODO: Update target network
     
     # Store current state dicts
     local_state_dict = local_model.state_dict()
@@ -108,220 +102,9 @@ def soft_update_target_network(local_model: nn.Module, target_model: nn.Module, 
     # Load the soft updated values
     target_model.load_state_dict(target_state_dict)
 
-class LargeDQN(OwnModule):
-    """
-    LargeDQN DQN with multi-buffer visual processing
-    
-    Architecture:
-    TODO
-    """
-    
-    def __init__(self, input_dim: int, action_space: int, obs_state_infos: ExtraStates, feature_dim_cnns: int = 128, hidden_dim_heads: int = 2048, phi: nn.Module = nn.LeakyReLU()):
-        #obs_state_infos: ExtraStates = None, 
-        super().__init__()
-        self.input_dim = input_dim # not used
-        self.obs_state_infos = obs_state_infos
-        self.action_space = action_space
-        self.hidden_dim_heads = hidden_dim_heads
-        self.phi = phi
-        
-        # Feature dimension after encoding
-        self.feature_dim_cnns = feature_dim_cnns
-
-        # Observation states info
-        self.obs_state_dims = obs_state_infos.get_dims(return_dict=False) # Indices to split the observation
-        self.obs_states_num = obs_state_infos.num_states
-        
-        # Separate encoders for each buffer type
-        self.encoders = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
-            
-        self.head_first = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
-            self.phi,
-            nn.Dropout(0.3))
-        
-        # Dueling network heads
-        self.value_head = nn.Sequential(
-            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            nn.Dropout(0.2),
-            self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, 32), # one value prediction
-            self.phi,
-            nn.Linear(32, 1) # one value prediction
-        )
-        
-        self.advantage_head = nn.Sequential(
-            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            nn.Dropout(0.2),
-            self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, action_space * self.obs_states_num),
-            self.phi,
-            nn.Linear(action_space * self.obs_states_num, action_space) # one prediction per action
-        )
-        
-        params_encoder = sum(p.numel() for p in self.encoders.parameters() if p.requires_grad)
-        params_head_first = sum(p.numel() for p in self.head_first.parameters() if p.requires_grad)
-        params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
-        params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
-                
-        print(f"Initialized model with {params_encoder + params_head_first + params_advantage_head + params_value_head} parameters!") #+ 
-    
-    def _build_encoder(self, input_channels: int) -> nn.Module:
-        """Build CNN encoder with residual blocks for visual input"""
-        
-        first_channel_out = 16# if input_channels == 3 else 4
-        
-        return nn.Sequential(
-            # Initial convolution - reduce spatial dimensions significantly
-            nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            self.phi,  # Output [N, C=16/4, WH=32]
-            
-            # First residual stage
-            ResidualBlock(space=2, dim=first_channel_out, act_fn=self.phi, depth=1),
-            Downsample(space=2, dim=first_channel_out, downsample=2),  # [N, C, 16]
-            
-            # Second residual stage - double channels
-            nn.Conv2d(first_channel_out, first_channel_out * 2, 1, bias=False),
-            ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=self.phi, depth=1),
-            Downsample(space=2, dim=first_channel_out * 2, downsample=2),  # [N, 2C, 8]
-            
-            # Third residual stage - double channels again, with kernel
-            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 3, bias=False),
-            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=self.phi, depth=2), # [N, 4C, 6]
-            
-            # Channel reduction with residual connection
-            ResidualBlock(space=2, dim=first_channel_out * 4, act_fn=self.phi, depth=1),
-            
-            # Final spatial reduction and channel adjustment
-            nn.Conv2d(first_channel_out * 4, first_channel_out * 2, 3, stride=3, padding=1), # [N, C, 2]
-            self.phi,
-            
-            # Global average pooling -> one pixel per channel
-            nn.AdaptiveAvgPool2d(1),
-            nn.Flatten(),
-            
-            # Output projection
-            nn.Linear(first_channel_out * 2, self.feature_dim_cnns),
-        )
-    
-    
-    def forward(self, observations: torch.Tensor) -> torch.Tensor:
-        """
-        Forward pass through multi-buffer DQN
-        
-        Args:
-            observations: Tensor for "screen", "depth", "labels", "automap"
-        """                
-        # Encode each visual buffer and split the observations
-        features = self.encoders(observations.split(self.obs_state_dims, dim=1))
-        
-        # Use one head for the dueling network                
-        head_logits = self.head_first(features)
-        
-        # Dueling network computation
-        value = self.value_head(head_logits)
-        advantage = self.advantage_head(head_logits)
-        
-        # Combine value and advantage
-        q_values = value + advantage - advantage.mean(dim=1, keepdim=True)
-        
-        return q_values
-    
-
-class SmallDQN(OwnModule):
-    """
-    Small DQN with multi-buffer visual processing
-    
-    Architecture:
-    TODO
-    """
-    
-    def __init__(self, input_dim: int, action_space: int, obs_state_infos: ExtraStates, feature_dim_cnns: int = 128, hidden_dim_heads: int = 1024, phi: nn.Module = nn.LeakyReLU()):
-        #obs_state_infos: ExtraStates = None, 
-        super().__init__()
-        self.input_dim = input_dim # not used
-        self.obs_state_infos = obs_state_infos
-        self.action_space = action_space
-        self.hidden_dim_heads = hidden_dim_heads
-        self.phi = phi
-        
-        # Feature dimension after encoding
-        self.feature_dim_cnns = feature_dim_cnns
-
-        # Observation states info
-        self.obs_state_dims = obs_state_infos.get_dims(return_dict=False) # Indices to split the observation
-        self.obs_states_num = obs_state_infos.num_states
-        
-        # Separate encoders for each buffer type
-        self.encoders = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
-        
-        # Action selector      
-        self.action_head = nn.Sequential(
-            nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
-            nn.Dropout(0.2),
-            self.phi,
-            nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 4),
-            nn.Dropout(0.2),
-            self.phi,
-            nn.Linear(self.hidden_dim_heads // 4, action_space) # one prediction per action
-        )
-        
-        params_encoder = sum(p.numel() for p in self.encoders.parameters() if p.requires_grad)
-        params_action_head = sum(p.numel() for p in self.action_head.parameters() if p.requires_grad)
-                
-        print(f"Initialized model with {params_encoder  + params_action_head} parameters!")
-    
-    def _build_encoder(self, input_channels: int) -> nn.Module:
-        """Build CNN encoder with residual blocks for visual input"""
-        
-        first_channel_out = 16 if input_channels == 3 else 4
-        
-        return nn.Sequential(
-            # Initial convolution - reduce spatial dimensions significantly
-            nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            self.phi,  # Output [N, C=16/4, WH=32]
-            
-            # First residual stage
-            ResidualBlock(space=2, dim=first_channel_out, act_fn=self.phi, depth=1),
-            Downsample(space=2, dim=first_channel_out, downsample=2),  # [N, C, 16]
-            
-            # Second residual stage - double channels
-            nn.Conv2d(first_channel_out, first_channel_out * 2, 1),
-            ResidualBlock(space=2, dim=first_channel_out * 2, act_fn=self.phi, depth=1),
-            Downsample(space=2, dim=first_channel_out * 2, downsample=2),  # [N, 2C, 8]
-            
-            # Third residual stage - double channels again, with kernel
-            nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 3, stride=2),  # [N, 4C, 3]    
-            
-            # Global average pooling -> one pixel per channel
-            nn.Flatten(),
-            
-            # Output projection
-            nn.Linear(first_channel_out * 4 * 3 * 3, self.feature_dim_cnns),
-            nn.Dropout(0.2),
-            self.phi,
-        )
-
-    
-    def forward(self, observations: torch.Tensor) -> torch.Tensor:
-        """
-        Forward pass through multi-buffer DQN
-        
-        Args:
-            observations: Tensor for "screen", "depth", "labels", "automap"
-        """                
-        # Encode each visual buffer and split the observations
-        features = self.encoders(observations.split(self.obs_state_dims, dim=1))
-
-        # Apply action head
-        q_values = self.action_head(features)
-        
-        return q_values
 
 class EfficientDQN(OwnModule):
-    """
-    EfficientDQN with multi-buffer visual processing
-    """
+    """  EfficientDQN with multi-buffer visual processing  """
     
     def __init__(self, input_dim: int, action_space: int, obs_state_infos: ExtraStates, feature_dim_cnns: int = 256, hidden_dim_heads: int = 1024, phi: nn.Module = nn.LeakyReLU(), dropout_p:float = 0.15):
         #obs_state_infos: ExtraStates = None, 
@@ -343,26 +126,28 @@ class EfficientDQN(OwnModule):
         # Separate encoders for each buffer type
         self.encoders = Parallel([self._build_encoder(dim) for dim in self.obs_state_dims])
         
-        
         self.head_first = nn.Sequential(
             #nn.Linear(self.feature_dim_cnns * self.obs_states_num, self.hidden_dim_heads),
             nn.Linear(np.array([2*2*4 * [32 if dim == 3 else 16 for dim in self.obs_state_dims]]).sum(), self.hidden_dim_heads),
+            self.phi,
+            nn.BatchNorm1d(self.hidden_dim_heads),
             nn.Dropout(self.dropout_p),
-            self.phi
         )
         
         # Dueling network heads
         self.value_head = nn.Sequential(
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 8),
-            nn.Dropout(self.dropout_p),
             self.phi,
+            nn.BatchNorm1d(self.hidden_dim_heads // 8),
+            nn.Dropout(self.dropout_p),
             nn.Linear(self.hidden_dim_heads // 8, 1)
         )
         
         self.advantage_head = nn.Sequential(
             nn.Linear(self.hidden_dim_heads, self.hidden_dim_heads // 8),
-            nn.Dropout(self.dropout_p),
             self.phi,
+            nn.BatchNorm1d(self.hidden_dim_heads // 8),
+            nn.Dropout(self.dropout_p),
             nn.Linear(self.hidden_dim_heads // 8, action_space) 
         )
         
@@ -371,6 +156,7 @@ class EfficientDQN(OwnModule):
         params_advantage_head = sum(p.numel() for p in self.advantage_head.parameters() if p.requires_grad)
         params_value_head = sum(p.numel() for p in self.value_head.parameters() if p.requires_grad)
                 
+        self.init_weights(bias=False, debug=True)
         
         print(f"Initialized model with {params_encoder  + params_head_first + params_advantage_head + params_value_head} parameters!")
     
@@ -382,24 +168,24 @@ class EfficientDQN(OwnModule):
         return nn.Sequential(
             # Initial convolution - reduce spatial dimensions significantly
             nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            #nn.GroupNorm(4, first_channel_out),
             self.phi,  # Output [N, C=16/4, WH=32
+            nn.BatchNorm2d(first_channel_out),
 
             # Second CNN stage - double channels
             nn.Conv2d(first_channel_out, first_channel_out * 2, 4, stride=3, padding=0), # [N, 2C, 10]
-            #nn.GroupNorm(8, first_channel_out * 2),
             self.phi,
+            nn.BatchNorm2d(first_channel_out * 2),
             
             # Third residual stage - double channels again, with kernel
             nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 4, stride=2, padding=0), # [N, 4C, 4]
-            #nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
-            
+            nn.BatchNorm2d(first_channel_out * 4),
+
             # Fourth residual stage - double channels again, with kernel
             nn.Conv2d(first_channel_out * 4, first_channel_out * 4, 2, stride=2), # [N, 4C, 4]
-            #nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
-            
+            nn.BatchNorm2d(first_channel_out * 4),
+        
             nn.Flatten(),
         )
 
@@ -419,7 +205,6 @@ class EfficientDQN(OwnModule):
 
         # Dueling network computation
         value = self.value_head(head_logits)
-
         advantage = self.advantage_head(head_logits)
 
         # Combine value and advantage
@@ -431,4 +216,3 @@ class EfficientDQN(OwnModule):
 if __name__ == "__main__":
     obs_states = ExtraStates(["screen", "depth", "labels", "automap"], 1)
     model = EfficientDQN(1, 8, ExtraStates(["screen", "depth", "labels", "automap"], 1))
-    

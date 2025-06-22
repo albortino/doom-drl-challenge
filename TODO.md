@@ -1,4 +1,10 @@
 # TODO
+## Mats
+- add wandb tracking
+- add PrioritizedReplay Buffer
+- improve logger to store the metrics and flush them in a structured way for activations, episodes and weights
+- add early stopping
+- add test environment (with one player)
 
 ## Training
 - [x] check if action space is sound

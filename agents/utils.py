@@ -1,6 +1,5 @@
-from typing import Dict, List
+from typing import Dict
 import torch
-from collections import OrderedDict
 import numpy as np
 from datetime import datetime
 from doom_arena.render import render_episode
@@ -9,23 +8,46 @@ import os
 import pandas as pd
 import contextlib
 from agents.dqn import epsilon_greedy
-from agents.helpers import EnvActions
+from agents.helpers import EnvActions, ActivationLogger, ExtraStates
+import onnx
+import json
 
-# def get_buttons(env, return_vals_list: bool = False) -> dict|list:
-#     """ Returns a dictionary or list with the button key and description """
-#     buttons = {0: "Noop"}
+def onnx_dump(env, model, config, filename: str):
+    # dummy state
+    with suppress_output():
+        init_state = env.reset()[0].unsqueeze(0)
 
-#     for player_env in env.envs:
-#         for idx, button in enumerate(player_env.game.get_available_buttons()):
-#             button_name = str(button).split(".")[1].split(":")[0].replace("_", " ")
-#             button_val = idx + 1
-            
-#             buttons[button_val] = button_name.title()
-        
-#     if return_vals_list:
-#         return list(buttons.keys())
+    # Export to ONNX
+    torch.onnx.export(
+        model.cpu(),
+        args=init_state,
+        f=filename,
+        export_params=True,
+        opset_version=11,
+        do_constant_folding=True,
+        input_names=["input"],
+        output_names=["output"],
+        dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
+    )
+    onnx_model = onnx.load(filename)
+
+    meta = onnx_model.metadata_props.add()
+    meta.key = "config"
+    meta.value = json.dumps(config)
+
+    onnx.save(onnx_model, filename)
+
+def analyze_model_tensors(logger: ActivationLogger, episode: int, obs_clean: tuple[torch.Tensor], model: torch.nn.Module, split_dims: list, model_sequence: list = [None, 0, 1, 1], print_once: bool = False, dtype=torch.float32):    
+    rand_tensor = torch.rand(size=torch.stack(obs_clean).shape).to("cpu").split(split_dims, dim=1)
     
-#     return buttons
+    value, advantage = logger.log_model_activations(rand_tensor, model, model_sequence, episode=episode, return_activations_from_idx=-2, print_once=print_once)
+    q_values = (value + advantage - advantage.mean(dim=1, keepdim=True)).to(dtype=dtype)
+    q_actions = q_values.argmax(dim=1).to(dtype=dtype)
+    
+    log_qvals = logger.analyze_activations(q_values, episode, title="Qvalues", print_once=print_once)
+    log_qacts = logger.analyze_activations(q_actions, episode, title="Actions", print_once=print_once)
+    logger.log(log_qvals + "\n" + log_qacts, improve_file_output=True)
+    
     
 def replay_episode(env, model, device, dtype, path: str = "", store: bool = False, random_player: bool = True):
     # ----------------------------------------------------------------
@@ -33,6 +55,7 @@ def replay_episode(env, model, device, dtype, path: str = "", store: bool = Fals
     # ----------------------------------------------------------------
 
     env.enable_replay()
+    model.eval()
 
     # Tracking reward components
     eval_reward = 0.0
@@ -42,12 +65,11 @@ def replay_episode(env, model, device, dtype, path: str = "", store: bool = Fals
         eval_obs = env.reset()
     
     eval_dones = [False]
-    model.cpu()
 
     while not all(eval_dones):
         env_actions = EnvActions(env)
         
-        eval_act = epsilon_greedy(env, model, eval_obs, 0, env_actions, "cpu", dtype=dtype)
+        eval_act = epsilon_greedy(env, model, eval_obs, 0, env_actions, device, dtype=dtype)
         eval_obs, reward_components, eval_dones, _ = env.step(eval_act)
         eval_reward += sum(reward_components)
 
@@ -66,13 +88,11 @@ def replay_episode(env, model, device, dtype, path: str = "", store: bool = Fals
     
     if store:
         path = os.path.join(path, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{eval_reward:.0f}.mp4")
-        render_episode(replays, subsample=5, replay_path=path)
+        _ = render_episode(replays, subsample=5, replay_path=path)
     else:
         HTML(render_episode(replays, subsample=5).to_html5_video())
 
     model.train()
-    model.to(device)
-    
     
 def get_average_result(episode_metrics: Dict[int, dict]) -> dict:
     """ Returns the average reward from all players for each reward type. """
