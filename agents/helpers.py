@@ -189,11 +189,11 @@ class EnvActions():
     action_weights = {
             'Noop': 0.05,
             'Move Forward': 0.2,
-            'Attack': 0.25,
+            'Attack': 0.3,
             'Move Left': 0.10,
             'Move Right': 0.10,
-            'Turn Left': 0.12,
-            'Turn Right': 0.12,
+            'Turn Left': 0.15,
+            'Turn Right': 0.15,
             'Jump': 0.05}
     
     def __init__(self, env, seed: int = 149, rng = None) -> None:

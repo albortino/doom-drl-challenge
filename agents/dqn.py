@@ -382,22 +382,22 @@ class EfficientDQN(OwnModule):
         return nn.Sequential(
             # Initial convolution - reduce spatial dimensions significantly
             nn.Conv2d(input_channels, first_channel_out, 8, stride=4, padding=2),
-            nn.GroupNorm(4, first_channel_out),
+            #nn.GroupNorm(4, first_channel_out),
             self.phi,  # Output [N, C=16/4, WH=32
 
             # Second CNN stage - double channels
             nn.Conv2d(first_channel_out, first_channel_out * 2, 4, stride=3, padding=0), # [N, 2C, 10]
-            nn.GroupNorm(8, first_channel_out * 2),
+            #nn.GroupNorm(8, first_channel_out * 2),
             self.phi,
             
             # Third residual stage - double channels again, with kernel
             nn.Conv2d(first_channel_out * 2, first_channel_out * 4, 4, stride=2, padding=0), # [N, 4C, 4]
-            nn.GroupNorm(16, first_channel_out * 4),
+            #nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
             
             # Fourth residual stage - double channels again, with kernel
             nn.Conv2d(first_channel_out * 4, first_channel_out * 4, 2, stride=2), # [N, 4C, 4]
-            nn.GroupNorm(16, first_channel_out * 4),
+            #nn.GroupNorm(16, first_channel_out * 4),
             self.phi,
             
             nn.Flatten(),

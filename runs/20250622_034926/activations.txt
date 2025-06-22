@@ -1,0 +1,13 @@
+LOGGER INITIALIZED AT 20250622-034926
+Episode 0 , encoders , Shape: [3, 768],Mean: 0.40,Std: 0.57,Norm: 33.48
+Episode 0 , head_first , Shape: [3, 1024],Mean: 0.16,Std: 0.23,Norm: 15.34
+Episode 0 , value_head , Shape: [3, 1],Mean: 0.21,Std: 0.05,Norm: 0.36
+Episode 0 , advantage_head , Shape: [3, 8],Mean: 0.01,Std: 0.09,Norm: 0.45
+Episode 0 , Qvalues, Shape: [3, 8],Mean: 0.21,Std: 0.10,Norm: 1.12
+Episode 0 , Actions, Shape: [3],Mean: 4.67,Std: 2.08,Norm: 8.60
+Episode 1 , encoders , Shape: [3, 768],Mean: 0.40,Std: 0.57,Norm: 33.56
+Episode 1 , head_first , Shape: [3, 1024],Mean: 0.15,Std: 0.23,Norm: 15.12
+Episode 1 , value_head , Shape: [3, 1],Mean: 0.18,Std: 0.03,Norm: 0.31
+Episode 1 , advantage_head , Shape: [3, 8],Mean: 0.01,Std: 0.09,Norm: 0.43
+Episode 1 , Qvalues, Shape: [3, 8],Mean: 0.18,Std: 0.09,Norm: 0.98
+Episode 1 , Actions, Shape: [3],Mean: 6.33,Std: 1.15,Norm: 11.09
